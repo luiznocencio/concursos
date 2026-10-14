@@ -1091,6 +1091,8 @@ git commit -m "feat(db): seed idempotente do edital gerado a partir do YAML"
 
 ### Task 4: Aplicar no projeto Supabase e gerar os tipos
 
+> **Como foi executada:** o MCP do Supabase espera uma confirmação manual (que não chega numa sessão remota) para SQL que considera destrutivo, e trava em `DROP`, `DELETE ... USING` e funções grandes com vários `DELETE`. Por isso a `0004_carregar_edital.sql` foi dividida em funções pequenas, e o seed de 54 KB foi enviado em 5 partes para a tabela `seed_partes` (migração `0005_seed_partes.sql`), conferindo o md5 de cada parte e do total, antes de chamar `carregar_edital`. Resultado no projeto: 17 disciplinas, 457 tópicos, 318 canônicos e 6 ligações cargo–prova. O procedimento está descrito em `docs/deploy.md`.
+
 Esta tarefa usa as ferramentas MCP do Supabase (`apply_migration`, `execute_sql`, `get_advisors`, `generate_typescript_types`, `get_project_url`, `get_publishable_keys`) no projeto `gmcjgtpamdhqpclqxtvg`. Quem executa precisa ter essas ferramentas. Ela é feita pelo controlador da execução, não por um subagente sem acesso.
 
 **Files:**
@@ -1099,7 +1101,7 @@ Esta tarefa usa as ferramentas MCP do Supabase (`apply_migration`, `execute_sql`
 
 - [ ] **Step 1: Aplicar as migrações**
 
-Para cada arquivo em `supabase/migrations/` em ordem, chame `apply_migration` com `name` igual ao nome do arquivo sem extensão (`0001_conteudo`, `0002_uso`, `0003_rls`, `0004_carregar_edital`) e `query` igual ao conteúdo do arquivo.
+Para cada arquivo em `supabase/migrations/` em ordem, chame `apply_migration` com `name` igual ao nome do arquivo sem extensão (`0001_conteudo` a `0005_seed_partes`) e `query` igual ao conteúdo do arquivo.
 
 - [ ] **Step 2: Aplicar o seed**
 
@@ -1115,7 +1117,7 @@ Expected: 17 disciplinas, o mesmo nº de tópicos do teste de seed, 6 ligações
 
 - [ ] **Step 3: Verificar os avisos de segurança**
 
-Chame `get_advisors` com `type: "security"`. Expected: nenhum aviso de tabela sem RLS. Avisos de "RLS habilitado sem política" em `jobs` e `ai_usage` são intencionais (só o servidor acessa) e ficam registrados em `docs/deploy.md`.
+Chame `get_advisors` com `type: "security"`. Expected: nenhum aviso de tabela sem RLS. Avisos de "RLS habilitado sem política" em `jobs`, `ai_usage` e `seed_partes` são intencionais (só o servidor acessa) e ficam registrados em `docs/deploy.md`.
 
 - [ ] **Step 4: Gerar os tipos**
 

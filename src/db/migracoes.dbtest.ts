@@ -39,7 +39,7 @@ describe("schema", () => {
     expect(r.rows.map((x) => x.table_name)).toEqual([
       "ai_usage", "bancas", "cargo_provas", "cargos", "concursos", "disciplinas", "fonte_dispositivos",
       "fontes", "item_topicos", "itens", "jobs", "prova_disciplinas", "provas", "respostas",
-      "revisao_espacada", "simulado_itens", "simulados", "textos_base", "topicos", "topicos_canonicos",
+      "revisao_espacada", "seed_partes", "simulado_itens", "simulados", "textos_base", "topicos", "topicos_canonicos",
     ]);
   });
 
