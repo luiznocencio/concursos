@@ -4,7 +4,7 @@ import type { Client } from "pg";
 import { parseEdital } from "../../core/edital/parse";
 import type { Topico } from "../../core/edital/schema";
 import { editalMini } from "../../core/edital/__fixtures__/mini";
-import { criarBancoDeTeste } from "../testing/banco";
+import { comoUsuario, criarBancoDeTeste } from "../testing/banco";
 import { sqlDoEdital } from "./edital-sql";
 
 const cbmal = parseEdital(readFileSync("editais/cbmal-2026/edital.yaml", "utf8"));
@@ -56,6 +56,14 @@ describe("seed do CBM-AL", () => {
       select count(*)::int as n from public.topicos t
       where t.canonico_id is null and not exists (select 1 from public.topicos f where f.parent_id = t.id)`);
     expect(semCanonico.rows[0].n).toBe(0);
+  });
+});
+
+describe("permissões", () => {
+  it("usuários da API não executam carregar_edital", async () => {
+    await expect(
+      comoUsuario(client, "00000000-0000-0000-0000-00000000000a", () => client.query(sqlDoEdital(editalMini()))),
+    ).rejects.toThrow(/permission denied for function carregar_edital/);
   });
 });
 

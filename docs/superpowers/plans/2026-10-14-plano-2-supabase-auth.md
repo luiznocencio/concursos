@@ -773,6 +773,8 @@ git commit -m "feat(db): migrações do schema com RLS e Postgres de teste"
 
 ### Task 3: Seed do edital gerado a partir do YAML
 
+> **Revisão durante a execução:** o SQL gerado linha a linha tinha 417 KB, grande demais para ser enviado ao projeto pelo MCP ou colado no SQL Editor. O seed passou a ser `select public.carregar_edital('<edital em JSON>'::jsonb);` (cerca de 55 KB), e os upserts foram para a função `public.carregar_edital(jsonb)` na migração `supabase/migrations/0004_carregar_edital.sql`. A função não pode ser executada pelos papéis `anon` e `authenticated`. Os arquivos no repositório (`0004_carregar_edital.sql`, `src/db/seed/edital-sql.ts`, `edital-sql.test.ts` e `edital-sql.dbtest.ts`) são a referência; o código abaixo é a versão original.
+
 **Files:**
 - Create: `src/db/seed/edital-sql.ts`
 - Create: `scripts/gerar-seed.ts`
@@ -1097,7 +1099,7 @@ Esta tarefa usa as ferramentas MCP do Supabase (`apply_migration`, `execute_sql`
 
 - [ ] **Step 1: Aplicar as migrações**
 
-Para cada arquivo em `supabase/migrations/` em ordem, chame `apply_migration` com `name` igual ao nome do arquivo sem extensão (`0001_conteudo`, `0002_uso`, `0003_rls`) e `query` igual ao conteúdo do arquivo.
+Para cada arquivo em `supabase/migrations/` em ordem, chame `apply_migration` com `name` igual ao nome do arquivo sem extensão (`0001_conteudo`, `0002_uso`, `0003_rls`, `0004_carregar_edital`) e `query` igual ao conteúdo do arquivo.
 
 - [ ] **Step 2: Aplicar o seed**
 
