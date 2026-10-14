@@ -44,7 +44,8 @@ Fontes: `editais/cbmal-2026/edital-01-abertura.pdf` (Edital nº 1, 21/05/2026) e
 - Duração das provas objetivas + discursiva: 4h30.
 - Discursiva (9.1, 9.7): até 30 linhas, Atualidades, `NPD = NC − 6 × NE ÷ TL`, aprovação com NPD ≥ 15 — modelada no YAML agora, usada no sub-projeto 2.
 - O texto do item 19 foi retificado no Edital nº 2, mas a publicação no DOE omitiu o conteúdo (`[...]`). O conteúdo programático do Edital nº 1 é a base, com essa ressalva registrada no YAML.
-- Data da prova: originalmente 11/10/2026; remarcada para **24/01/2027** (republicação posterior, ainda não incluída no repositório). O YAML usa 24/01/2027.
+- Data da prova: 11/10/2026 no cronograma do Edital nº 1. Portais de concursos noticiam remarcação para **24/01/2027**, mas nenhum documento oficial no repositório confirma isso. O YAML usa 24/01/2027 com ressalva registrada e deve ser atualizado quando o ato oficial for obtido.
+- `portaria-cbmal-185-2026-taf.pdf` (índices do TAF) fica arquivada para referência; o TAF está fora de escopo.
 
 ## 3. Arquitetura
 
@@ -82,16 +83,17 @@ data_prova: 2027-01-24
 editais_fonte: [edital-01-abertura.pdf, edital-02-retificacao.pdf]
 ressalvas:
   - "Item 19 retificado no Edital nº 2 sem texto publicado; conteúdo baseado no Edital nº 1."
+  - "Data da prova 24/01/2027 segundo noticiário; sem ato oficial no repositório."
 cargos:
   - slug: cfo
     nome: Oficial de Estado-Maior
     provas: [p1-gerais, p2-cfo, discursiva]
-    corte_conjunto: { provas: [p1-gerais, p2-cfo], regra: piso_fator, fator: 0.3 }
+    corte_conjunto: { provas: [p1-gerais, p2-cfo], corte: { regra: piso_fator, fator: 0.3 } }
   - slug: soldado
     nome: Soldado
     qualificacoes: [QPBM/1, QPBM/2]
     provas: [p1-gerais, p2-soldado, discursiva]
-    corte_conjunto: { provas: [p1-gerais, p2-soldado], regra: piso_fator, fator: 0.3 }
+    corte_conjunto: { provas: [p1-gerais, p2-soldado], corte: { regra: piso_fator, fator: 0.3 } }
 provas:
   - slug: p1-gerais
     nome: P1 – Conhecimentos gerais
