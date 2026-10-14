@@ -12,7 +12,8 @@
     "typecheck": "tsc --noEmit",
     "db:test:start": "bash scripts/db-test.sh start",
     "db:test:stop": "bash scripts/db-test.sh stop",
-    "test:db": "vitest run --config vitest.db.config.ts"
+    "test:db": "vitest run --config vitest.db.config.ts",
+    "seed:gerar": "tsx scripts/gerar-seed.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
