@@ -19,6 +19,19 @@ describe("dividirEmArtigos", () => {
     expect(artigos[1].texto).toContain("II - cumprir.");
   });
 
+  it("não confunde remissão no começo da linha com início de artigo", () => {
+    const artigos = dividirEmArtigos(`Art. 47. A exclusão se faz por:
+I - reforma.
+Art. 48. O militar enquadrado em um dos incisos do
+art. 47, será afastado do cargo.
+Art. 49, caput, citado no começo da linha.
+Art. 31-A. Incluído por lei posterior.`);
+    expect(artigos.map((a) => a.referencia)).toEqual(["art. 47", "art. 48", "art. 31-A"]);
+    expect(artigos[1].texto).toBe(
+      "Art. 48. O militar enquadrado em um dos incisos do\nart. 47, será afastado do cargo.\nArt. 49, caput, citado no começo da linha.",
+    );
+  });
+
   it("ignora o preâmbulo e referências repetidas", () => {
     const artigos = dividirEmArtigos(`${LEI}\nArt. 1º Texto repetido de outra lei citada.`);
     expect(artigos).toHaveLength(4);

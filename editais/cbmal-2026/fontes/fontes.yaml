@@ -1,5 +1,6 @@
 # Textos das leis em .txt nesta pasta (um artigo por "Art." no início da linha).
 # Carregue no banco com: npm run fontes:carregar -- cbmal-2026
+# extras/: normas citadas no edital fora do conteúdo programático (não entram na geração de itens).
 fontes:
   - slug: lei-al-5346-1992
     tipo: lei
