@@ -99,3 +99,13 @@ Para parar: `select cron.unschedule('worker-jobs');`.
 ### Leis do CBM-AL
 
 Coloque os textos em `editais/cbmal-2026/fontes/` com os nomes do `fontes.yaml` (texto puro, cada artigo começando com "Art.") e rode `npm run fontes:carregar -- cbmal-2026`. O script substitui os artigos de cada lei a cada execução.
+
+## Telas de estudo
+
+- **Início:** "Estudar agora" monta 20 itens pelo motor de foco (70% pontos fracos, 20% revisão, 10% manutenção). Se algum dos 10 tópicos prioritários tiver menos de 10 itens novos, a sessão pede geração (até 3 pedidos em aberto por pessoa, 5 itens cada). Os pedidos só andam com o worker agendado e as chaves de IA configuradas.
+- **Treinar:** escolha tópicos do edital e a quantidade (10, 20 ou 30).
+- **Simulado:** só as provas objetivas, na distribuição do edital, com 1h a menos que a duração total (a discursiva entra com o corretor de redação). A correção sai na entrega; erros e brancos vão para a revisão espaçada.
+- **Painel:** contagem regressiva, evolução nos simulados contra os cortes, desempenho por disciplina e tópico, 10 tópicos prioritários. Moderadores veem também o custo de IA do mês, a fila de geração e o link para a revisão de itens.
+- **Itens:** fila de itens em que as IAs discordaram ou que alguém marcou como suspeito. Aprovar, aprovar com o gabarito invertido ou descartar. Usa `SUPABASE_SECRET_KEY`.
+
+Variável opcional: `MODERADORES_EMAILS` (Vercel, produção e preview). Sem ela, todos os e-mails de `AUTH_EMAILS_PERMITIDOS` moderam.
