@@ -84,7 +84,7 @@ export default async function Painel() {
               <li key={t.chave} className="flex items-center gap-3 py-2">
                 <span className="w-5 shrink-0 text-sm tabular-nums text-pedra">{i + 1}</span>
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate">{t.titulo}</span>
+                  <span className="line-clamp-2" title={t.titulo}>{t.titulo}</span>
                   <span className="block text-sm text-pedra">
                     {estrutura.disciplinas[t.disciplina]} · {t.n === 0 ? "nunca praticado" : aproveitamento(t.aproveitamento)}
                   </span>

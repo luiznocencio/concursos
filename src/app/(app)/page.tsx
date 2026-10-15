@@ -119,7 +119,7 @@ export default async function Inicio({ searchParams }: { searchParams: Promise<{
             {foco.map((t) => (
               <li key={t.chave} className="flex items-center gap-4 py-3">
                 <div className="min-w-0 flex-1">
-                  <p className="truncate font-medium">{t.titulo}</p>
+                  <p className="line-clamp-2 font-medium" title={t.titulo}>{t.titulo}</p>
                   <p className="text-sm text-pedra">
                     {estrutura.disciplinas[t.disciplina]} ·{" "}
                     {t.n === 0 ? "nunca praticado" : `${aproveitamento(t.aproveitamento)} em ${plural(t.n, "resposta", "respostas")}`}

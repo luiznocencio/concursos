@@ -86,8 +86,8 @@ describe("estudo_candidatos", () => {
     await responder(ANA, sessao, item.crase, "C");
     const candidatos = await comoUsuario(client, ANA, () => umValor<unknown[]>("select public.estudo_candidatos($1)", [cargo]));
     expect(candidatos).toEqual([
-      { id: item.crase, textoBaseId: null, canonicos: ["portugues/crase"], visto: true },
-      { id: item.regencia, textoBaseId: null, canonicos: ["portugues/crase", "portugues/regencia"], visto: false },
+      { id: item.crase, textoBaseId: null, canonicos: ["portugues/crase"], visto: true, origem: "ia" },
+      { id: item.regencia, textoBaseId: null, canonicos: ["portugues/crase", "portugues/regencia"], visto: false, origem: "ia" },
     ]);
     const paraBruno = await comoUsuario(client, BRUNO, () => umValor<{ visto: boolean }[]>("select public.estudo_candidatos($1)", [cargo]));
     expect(paraBruno.map((c) => c.visto)).toEqual([false, false]);
