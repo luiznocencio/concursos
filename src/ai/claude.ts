@@ -10,10 +10,19 @@ export interface ConfigClaude {
   esforco?: "low" | "medium" | "high" | "xhigh" | "max";
 }
 
+// O Haiku 5.5 não tem fallback no servidor: com "default" a recusa continua recusa.
+export function suportaFallbackServidor(modelo: string): boolean {
+  return !modelo.startsWith("claude-haiku-");
+}
+
 export function criarProvedorClaude(config: ConfigClaude = {}): ProvedorIa {
   const client = new Anthropic(config.apiKey ? { apiKey: config.apiKey } : {});
   const modelo = config.modelo ?? "claude-opus-5-5";
   if (!PRECOS_CLAUDE[modelo]) throw new Error(`Preço desconhecido para o modelo ${modelo}`);
+  // Em recusa por política, a própria API refaz o pedido no modelo de fallback padrão.
+  const fallback = suportaFallbackServidor(modelo)
+    ? { betas: ["server-side-fallback-2026-07-01"], fallbacks: "default" as const }
+    : {};
 
   return {
     nome: "anthropic",
@@ -23,9 +32,7 @@ export function criarProvedorClaude(config: ConfigClaude = {}): ProvedorIa {
         resposta = await client.beta.messages.parse({
           model: modelo,
           max_tokens: 16000,
-          // Em recusa por política, a própria API refaz o pedido no modelo de fallback padrão.
-          betas: ["server-side-fallback-2026-07-01"],
-          fallbacks: "default",
+          ...fallback,
           output_config: { effort: config.esforco ?? "high", format: betaZodOutputFormat(pedido.schema) },
           system: [{ type: "text", text: pedido.sistema, cache_control: { type: "ephemeral" } }],
           messages: [{ role: "user", content: pedido.prompt }],
