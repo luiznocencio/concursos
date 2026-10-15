@@ -109,3 +109,14 @@ Coloque os textos em `editais/cbmal-2026/fontes/` com os nomes do `fontes.yaml` 
 - **Itens:** fila de itens em que as IAs discordaram ou que alguém marcou como suspeito. Aprovar, aprovar com o gabarito invertido ou descartar. Usa `SUPABASE_SECRET_KEY`.
 
 Variável opcional: `MODERADORES_EMAILS` (Vercel, produção e preview). Sem ela, todos os e-mails de `AUTH_EMAILS_PERMITIDOS` moderam.
+
+## Importação de itens reais
+
+Tela **Importar** (só moderadores): itens de provas anteriores da banca, com o gabarito oficial.
+
+1. Informe a prova de origem (ex.: "CBM-AL 2021 Soldado") e cole o texto da prova e o gabarito. O texto é lido no navegador: textos-base e comandos ("Julgue os itens a seguir...") seguidos de itens numerados. O gabarito aceita "1 C 2 E 3 X", uma resposta por linha ou a tabela do gabarito definitivo do Cebraspe. Anulados (X) não entram.
+2. Confira a prévia: grupos, gabaritos e inconsistências (item sem gabarito, gabarito sem item, saltos na numeração, texto que sobrou). Se algo estiver errado, volte e corrija o texto colado; uma linha em branco entre blocos resolve quase tudo.
+3. Tópicos: a IA (Claude, com as chaves de IA do worker) sugere 1 ou 2 tópicos canônicos do concurso por item; confirme ou troque. Sem as chaves, ou se a IA falhar, escolha à mão. O custo vai para `ai_usage` com a finalidade `sugerir_topicos`.
+4. Gravar: os itens entram como `origem = real`, `status = aprovado`, com `prova_origem` e o gabarito oficial. Itens com o mesmo texto (hash normalizado) já gravados contam como duplicados e não se repetem. Usa `SUPABASE_SECRET_KEY`.
+
+Variável opcional `ITENS_REAIS_VISIVEIS` (Vercel, produção e preview). Vazia ou `true`: os itens reais entram nas sessões (uso pessoal). `false`: modo produto, os itens reais saem de treino, simulado e revisão e continuam como exemplos de estilo na geração.
