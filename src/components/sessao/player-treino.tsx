@@ -68,10 +68,19 @@ export function PlayerTreino({ sessaoId, itens }: { sessaoId: string; itens: Ite
           setErro(r.erro);
           return;
         }
-        const { gabarito, justificativa, citacao, fonte, resultado } = r.dados;
+        const { gabarito, justificativa, citacao, fonte, provaOrigem, resultado } = r.dados;
         setCorrigidos((c) => ({
           ...c,
-          [item.id]: { gabarito, justificativa, citacao, fonte, resultado, resposta: r.dados.resposta, duvida: r.dados.duvida },
+          [item.id]: {
+            gabarito,
+            justificativa,
+            citacao,
+            fonte,
+            provaOrigem,
+            resultado,
+            resposta: r.dados.resposta,
+            duvida: r.dados.duvida,
+          },
         }));
       });
     },

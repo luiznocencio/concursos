@@ -1,5 +1,6 @@
 import { CheckCircle, MinusCircle, XCircle } from "@phosphor-icons/react/ssr";
 import type { ResultadoResposta } from "@/core";
+import { pilula } from "@/components/ui";
 
 const ESTILO: Record<ResultadoResposta, { caixa: string; titulo: string }> = {
   certo: { caixa: "bg-azul-claro text-[#00447f]", titulo: "Você acertou" },
@@ -14,14 +15,16 @@ export interface DadosFeedback {
   justificativa: string;
   citacao: string | null;
   fonte: string | null;
+  provaOrigem: string | null;
 }
 
 export function nomeGabarito(g: string): string {
   return g === "C" ? "Certo" : g === "E" ? "Errado" : g;
 }
 
-// Correção de um item: resultado, gabarito, justificativa e o trecho da fonte.
-export function Feedback({ resultado, gabarito, justificativa, citacao, fonte }: DadosFeedback) {
+// Correção de um item: resultado, gabarito, justificativa, o trecho da fonte e, nas questões reais,
+// a prova de onde vieram (só chega aqui junto com a correção, nunca durante o simulado).
+export function Feedback({ resultado, gabarito, justificativa, citacao, fonte, provaOrigem }: DadosFeedback) {
   const e = ESTILO[resultado];
   const Icone = resultado === "errado" ? XCircle : resultado === "branco" ? MinusCircle : CheckCircle;
   return (
@@ -30,6 +33,7 @@ export function Feedback({ resultado, gabarito, justificativa, citacao, fonte }:
         <Icone size={20} weight="fill" aria-hidden />
         {e.titulo}. Gabarito: {nomeGabarito(gabarito)}.
       </p>
+      {provaOrigem && <p className={`${pilula.neutra} self-start`}>Questão real · {provaOrigem}</p>}
       {justificativa && <p className="max-w-[70ch] leading-relaxed text-grafite">{justificativa}</p>}
       {citacao && (
         <blockquote className="max-w-[70ch] border-l-2 border-borda-forte pl-4 text-[15px] leading-relaxed text-black/70">

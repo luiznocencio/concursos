@@ -159,6 +159,7 @@ export interface Correcao {
   justificativa: string;
   citacao: string | null;
   fonte: string | null;
+  provaOrigem: string | null;
   resultado: ResultadoResposta;
   concluida: boolean;
 }
@@ -201,6 +202,7 @@ export async function responderItem(
     justificativa: item.justificativa,
     citacao: item.citacao,
     fonte: item.fonte,
+    provaOrigem: item.provaOrigem,
     resultado,
     concluida,
   };

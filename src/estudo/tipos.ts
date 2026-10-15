@@ -40,6 +40,8 @@ export interface ItemCorrecao {
   justificativa: string;
   citacao: string | null;
   fonte: string | null;
+  // Prova de onde a questão real foi tirada; null nos itens gerados por IA.
+  provaOrigem: string | null;
 }
 
 export interface RespostaGravada {
