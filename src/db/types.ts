@@ -830,6 +830,7 @@ export type Database = {
         Returns: number
       }
       ia_registrar_uso: { Args: { p_uso: Json }; Returns: undefined }
+      itens_importar_reais: { Args: { p_prova: Json }; Returns: Json }
       itens_marcar_suspeito: {
         Args: { p_item: string; p_motivo: string }
         Returns: undefined
