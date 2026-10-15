@@ -40,3 +40,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# cópias de trabalho dos agentes do Claude Code
+.claude/worktrees/
