@@ -13,7 +13,10 @@
     "db:test:start": "bash scripts/db-test.sh start",
     "db:test:stop": "bash scripts/db-test.sh stop",
     "test:db": "vitest run --config vitest.db.config.ts",
-    "seed:gerar": "tsx scripts/gerar-seed.ts"
+    "seed:gerar": "tsx scripts/gerar-seed.ts",
+    "fontes:carregar": "tsx --env-file=.env.local scripts/carregar-fontes.ts",
+    "ia:lote": "tsx --env-file=.env.local scripts/gerar-lote.ts",
+    "ia:enfileirar": "tsx --env-file=.env.local scripts/enfileirar.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.134.0",

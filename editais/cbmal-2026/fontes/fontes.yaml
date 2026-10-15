@@ -1,0 +1,29 @@
+# Textos das leis em .txt nesta pasta (um artigo por "Art." no início da linha).
+# Carregue no banco com: npm run fontes:carregar -- cbmal-2026
+fontes:
+  - slug: lei-al-5346-1992
+    tipo: lei
+    titulo: Lei Estadual nº 5.346/1992 — Estatuto dos Policiais Militares de Alagoas
+    arquivo: lei-al-5346-1992.txt
+    canonicos: [legislacao-cbmal/lei-5346-1992-estatuto]
+  - slug: decreto-al-37042-1996
+    tipo: decreto
+    titulo: Decreto Estadual nº 37.042/1996 — Regulamento Disciplinar da PM de Alagoas
+    arquivo: decreto-al-37042-1996.txt
+    canonicos: [legislacao-cbmal/decreto-37042-1996-regulamento-disciplinar]
+  - slug: lei-al-6514-2004
+    tipo: lei
+    titulo: Lei Estadual nº 6.514/2004 — Promoção de Oficiais e Praças da PM e do CBM de Alagoas
+    arquivo: lei-al-6514-2004.txt
+    canonicos: [legislacao-cbmal/lei-6514-2004-promocao-oficiais]
+  - slug: lei-al-6544-2004
+    tipo: lei
+    titulo: Lei Estadual nº 6.544/2004 — Promoção de Soldados, Cabos e Subtenentes da PM e do CBM de Alagoas
+    arquivo: lei-al-6544-2004.txt
+    canonicos: [legislacao-cbmal/lei-6544-2004-promocao-pracas]
+  - slug: lei-federal-14751-2023
+    tipo: lei
+    titulo: Lei Federal nº 14.751/2023 — Lei Orgânica Nacional das Polícias Militares e dos Corpos de Bombeiros Militares
+    url_oficial: https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/L14751.htm
+    arquivo: lei-federal-14751-2023.txt
+    canonicos: [legislacao-cbmal/lei-14751-2023-lei-organica-militares]

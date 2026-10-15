@@ -52,3 +52,50 @@
 
 - `npm test`: suíte unitária.
 - `npm run db:test:start && npm run test:db`: migrações, RLS e seed num Postgres local descartável. Fora do ambiente de nuvem, defina `TEST_DATABASE_URL` apontando para um Postgres seu (o usuário precisa poder criar bancos).
+
+## Geração de questões por IA
+
+### Variáveis (Vercel → Settings → Environment Variables, e `.env.local` para os scripts)
+
+| Variável | Onde obter |
+|---|---|
+| `SUPABASE_SECRET_KEY` | Supabase → Project Settings → API Keys → chave secreta (`sb_secret_…`) |
+| `WORKER_SECRET` | Gere com `openssl rand -hex 32` |
+| `ANTHROPIC_API_KEY` | console.anthropic.com → API Keys |
+| `CLAUDE_MODEL` | Opcional; padrão `claude-opus-5-5` |
+| `OPENAI_API_KEY` | platform.openai.com → API keys |
+| `OPENAI_MODEL` | O modelo GPT que você quer usar |
+| `OPENAI_PRECO_ENTRADA_USD_MTOK`, `OPENAI_PRECO_SAIDA_USD_MTOK` | Preço desse modelo na página de preços da OpenAI |
+
+### Como funciona
+
+1. Um job `gerar_itens` entra na fila (`npm run ia:enfileirar -- cbmal-2026 portugues/crase 5`; no Plano 4, o próprio app enfileira).
+2. O worker (`POST /api/jobs/worker`) pega um job: uma IA gera até 5 itens, a outra julga sem ver o gabarito.
+3. Itens com concordância entram como `aprovado`; os demais ficam em `revisao`. O custo de cada chamada vai para `ai_usage`.
+4. Falhas voltam para a fila com espera crescente; depois de 3 tentativas o job fica `falhou`, com a mensagem em `jobs.erro`.
+
+Para testar uma geração na hora, sem fila: `npm run ia:lote -- cbmal-2026 portugues/crase 3` (chamada real, com custo).
+
+### Agendar o worker no Supabase (SQL Editor)
+
+Troque `<URL>` pela URL de produção e `<WORKER_SECRET>` pelo segredo. O segredo fica visível só para administradores do banco.
+
+```sql
+create extension if not exists pg_cron;
+create extension if not exists pg_net;
+select cron.schedule(
+  'worker-jobs',
+  '* * * * *',
+  $$ select net.http_post(
+       url := '<URL>/api/jobs/worker',
+       headers := jsonb_build_object('Authorization', 'Bearer <WORKER_SECRET>'),
+       timeout_milliseconds := 300000
+     ) $$
+);
+```
+
+Para parar: `select cron.unschedule('worker-jobs');`.
+
+### Leis do CBM-AL
+
+Coloque os textos em `editais/cbmal-2026/fontes/` com os nomes do `fontes.yaml` (texto puro, cada artigo começando com "Art.") e rode `npm run fontes:carregar -- cbmal-2026`. O script substitui os artigos de cada lei a cada execução.
