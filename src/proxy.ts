@@ -1,8 +1,11 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { atualizarSessao } from "@/db/supabase/proxy";
-import { rotaPublica } from "@/lib/auth/rotas";
+import { encaminharCodigo, rotaPublica } from "@/lib/auth/rotas";
 
 export async function proxy(request: NextRequest) {
+  const callback = encaminharCodigo(request.nextUrl);
+  if (callback) return NextResponse.redirect(callback);
+
   const { resposta, autenticado } = await atualizarSessao(request);
   const { pathname, search } = request.nextUrl;
   if (!autenticado && !rotaPublica(pathname)) {

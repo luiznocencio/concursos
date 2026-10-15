@@ -34,8 +34,9 @@
 
 ### Autenticação (painel do Supabase → Authentication → URL Configuration)
 
-- **Site URL:** a URL de produção da Vercel (ex.: `https://concursos.vercel.app`).
-- **Redirect URLs:** adicione `http://localhost:3000/auth/callback` e `https://<url-de-produção>/auth/callback`.
+- **Site URL:** a URL de produção da Vercel (ex.: `https://concursos-luiz-inocencio.vercel.app`).
+- **Redirect URLs:** `http://localhost:3000/**` e `https://concursos-*-luiz-inocencio.vercel.app/**`, mais a URL de produção com `/**` no final. O curinga cobre as URLs de preview que a Vercel cria a cada branch.
+- Abra o link do e-mail no mesmo navegador e no mesmo endereço em que pediu o login: o código de acesso só pode ser trocado onde o pedido foi feito.
 - Opcional: em Authentication → Sign In / Providers, desligue "Allow new users to sign up" depois do primeiro login, para que só a sua conta exista.
 
 ## Vercel

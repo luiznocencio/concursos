@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { destinoSeguro, emailPermitido, rotaPublica } from "./rotas";
+import { destinoSeguro, emailPermitido, encaminharCodigo, rotaPublica } from "./rotas";
 
 describe("rotaPublica", () => {
   it("libera login e callback", () => {
@@ -36,5 +36,21 @@ describe("emailPermitido", () => {
     expect(emailPermitido("ana@x.com", undefined)).toBe(false);
     expect(emailPermitido("ana@x.com", "")).toBe(false);
     expect(emailPermitido("ana@x.com", "bia@y.com")).toBe(false);
+  });
+});
+
+describe("encaminharCodigo", () => {
+  it("leva o código de login de qualquer página para o callback", () => {
+    expect(encaminharCodigo(new URL("https://app.vercel.app/?code=abc"))?.toString()).toBe(
+      "https://app.vercel.app/auth/callback?code=abc",
+    );
+    expect(encaminharCodigo(new URL("https://app.vercel.app/entrar?code=abc&x=1"))?.toString()).toBe(
+      "https://app.vercel.app/auth/callback?code=abc",
+    );
+  });
+
+  it("não faz nada sem código ou já no callback", () => {
+    expect(encaminharCodigo(new URL("https://app.vercel.app/simulado"))).toBeNull();
+    expect(encaminharCodigo(new URL("https://app.vercel.app/auth/callback?code=abc"))).toBeNull();
   });
 });
