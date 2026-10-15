@@ -1,7 +1,9 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
+import type { ItemCandidato } from "@/core";
 import { montarEstruturaCargo, type EstruturaCargo, type LinhaCargo } from "@/estudo/estrutura";
 import type { ConfigSessao, Marcacao, ModoSessao, RepositorioEstudo, ResultadoSessao } from "@/estudo/tipos";
+import { itensReaisVisiveis } from "@/lib/itens-reais";
 import type { Database, Json } from "../types";
 
 export type Cliente = SupabaseClient<Database>;
@@ -11,7 +13,13 @@ function falhou(operacao: string, erro: { message: string } | null): never {
 }
 
 const candidatosSchema = z.array(
-  z.object({ id: z.string(), textoBaseId: z.string().nullable(), canonicos: z.array(z.string()), visto: z.boolean() }),
+  z.object({
+    id: z.string(),
+    textoBaseId: z.string().nullable(),
+    canonicos: z.array(z.string()),
+    visto: z.boolean(),
+    origem: z.enum(["real", "ia"]),
+  }),
 );
 const historicoSchema = z.array(
   z.object({
@@ -44,8 +52,17 @@ export async function carregarEstrutura(db: Cliente, cargoId: string): Promise<E
   return montarEstruturaCargo(data as unknown as LinhaCargo);
 }
 
+// Em modo produto (itensReais = false) os itens reais saem das sessões: sem candidato, eles também
+// não entram em treino, simulado nem revisão. O gerador continua a usá-los como referência de estilo.
+export function filtrarCandidatos(linhas: z.infer<typeof candidatosSchema>, itensReais: boolean): ItemCandidato[] {
+  return linhas
+    .filter((l) => itensReais || l.origem !== "real")
+    .map(({ id, textoBaseId, canonicos, visto }) => ({ id, textoBaseId, canonicos, visto }));
+}
+
 // Implementação com o cliente do usuário: o RLS garante que cada um só vê e grava o que é seu.
-export function criarRepositorioEstudo(db: Cliente): RepositorioEstudo {
+export function criarRepositorioEstudo(db: Cliente, opcoes: { itensReais?: boolean } = {}): RepositorioEstudo {
+  const itensReais = opcoes.itensReais ?? itensReaisVisiveis();
   const estruturas = new Map<string, Promise<EstruturaCargo>>();
 
   return {
@@ -57,7 +74,7 @@ export function criarRepositorioEstudo(db: Cliente): RepositorioEstudo {
     async candidatos(cargoId) {
       const { data, error } = await db.rpc("estudo_candidatos", { p_cargo: cargoId });
       if (error) falhou("candidatos", error);
-      return candidatosSchema.parse(data);
+      return filtrarCandidatos(candidatosSchema.parse(data), itensReais);
     },
 
     async historico(cargoId) {
