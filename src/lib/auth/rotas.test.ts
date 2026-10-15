@@ -7,6 +7,11 @@ describe("rotaPublica", () => {
     expect(rotaPublica("/auth/callback")).toBe(true);
   });
 
+  it("libera o worker de jobs, que se autentica com segredo próprio", () => {
+    expect(rotaPublica("/api/jobs/worker")).toBe(true);
+    expect(rotaPublica("/api/outra")).toBe(false);
+  });
+
   it("protege o resto", () => {
     expect(rotaPublica("/")).toBe(false);
     expect(rotaPublica("/entrarx")).toBe(false);

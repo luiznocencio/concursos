@@ -1,4 +1,5 @@
-const ROTAS_PUBLICAS = ["/entrar", "/auth/callback"];
+// /api/jobs tem autenticação própria (segredo do worker).
+const ROTAS_PUBLICAS = ["/entrar", "/auth/callback", "/api/jobs"];
 
 export function rotaPublica(caminho: string): boolean {
   return ROTAS_PUBLICAS.some((r) => caminho === r || caminho.startsWith(`${r}/`));
