@@ -29,7 +29,7 @@ export function Aviso({ codigo, pedidos }: { codigo?: string; pedidos?: string }
   const texto = codigo ? mensagem(codigo, Number(pedidos ?? 0)) : null;
   if (!texto) return null;
   return (
-    <p role="status" className="mb-8 flex items-start gap-3 rounded-xl bg-azul-claro px-4 py-3 text-[15px] text-[#00447f]">
+    <p role="status" className="mb-8 flex items-start gap-3 rounded-xl bg-azul-claro px-4 py-3 text-[15px] text-azul-tinta">
       <Info size={20} weight="bold" className="mt-0.5 shrink-0" aria-hidden />
       {texto}
     </p>

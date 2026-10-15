@@ -8,7 +8,7 @@ export function Tendencia({ valores }: { valores: (number | null)[] }) {
       {valores.map((v, i) => (
         <span key={i} className="relative flex h-full w-2.5 flex-col justify-center">
           {v === null ? (
-            <span className="h-px w-2.5 bg-black/20" />
+            <span className="h-px w-2.5 bg-tinta/20" />
           ) : (
             <span
               className={`absolute left-0 w-2.5 rounded-[2px] ${v >= 0 ? "bottom-1/2 bg-azul" : "top-1/2 bg-coral"}`}

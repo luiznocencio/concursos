@@ -61,7 +61,7 @@ export default async function FilaDeItens() {
                   </div>
                 </div>
                 {i.citacao && (
-                  <blockquote className="border-l-2 border-borda-forte pl-4 text-sm leading-relaxed text-black/70">
+                  <blockquote className="border-l-2 border-borda-forte pl-4 text-sm leading-relaxed text-tinta/70">
                     {i.citacao}
                     {i.fonte && <span className="mt-1 block text-pedra">{i.fonte}</span>}
                   </blockquote>
@@ -69,7 +69,7 @@ export default async function FilaDeItens() {
                 {v.denuncias && v.denuncias.length > 0 && (
                   <ul className="flex flex-col gap-1 text-sm">
                     {v.denuncias.map((d, k) => (
-                      <li key={k} className="text-[#8f1c0c]">
+                      <li key={k} className="text-vermelho-tinta">
                         Denúncia{d.em ? ` em ${dataEHora(d.em)}` : ""}: {d.motivo || "sem motivo"}
                       </li>
                     ))}

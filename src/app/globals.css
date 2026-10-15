@@ -1,26 +1,127 @@
 @import "tailwindcss";
 
-/* Tokens do docs/design/DESIGN.md (estilo Notion): papel quente, cartões brancos com borda fina,
-   um único azul para a ação principal e acentos usados como pontuação. Tema claro apenas. */
+/* Tokens do docs/design/DESIGN.md (estilo Notion): papel quente, cartões com borda fina,
+   um único azul para a ação principal e acentos usados como pontuação.
+
+   Tema: cada cor é uma variável CSS (--t-*) com valor claro em :root e valor escuro em dois
+   lugares — [data-tema="escuro"] (escolha explícita) e @media (prefers-color-scheme: dark) quando
+   o tema é "sistema". Os dois blocos escuros precisam ser idênticos (src/lib/tema.test.ts confere).
+   Os utilitários do Tailwind (bg-papel, text-tinta/70...) leem as variáveis via @theme inline. */
 @theme inline {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --color-papel: #f6f5f4;
-  --color-tinta: #000000;
-  --color-grafite: #615d59;
-  --color-pedra: #757575;
-  --color-azul: #0075de;
-  --color-azul-escuro: #005bab;
-  --color-azul-claro: #e6f3fe;
-  --color-ceu: #62aef0;
-  --color-marigold: #ffb110;
-  --color-marigold-claro: #fff4dc;
-  --color-coral: #f64932;
-  --color-vermelho: #e32d14;
-  --color-vermelho-claro: #fdebe8;
-  --color-meia-noite: #02093a;
-  --color-borda: rgba(0, 0, 0, 0.08);
-  --color-borda-forte: rgba(0, 0, 0, 0.15);
+  --color-papel: var(--t-papel);
+  --color-superficie: var(--t-superficie);
+  --color-tinta: var(--t-tinta);
+  --color-grafite: var(--t-grafite);
+  --color-pedra: var(--t-pedra);
+  --color-azul: var(--t-azul);
+  --color-azul-acao: var(--t-azul-acao);
+  --color-azul-escuro: var(--t-azul-escuro);
+  --color-azul-claro: var(--t-azul-claro);
+  --color-azul-claro-forte: var(--t-azul-claro-forte);
+  --color-azul-tinta: var(--t-azul-tinta);
+  --color-marigold: var(--t-marigold);
+  --color-marigold-claro: var(--t-marigold-claro);
+  --color-marigold-tinta: var(--t-marigold-tinta);
+  --color-coral: var(--t-coral);
+  --color-vermelho: var(--t-vermelho);
+  --color-vermelho-claro: var(--t-vermelho-claro);
+  --color-vermelho-tinta: var(--t-vermelho-tinta);
+  --color-meia-noite: var(--t-meia-noite);
+  --color-realce: var(--t-realce);
+  --color-borda: var(--t-borda);
+  --color-borda-forte: var(--t-borda-forte);
+  --color-borda-campo: var(--t-borda-campo);
 }
+
+:root {
+  color-scheme: light dark;
+  --t-papel: #f6f5f4;
+  --t-superficie: #ffffff;
+  --t-tinta: #000000;
+  --t-grafite: #615d59;
+  --t-pedra: #6b6b6b;
+  --t-azul: #0068c4;
+  --t-azul-acao: #0075de;
+  --t-azul-escuro: #005bab;
+  --t-azul-claro: #e6f3fe;
+  --t-azul-claro-forte: #d6ebfd;
+  --t-azul-tinta: #00447f;
+  --t-marigold: #ffb110;
+  --t-marigold-claro: #fff4dc;
+  --t-marigold-tinta: #8a5a00;
+  --t-coral: #f64932;
+  --t-vermelho: #c4250f;
+  --t-vermelho-claro: #fdebe8;
+  --t-vermelho-tinta: #8f1c0c;
+  --t-meia-noite: #02093a;
+  --t-realce: rgba(0, 0, 0, 0.03);
+  --t-borda: rgba(0, 0, 0, 0.08);
+  --t-borda-forte: rgba(0, 0, 0, 0.15);
+  --t-borda-campo: rgba(0, 0, 0, 0.45);
+}
+
+:root[data-tema="claro"] {
+  color-scheme: light;
+}
+
+/* tema-escuro:inicio */
+:root[data-tema="escuro"] {
+  color-scheme: dark;
+  --t-papel: #191817;
+  --t-superficie: #22211f;
+  --t-tinta: #ebe9e6;
+  --t-grafite: #aaa49d;
+  --t-pedra: #a39d96;
+  --t-azul: #5aa9f0;
+  --t-azul-acao: #0075de;
+  --t-azul-escuro: #0066c2;
+  --t-azul-claro: #132b44;
+  --t-azul-claro-forte: #183654;
+  --t-azul-tinta: #c5e1fb;
+  --t-marigold: #ffb935;
+  --t-marigold-claro: #372a12;
+  --t-marigold-tinta: #f5c062;
+  --t-coral: #ff6b55;
+  --t-vermelho: #ff7c69;
+  --t-vermelho-claro: #3f1d17;
+  --t-vermelho-tinta: #ffc4ba;
+  --t-meia-noite: #141b4d;
+  --t-realce: rgba(235, 233, 230, 0.05);
+  --t-borda: rgba(235, 233, 230, 0.1);
+  --t-borda-forte: rgba(235, 233, 230, 0.18);
+  --t-borda-campo: rgba(235, 233, 230, 0.38);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema="claro"]) {
+    color-scheme: dark;
+    --t-papel: #191817;
+    --t-superficie: #22211f;
+    --t-tinta: #ebe9e6;
+    --t-grafite: #aaa49d;
+    --t-pedra: #a39d96;
+    --t-azul: #5aa9f0;
+    --t-azul-acao: #0075de;
+    --t-azul-escuro: #0066c2;
+    --t-azul-claro: #132b44;
+    --t-azul-claro-forte: #183654;
+    --t-azul-tinta: #c5e1fb;
+    --t-marigold: #ffb935;
+    --t-marigold-claro: #372a12;
+    --t-marigold-tinta: #f5c062;
+    --t-coral: #ff6b55;
+    --t-vermelho: #ff7c69;
+    --t-vermelho-claro: #3f1d17;
+    --t-vermelho-tinta: #ffc4ba;
+    --t-meia-noite: #141b4d;
+    --t-realce: rgba(235, 233, 230, 0.05);
+    --t-borda: rgba(235, 233, 230, 0.1);
+    --t-borda-forte: rgba(235, 233, 230, 0.18);
+    --t-borda-campo: rgba(235, 233, 230, 0.38);
+  }
+}
+/* tema-escuro:fim */
 
 body {
   background: var(--color-papel);

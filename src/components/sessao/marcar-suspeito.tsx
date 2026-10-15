@@ -45,7 +45,7 @@ export function MarcarSuspeito({ itemId }: { itemId: string }) {
         maxLength={500}
         required
         placeholder="Ex.: o gabarito contradiz o art. 5º da lei."
-        className="rounded-lg border border-borda-forte bg-white px-3 py-2 text-[15px] placeholder:text-pedra"
+        className="rounded-lg border border-borda-campo bg-superficie px-3 py-2 text-[15px] placeholder:text-pedra"
       />
       {estado !== "livre" && <p className="text-sm text-vermelho">{estado}</p>}
       <div className="flex gap-2">

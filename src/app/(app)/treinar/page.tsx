@@ -37,7 +37,7 @@ export default async function Treinar({
       </p>
 
       <form action={treinarTopicos} className="mt-8 flex flex-col gap-6">
-        <div className="divide-y divide-borda rounded-xl border border-borda bg-white">
+        <div className="divide-y divide-borda rounded-xl border border-borda bg-superficie">
           {tabela.map((d) => (
             <details key={d.disciplina} className="group px-6">
               <summary className="flex cursor-pointer list-none items-center gap-4 py-4">
@@ -47,7 +47,7 @@ export default async function Treinar({
               <ul className="flex flex-col pb-4">
                 {d.topicos.map((t) => (
                   <li key={`${t.disciplina}:${t.codigo}`}>
-                    <label className="flex cursor-pointer items-start gap-3 rounded-lg px-2 py-2 hover:bg-black/[0.03]">
+                    <label className="flex cursor-pointer items-start gap-3 rounded-lg px-2 py-2 hover:bg-realce">
                       <input type="checkbox" name="canonico" value={t.canonico} className="mt-1 size-4 accent-azul" />
                       <span className="flex-1">
                         <span className="text-pedra">{t.codigo}</span> {t.titulo}
@@ -65,11 +65,11 @@ export default async function Treinar({
           ))}
         </div>
 
-        <div className="sticky bottom-4 flex flex-wrap items-center gap-4 self-start rounded-xl border border-borda bg-white px-4 py-3">
+        <div className="sticky bottom-4 flex flex-wrap items-center gap-4 self-start rounded-xl border border-borda bg-superficie px-4 py-3">
           <label htmlFor="total" className="text-sm font-medium">
             Quantidade
           </label>
-          <select id="total" name="total" defaultValue="10" className="rounded-lg border border-borda-forte bg-white px-3 py-2 text-sm">
+          <select id="total" name="total" defaultValue="10" className="rounded-lg border border-borda-campo bg-superficie px-3 py-2 text-sm">
             <option value="10">10 itens</option>
             <option value="20">20 itens</option>
             <option value="30">30 itens</option>
