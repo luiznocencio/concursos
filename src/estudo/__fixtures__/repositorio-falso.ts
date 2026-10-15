@@ -7,6 +7,8 @@ export interface EstadoFalso {
   candidatos: ItemCandidato[];
   historico: RespostaHistorico[];
   gabaritos: Record<string, string>;
+  // Itens reais e a prova de onde vieram; os demais são de IA.
+  provasOrigem: Record<string, string>;
   vencidas: string[];
   sessoes: Map<string, Sessao>;
   respostas: Map<string, RespostaGravada[]>;
@@ -21,6 +23,7 @@ export function criarRepositorioFalso(inicial: Partial<EstadoFalso> & { estrutur
     candidatos: [],
     historico: [],
     gabaritos: {},
+    provasOrigem: {},
     vencidas: [],
     sessoes: new Map(),
     respostas: new Map(),
@@ -65,6 +68,7 @@ export function criarRepositorioFalso(inicial: Partial<EstadoFalso> & { estrutur
         justificativa: `porque ${id}`,
         citacao: null,
         fonte: null,
+        provaOrigem: estado.provasOrigem[id] ?? null,
       }));
     },
     async respostas(sessaoId) {
