@@ -37,6 +37,7 @@ describe("montarSimuladoProva", () => {
     const r = montarSimuladoProva(demandas, itens);
     expect(r.itens).toEqual(["p/x#0", "p/y#0", "p/x#1", "p/y#1", "m/x#0", "m/x#1", "m/x#2"]);
     expect(r.faltantes).toEqual([]);
+    expect(r.disciplinaDoItem).toMatchObject({ "p/x#0": "port", "p/y#1": "port", "m/x#2": "mat" });
   });
 
   it("informa quantos itens faltam por disciplina", () => {

@@ -26,6 +26,7 @@ export function montarTreinoTopico(p: { canonicos: string[]; itens: ItemCandidat
 export interface SimuladoMontado {
   itens: string[];
   faltantes: { disciplina: string; faltam: number }[];
+  disciplinaDoItem: Record<string, string>;
 }
 
 export function montarSimuladoProva(
@@ -36,12 +37,14 @@ export function montarSimuladoProva(
   const usados = new Set(excluir);
   const selecionados: string[] = [];
   const faltantes: SimuladoMontado["faltantes"] = [];
+  const disciplinaDoItem: Record<string, string> = {};
   for (const d of demandas) {
     const escolhidos = rodizio(d.canonicos, itens, usados, d.quantidade);
     selecionados.push(...escolhidos);
+    for (const id of escolhidos) disciplinaDoItem[id] = d.disciplina;
     if (escolhidos.length < d.quantidade) faltantes.push({ disciplina: d.disciplina, faltam: d.quantidade - escolhidos.length });
   }
-  return { itens: agruparPorTextoBase(selecionados, itens), faltantes };
+  return { itens: agruparPorTextoBase(selecionados, itens), faltantes, disciplinaDoItem };
 }
 
 export function topicosQuePrecisamGeracao(
