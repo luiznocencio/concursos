@@ -19,6 +19,7 @@ export default async function LayoutApp({ children }: { children: React.ReactNod
             <NavLink href="/simulado">Simulado</NavLink>
             <NavLink href="/painel">Painel</NavLink>
             {moderador && <NavLink href="/itens">Itens</NavLink>}
+            {moderador && <NavLink href="/importar">Importar</NavLink>}
           </nav>
           <span className="hidden text-sm text-pedra md:inline">{user.email}</span>
           <form action={sair}>
