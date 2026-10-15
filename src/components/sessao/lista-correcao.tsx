@@ -22,7 +22,7 @@ export function ListaCorrecao({ itens }: { itens: ItemDaSessao[] }) {
         return (
           <li key={i.id}>
             <details className="group">
-              <summary className="flex cursor-pointer list-none items-center gap-4 py-3 hover:bg-black/[0.02]">
+              <summary className="flex cursor-pointer list-none items-center gap-4 py-3 hover:bg-realce">
                 <span className="w-8 shrink-0 text-sm text-pedra">{n + 1}</span>
                 <span className="line-clamp-1 flex-1 text-[15px]">{i.enunciado}</span>
                 <span className={`shrink-0 text-sm font-medium ${COR[resultado]}`}>{ROTULO[resultado]}</span>

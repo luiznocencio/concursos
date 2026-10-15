@@ -2,10 +2,10 @@ import { CheckCircle, MinusCircle, XCircle } from "@phosphor-icons/react/ssr";
 import type { ResultadoResposta } from "@/core";
 
 const ESTILO: Record<ResultadoResposta, { caixa: string; titulo: string }> = {
-  certo: { caixa: "bg-azul-claro text-[#00447f]", titulo: "Você acertou" },
-  certo_duvida: { caixa: "bg-azul-claro text-[#00447f]", titulo: "Você acertou, com dúvida" },
-  errado: { caixa: "bg-vermelho-claro text-[#8f1c0c]", titulo: "Você errou" },
-  branco: { caixa: "bg-black/5 text-black/80", titulo: "Em branco" },
+  certo: { caixa: "bg-azul-claro text-azul-tinta", titulo: "Você acertou" },
+  certo_duvida: { caixa: "bg-azul-claro text-azul-tinta", titulo: "Você acertou, com dúvida" },
+  errado: { caixa: "bg-vermelho-claro text-vermelho-tinta", titulo: "Você errou" },
+  branco: { caixa: "bg-tinta/5 text-tinta/80", titulo: "Em branco" },
 };
 
 export interface DadosFeedback {
@@ -32,7 +32,7 @@ export function Feedback({ resultado, gabarito, justificativa, citacao, fonte }:
       </p>
       {justificativa && <p className="max-w-[70ch] leading-relaxed text-grafite">{justificativa}</p>}
       {citacao && (
-        <blockquote className="max-w-[70ch] border-l-2 border-borda-forte pl-4 text-[15px] leading-relaxed text-black/70">
+        <blockquote className="max-w-[70ch] border-l-2 border-borda-forte pl-4 text-[15px] leading-relaxed text-tinta/70">
           {citacao}
           {fonte && <span className="mt-1 block text-sm text-pedra">{fonte}</span>}
         </blockquote>

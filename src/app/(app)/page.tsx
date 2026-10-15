@@ -147,7 +147,7 @@ export default async function Inicio({ searchParams }: { searchParams: Promise<{
               <li key={s.id}>
                 <Link
                   href={rotaDaSessao(s.id, s.config)}
-                  className="flex items-center gap-4 py-3 transition-colors duration-200 hover:bg-black/[0.02]"
+                  className="flex items-center gap-4 py-3 transition-colors duration-200 hover:bg-realce"
                 >
                   <span className="w-16 shrink-0 text-sm text-pedra">{data(s.iniciadaEm)}</span>
                   <span className="flex-1 font-medium">{nomeDaSessao(s.config)}</span>

@@ -20,7 +20,7 @@ const ETAPAS: { id: Etapa; nome: string }[] = [
   { id: "resumo", nome: "Pronto" },
 ];
 
-const campo = "w-full rounded-lg border border-borda-forte bg-white px-3 py-2 text-[15px] placeholder:text-pedra";
+const campo = "w-full rounded-lg border border-borda-campo bg-superficie px-3 py-2 text-[15px] placeholder:text-pedra";
 
 function Passos({ atual }: { atual: Etapa }) {
   const indice = ETAPAS.findIndex((e) => e.id === atual);
@@ -30,11 +30,11 @@ function Passos({ atual }: { atual: Etapa }) {
         <li
           key={e.id}
           aria-current={k === indice ? "step" : undefined}
-          className={`flex items-center gap-2 ${k === indice ? "font-medium text-black" : k < indice ? "text-grafite" : "text-pedra"}`}
+          className={`flex items-center gap-2 ${k === indice ? "font-medium text-tinta" : k < indice ? "text-grafite" : "text-pedra"}`}
         >
           <span
             className={`flex size-6 items-center justify-center rounded-full text-xs tabular-nums ${
-              k === indice ? "bg-black text-white" : "bg-black/5"
+              k === indice ? "bg-tinta text-papel" : "bg-tinta/5"
             }`}
           >
             {k + 1}
@@ -62,7 +62,7 @@ function Inconsistencias({ previa }: { previa: PreviaImportacao }) {
     );
   }
   return (
-    <div className="rounded-lg bg-marigold-claro px-4 py-3 text-sm text-[#5c3c00]" role="status">
+    <div className="rounded-lg bg-marigold-claro px-4 py-3 text-sm text-marigold-tinta" role="status">
       <p className="flex items-center gap-2 font-medium">
         <WarningCircle size={18} weight="fill" aria-hidden />
         Confira antes de seguir

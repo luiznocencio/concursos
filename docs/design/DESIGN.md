@@ -201,6 +201,32 @@ SVG logo at native proportions, color desaturated to near-black (#000000 at 60% 
 | 2 | Accent Card Surface | `#ffb110` | Colored card backgrounds (yellow, coral, blue, midnight) — feature blocks paint the canvas with single-hue fills |
 | 3 | Dark Card Surface | `#02093a` | Deep navy panels for dark-mode-style feature blocks — inverting the surface stack with white text on midnight |
 
+## Tema escuro
+
+No app, cada cor é um token semântico em `src/app/globals.css` (`--t-*`, exposto ao Tailwind como `bg-papel`, `text-tinta/70` etc.). O escuro vale com `<html data-tema="escuro">` (cookie `tema`, escolhido no cabeçalho) ou com `prefers-color-scheme: dark` quando o tema é "sistema". Componentes usam só tokens: nada de `bg-white`, `text-black` ou hex soltos. Espírito do Notion escuro: fundo quase preto quente, cartões um tom acima com borda fina, texto quase branco, o mesmo azul como único CTA.
+
+| Token | Claro | Escuro | Uso |
+|-------|-------|--------|-----|
+| `papel` | `#f6f5f4` | `#191817` | Fundo da página |
+| `superficie` | `#ffffff` | `#22211f` | Cartões, campos, botão de contorno |
+| `tinta` | `#000000` | `#ebe9e6` | Texto; hierarquia por alfa (`/90`, `/70`, `/55`) e fundos neutros (`/5`) |
+| `grafite` | `#615d59` | `#aaa49d` | Texto de apoio |
+| `pedra` | `#6b6b6b` | `#a39d96` | Texto secundário, rótulos |
+| `azul` | `#0068c4` | `#5aa9f0` | Links, texto azul, barras, foco |
+| `azul-acao` | `#0075de` | `#0075de` | Fundo do botão primário (texto branco) |
+| `azul-escuro` | `#005bab` | `#0066c2` | Hover do primário |
+| `azul-claro` / `azul-claro-forte` | `#e6f3fe` / `#d6ebfd` | `#132b44` / `#183654` | Botão secundário, pílula azul, aviso |
+| `azul-tinta` | `#00447f` | `#c5e1fb` | Texto sobre `azul-claro` |
+| `marigold` / `marigold-claro` / `marigold-tinta` | `#ffb110` / `#fff4dc` / `#8a5a00` | `#ffb935` / `#372a12` / `#f5c062` | Dúvida, alerta |
+| `coral` | `#f64932` | `#ff6b55` | Barras abaixo do corte |
+| `vermelho` / `vermelho-claro` / `vermelho-tinta` | `#c4250f` / `#fdebe8` / `#8f1c0c` | `#ff7c69` / `#3f1d17` / `#ffc4ba` | Erro |
+| `meia-noite` | `#02093a` | `#141b4d` | Cartão escuro do Início (texto branco nos dois temas) |
+| `realce` | `rgba(0,0,0,.03)` | `rgba(235,233,230,.05)` | Hover de linhas e opções |
+| `borda` / `borda-forte` | `rgba(0,0,0,.08)` / `.15` | `rgba(235,233,230,.10)` / `.18` | Bordas de cartão e de botão |
+| `borda-campo` | `rgba(0,0,0,.45)` | `rgba(235,233,230,.38)` | Borda de input/select (≥ 3:1) |
+
+Todo texto passa de 4,5:1 nos dois temas. No claro, `pedra`, `azul` (texto) e `vermelho` ficaram um pouco mais escuros que os valores do Notion para atingir AA; o azul cheio do CTA continua `#0075de`.
+
 ## Elevation
 
 - **Nav (sticky):** `0px 0.7px 1.462px 0px rgb(0% 0% 0%/0.015), 0px 3px 9px 0px rgb(0% 0% 0%/0.03)`

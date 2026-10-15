@@ -1,3 +1,4 @@
+import { botao } from "@/components/ui";
 import { enviarLinkMagico } from "./actions";
 
 const MENSAGENS: Record<string, string> = {
@@ -18,11 +19,11 @@ export default async function Entrar({
     <main className="mx-auto flex min-h-screen max-w-sm flex-col justify-center gap-6 px-4">
       <h1 className="text-[40px] font-semibold leading-tight tracking-tight">Entrar</h1>
       {enviado ? (
-        <p className="rounded-xl border border-black/10 bg-white p-6 text-[#615d59]">
+        <p className="rounded-xl border border-borda bg-superficie p-6 text-grafite">
           Enviamos um link de acesso para o seu e-mail. Abra-o neste navegador.
         </p>
       ) : (
-        <form action={enviarLinkMagico} className="flex flex-col gap-3 rounded-xl border border-black/10 bg-white p-6">
+        <form action={enviarLinkMagico} className="flex flex-col gap-3 rounded-xl border border-borda bg-superficie p-6">
           <label htmlFor="email" className="text-sm font-medium">
             E-mail
           </label>
@@ -32,11 +33,11 @@ export default async function Entrar({
             type="email"
             required
             autoComplete="email"
-            className="rounded-lg border border-black/15 px-3 py-2"
+            className="rounded-lg border border-borda-campo bg-superficie px-3 py-2"
           />
           <input type="hidden" name="proximo" value={proximo ?? "/"} />
-          {erro && <p className="text-sm text-[#e32d14]">{MENSAGENS[erro] ?? "Algo deu errado."}</p>}
-          <button type="submit" className="rounded-lg bg-[#0075de] px-4 py-2 text-sm font-medium text-white">
+          {erro && <p className="text-sm text-vermelho">{MENSAGENS[erro] ?? "Algo deu errado."}</p>}
+          <button type="submit" className={botao.primario}>
             Receber link de acesso
           </button>
         </form>
