@@ -28,5 +28,6 @@ export async function enviarLinkMagico(formData: FormData) {
     email,
     options: { emailRedirectTo: `${origem}/auth/callback` },
   });
+  if (error?.code === "over_email_send_rate_limit") voltar("erro=limite");
   voltar(error ? "erro=envio" : "enviado=1");
 }

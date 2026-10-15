@@ -4,6 +4,7 @@ const MENSAGENS: Record<string, string> = {
   email: "Informe um e-mail válido.",
   "nao-autorizado": "Este e-mail não tem acesso à plataforma.",
   envio: "Não foi possível enviar o link. Tente de novo em alguns minutos.",
+  limite: "Limite de e-mails de acesso atingido. Use o último link recebido ou tente de novo em até 1 hora.",
   link: "O link expirou ou já foi usado. Peça um novo.",
 };
 
