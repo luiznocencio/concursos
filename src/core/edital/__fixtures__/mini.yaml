@@ -1,0 +1,60 @@
+slug: mini-2026
+nome: Concurso Mini
+banca: cebraspe
+data_prova: "2027-01-24"
+editais_fonte: [edital.pdf]
+cargos:
+  - slug: cargo-a
+    nome: Cargo A
+    duracao_min: 270
+    provas: [p1, p2-a, disc]
+    corte_conjunto: { provas: [p1, p2-a], corte: { regra: piso_fator, fator: 0.3 } }
+provas:
+  - slug: p1
+    nome: P1
+    tipo: objetiva
+    formato: certo_errado
+    itens: 10
+    pontuacao: { regra: certo_errado_penalidade }
+    corte: { regra: piso_fator, fator: 0.2 }
+    disciplinas: [port, mat]
+    distribuicao_estimada: { estimada: true, disciplinas: { port: 6, mat: 4 } }
+  - slug: p2-a
+    nome: P2 A
+    tipo: objetiva
+    formato: certo_errado
+    itens: 10
+    pontuacao: { regra: certo_errado_penalidade }
+    corte: { regra: piso_fator, fator: 0.3 }
+    disciplinas: [fis]
+    distribuicao_estimada: { estimada: true, disciplinas: { fis: 10 } }
+  - slug: disc
+    nome: Discursiva
+    tipo: discursiva
+    pontuacao_maxima: 30
+    linhas_max: 30
+    nota_minima: 15
+    disciplinas: [atual]
+disciplinas:
+  - slug: port
+    nome: Português
+    topicos:
+      - { codigo: "1", titulo: Interpretação, canonico: portugues/interpretacao }
+      - codigo: "2"
+        titulo: Sintaxe
+        subtopicos:
+          - { codigo: "2.1", titulo: Crase, canonico: portugues/crase }
+          - { codigo: "2.2", titulo: Regência, canonico: portugues/regencia }
+  - slug: mat
+    nome: Matemática
+    topicos:
+      - { codigo: "1", titulo: Porcentagem, canonico: matematica/porcentagem }
+      - { codigo: "2", titulo: Juros, canonico: matematica/juros }
+  - slug: fis
+    nome: Física
+    topicos:
+      - { codigo: "1", titulo: Leis de Newton, canonico: fisica/leis-de-newton }
+  - slug: atual
+    nome: Atualidades
+    topicos:
+      - { codigo: "1", titulo: Temas atuais, canonico: atualidades/temas-atuais }

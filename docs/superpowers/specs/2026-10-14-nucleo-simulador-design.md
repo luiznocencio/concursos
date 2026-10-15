@@ -63,6 +63,8 @@ Fontes: `editais/cbmal-2026/edital-01-abertura.pdf` (Edital nº 1, 21/05/2026) e
 
 `core/` não importa nada de `db/`, `ai/` ou `app/`. Isso mantém as regras do edital e da banca testáveis isoladamente.
 
+**Interface:** a linguagem visual segue `docs/design/DESIGN.md` (canvas de papel quente `#f6f5f4`, cards brancos com borda fina e sem sombra, um único azul `#0075de` para a ação principal, Inter como fonte). As telas (Plano 4) são construídas com a skill `design-taste-frontend` usando esse documento como base.
+
 **Segredos:** chaves das IAs apenas em variáveis de ambiente do servidor. Chamadas de IA só em rotas/funções de servidor.
 
 **Jobs em segundo plano:** tabela `jobs` (tipo, payload, status, tentativas, erro). Uma rota de worker processa um job por invocação, em lotes pequenos (até 5 itens) para caber no limite de tempo das funções da Vercel. A rota é disparada logo após o enfileiramento e periodicamente via `pg_cron` do Supabase (a cada minuto), protegida por segredo compartilhado.

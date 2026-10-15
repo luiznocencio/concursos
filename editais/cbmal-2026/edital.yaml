@@ -1,0 +1,749 @@
+slug: cbmal-2026
+nome: Concurso CBM-AL 2026 — CFO e CFP
+banca: cebraspe
+data_prova: "2027-01-24"
+editais_fonte:
+  - edital-01-abertura.pdf
+  - edital-02-retificacao.pdf
+  - portaria-cbmal-185-2026-taf.pdf
+ressalvas:
+  - "Item 19 retificado no Edital nº 2 sem texto publicado; conteúdo baseado no Edital nº 1."
+  - "Data da prova 24/01/2027 segundo noticiário; sem ato oficial no repositório."
+  - "Distribuição de itens por disciplina estimada; o edital não a informa."
+cargos:
+  - slug: cfo
+    nome: Oficial de Estado-Maior
+    duracao_min: 270
+    provas: [p1-gerais, p2-cfo, discursiva]
+    corte_conjunto: { provas: [p1-gerais, p2-cfo], corte: { regra: piso_fator, fator: 0.3 } }
+  - slug: soldado
+    nome: Soldado
+    qualificacoes: [QPBM/1, QPBM/2]
+    duracao_min: 270
+    provas: [p1-gerais, p2-soldado, discursiva]
+    corte_conjunto: { provas: [p1-gerais, p2-soldado], corte: { regra: piso_fator, fator: 0.3 } }
+provas:
+  - slug: p1-gerais
+    nome: P1 – Conhecimentos gerais
+    tipo: objetiva
+    formato: certo_errado
+    itens: 50
+    pontuacao: { regra: certo_errado_penalidade }
+    corte: { regra: piso_fator, fator: 0.2 }
+    disciplinas: [lp, ingles, informatica, matematica, rlm, legislacao-cbmal, cidadania-dh]
+    distribuicao_estimada:
+      estimada: true
+      disciplinas: { lp: 12, ingles: 5, informatica: 6, matematica: 6, rlm: 7, legislacao-cbmal: 8, cidadania-dh: 6 }
+  - slug: p2-cfo
+    nome: P2 – Conhecimentos específicos (CFO)
+    tipo: objetiva
+    formato: certo_errado
+    itens: 70
+    pontuacao: { regra: certo_errado_penalidade }
+    corte: { regra: piso_fator, fator: 0.3 }
+    disciplinas: [fisica-cfo, quimica-cfo, biologia-cfo, direito-administrativo, direito-constitucional]
+    distribuicao_estimada:
+      estimada: true
+      disciplinas: { fisica-cfo: 16, quimica-cfo: 16, biologia-cfo: 14, direito-administrativo: 12, direito-constitucional: 12 }
+  - slug: p2-soldado
+    nome: P2 – Conhecimentos específicos (Soldado)
+    tipo: objetiva
+    formato: certo_errado
+    itens: 70
+    pontuacao: { regra: certo_errado_penalidade }
+    corte: { regra: piso_fator, fator: 0.3 }
+    disciplinas: [fisica-soldado, quimica-soldado, biologia-soldado, mecanica-geral]
+    distribuicao_estimada:
+      estimada: true
+      disciplinas: { fisica-soldado: 18, quimica-soldado: 18, biologia-soldado: 18, mecanica-geral: 16 }
+  - slug: discursiva
+    nome: P3 – Prova discursiva
+    tipo: discursiva
+    pontuacao_maxima: 30
+    linhas_max: 30
+    nota_minima: 15
+    disciplinas: [atualidades]
+disciplinas:
+  # ---------------------------------------------------------------- CONHECIMENTOS GERAIS
+  - slug: lp
+    nome: Língua Portuguesa
+    topicos:
+      - { codigo: "1", titulo: Compreensão e interpretação de textos de gêneros variados, canonico: portugues/interpretacao-de-textos }
+      - { codigo: "2", titulo: Reconhecimento de tipos e gêneros textuais, canonico: portugues/tipos-e-generos-textuais }
+      - { codigo: "3", titulo: Domínio da ortografia oficial, canonico: portugues/ortografia }
+      - codigo: "4"
+        titulo: Domínio dos mecanismos de coesão textual
+        subtopicos:
+          - { codigo: "4.1", titulo: "Emprego de elementos de referenciação, substituição e repetição, de conectores e de outros elementos de sequenciação textual", canonico: portugues/coesao-referenciacao-conectores }
+          - { codigo: "4.2", titulo: Emprego de tempos e modos verbais, canonico: portugues/tempos-e-modos-verbais }
+      - codigo: "5"
+        titulo: Domínio da estrutura morfossintática do período
+        subtopicos:
+          - { codigo: "5.1", titulo: Emprego das classes de palavras, canonico: portugues/classes-de-palavras }
+          - { codigo: "5.2", titulo: Relações de coordenação entre orações e entre termos da oração, canonico: portugues/coordenacao }
+          - { codigo: "5.3", titulo: Relações de subordinação entre orações e entre termos da oração, canonico: portugues/subordinacao }
+          - { codigo: "5.4", titulo: Emprego dos sinais de pontuação, canonico: portugues/pontuacao }
+          - { codigo: "5.5", titulo: Concordância verbal e nominal, canonico: portugues/concordancia-verbal-e-nominal }
+          - { codigo: "5.6", titulo: Regência verbal e nominal, canonico: portugues/regencia-verbal-e-nominal }
+          - { codigo: "5.7", titulo: Emprego do sinal indicativo de crase, canonico: portugues/crase }
+          - { codigo: "5.8", titulo: Colocação dos pronomes átonos, canonico: portugues/colocacao-pronominal }
+      - codigo: "6"
+        titulo: Reescrita de frases e parágrafos do texto
+        subtopicos:
+          - { codigo: "6.1", titulo: Significação das palavras, canonico: portugues/significacao-das-palavras }
+          - { codigo: "6.2", titulo: Substituição de palavras ou de trechos de texto, canonico: portugues/substituicao-de-palavras-e-trechos }
+          - { codigo: "6.3", titulo: Reorganização da estrutura de orações e de períodos do texto, canonico: portugues/reorganizacao-de-oracoes-e-periodos }
+          - { codigo: "6.4", titulo: Reescrita de textos de diferentes gêneros e níveis de formalidade, canonico: portugues/reescrita-e-niveis-de-formalidade }
+  - slug: ingles
+    nome: Língua Inglesa
+    topicos:
+      - { codigo: "1", titulo: Compreensão de textos em língua inglesa, canonico: ingles/compreensao-de-textos }
+      - { codigo: "2", titulo: Itens gramaticais relevantes para a compreensão dos conteúdos semânticos, canonico: ingles/gramatica-para-compreensao }
+  - slug: informatica
+    nome: Noções de Informática
+    topicos:
+      - { codigo: "1", titulo: Noções de sistema operacional (ambientes Linux e Windows), canonico: informatica/sistemas-operacionais-linux-windows }
+      - { codigo: "2", titulo: "Edição de textos, planilhas e apresentações (ambientes Microsoft Office e BrOffice)", canonico: informatica/editores-planilhas-apresentacoes }
+      - codigo: "3"
+        titulo: Redes de computadores
+        subtopicos:
+          - { codigo: "3.1", titulo: "Conceitos básicos, ferramentas, aplicativos e procedimentos de Internet e intranet", canonico: informatica/internet-e-intranet }
+          - { codigo: "3.2", titulo: "Programas de navegação (Microsoft Edge, Mozilla Firefox e Google Chrome)", canonico: informatica/navegadores }
+          - { codigo: "3.3", titulo: Programas de correio eletrônico (Outlook Express e Mozilla Thunderbird), canonico: informatica/correio-eletronico }
+          - { codigo: "3.4", titulo: Sítios de busca e pesquisa na Internet, canonico: informatica/busca-e-pesquisa-na-internet }
+          - { codigo: "3.5", titulo: Grupos de discussão, canonico: informatica/grupos-de-discussao }
+          - { codigo: "3.6", titulo: Redes sociais, canonico: informatica/redes-sociais }
+          - { codigo: "3.7", titulo: Computação na nuvem (cloud computing), canonico: informatica/computacao-em-nuvem }
+      - { codigo: "4", titulo: "Conceitos de organização e de gerenciamento de informações, arquivos, pastas e programas", canonico: informatica/arquivos-pastas-e-programas }
+      - codigo: "5"
+        titulo: Segurança da informação
+        subtopicos:
+          - { codigo: "5.1", titulo: Procedimentos de segurança, canonico: informatica/procedimentos-de-seguranca }
+          - { codigo: "5.2", titulo: "Noções de vírus, worms e pragas virtuais", canonico: informatica/virus-worms-e-pragas-virtuais }
+          - { codigo: "5.3", titulo: "Aplicativos para segurança (antivírus, firewall, anti-spyware etc.)", canonico: informatica/aplicativos-de-seguranca }
+          - { codigo: "5.4", titulo: Procedimentos de backup, canonico: informatica/backup }
+          - { codigo: "5.5", titulo: Armazenamento de dados na nuvem (cloud storage), canonico: informatica/armazenamento-em-nuvem }
+  - slug: matematica
+    nome: Matemática
+    topicos:
+      - codigo: "1"
+        titulo: Álgebra linear
+        subtopicos:
+          - { codigo: "1.1", titulo: "Conjunto numérico: operações com números inteiros, fracionários e decimais", canonico: matematica/operacoes-com-numeros }
+      - { codigo: "2", titulo: Proporções e divisão proporcional, canonico: matematica/proporcoes-e-divisao-proporcional }
+      - { codigo: "3", titulo: Regras de três simples e composta, canonico: matematica/regra-de-tres }
+      - { codigo: "4", titulo: Porcentagem, canonico: matematica/porcentagem }
+      - { codigo: "5", titulo: Juros simples e compostos; capitalização e descontos, canonico: matematica/juros-capitalizacao-e-descontos }
+      - { codigo: "6", titulo: "Taxas de juros: nominal, efetiva, equivalente, proporcional, real e aparente", canonico: matematica/taxas-de-juros }
+  - slug: rlm
+    nome: Raciocínio Lógico e Analítico
+    topicos:
+      - codigo: "1"
+        titulo: Lógica sentencial (ou proposicional)
+        subtopicos:
+          - { codigo: "1.1", titulo: Proposições simples e compostas, canonico: raciocinio-logico/proposicoes-simples-e-compostas }
+          - { codigo: "1.2", titulo: Tabelas verdade, canonico: raciocinio-logico/tabelas-verdade }
+          - { codigo: "1.3", titulo: Equivalências, canonico: raciocinio-logico/equivalencias-logicas }
+      - { codigo: "2", titulo: "Estrutura lógica de relações arbitrárias entre pessoas, lugares, objetos ou eventos fictícios; dedução de novas informações das relações fornecidas e avaliação das condições usadas para estabelecer a estrutura daquelas relações", canonico: raciocinio-logico/estrutura-logica-de-relacoes }
+      - { codigo: "3", titulo: "Compreensão e análise da lógica de uma situação, utilizando as funções intelectuais: raciocínio verbal, raciocínio matemático, raciocínio sequencial, reconhecimento de padrões, orientação espacial e temporal, formação de conceitos, discriminação de elementos; compreensão de dados apresentados em gráficos e tabelas", canonico: raciocinio-logico/logica-de-situacoes }
+      - codigo: "4"
+        titulo: Problemas de lógica e raciocínio
+        subtopicos:
+          - { codigo: "4.1", titulo: Problemas de contagem e noções de probabilidade, canonico: raciocinio-logico/contagem-e-probabilidade }
+      - { codigo: "5", titulo: Falácias, canonico: raciocinio-logico/falacias }
+      - { codigo: "6", titulo: "Noções de estatística: média, moda, mediana e desvio-padrão", canonico: raciocinio-logico/nocoes-de-estatistica }
+  - slug: legislacao-cbmal
+    nome: Legislação pertinente ao CBMAL
+    topicos:
+      - { codigo: "1", titulo: "Lei Estadual nº 5.346/1992 (dispõe sobre o Estatuto dos Policiais Militares do Estado de Alagoas e dá outras providências) e suas alterações", canonico: legislacao-cbmal/lei-5346-1992-estatuto }
+      - { codigo: "2", titulo: "Decreto estadual nº 37.042/1996 (Regulamento Disciplinar da Polícia Militar de Alagoas)", canonico: legislacao-cbmal/decreto-37042-1996-regulamento-disciplinar }
+      - { codigo: "3", titulo: "Lei Estadual nº 6.514/2004 (dispõe sobre os critérios e as condições que asseguram aos Oficiais e Praças da ativa da Polícia Militar e do Corpo de Bombeiros Militar do Estado de Alagoas o acesso na hierarquia militar e adota outras providências) e suas alterações", canonico: legislacao-cbmal/lei-6514-2004-promocao-oficiais }
+      - { codigo: "4", titulo: "Lei Estadual nº 6.544/2004 (dispõe sobre os critérios e as condições que asseguram aos Soldados, Cabos e Subtenentes da ativa da Polícia Militar e do Corpo de Bombeiros Militar do Estado de Alagoas o acesso na hierarquia militar e adota outras providências) e suas alterações", canonico: legislacao-cbmal/lei-6544-2004-promocao-pracas }
+      - { codigo: "5", titulo: Lei Federal nº 14.751/2023, canonico: legislacao-cbmal/lei-14751-2023-lei-organica-militares }
+  - slug: cidadania-dh
+    nome: Cidadania e Direitos Humanos
+    topicos:
+      - { codigo: "1", titulo: Ética e moral, canonico: cidadania-dh/etica-e-moral }
+      - { codigo: "2", titulo: "Ética, princípios e valores", canonico: cidadania-dh/etica-principios-e-valores }
+      - { codigo: "3", titulo: "Ética e democracia: exercício da cidadania", canonico: cidadania-dh/etica-democracia-e-cidadania }
+      - { codigo: "4", titulo: Ética e função pública, canonico: cidadania-dh/etica-e-funcao-publica }
+      - { codigo: "5", titulo: Ética no setor público, canonico: cidadania-dh/etica-no-setor-publico }
+      - codigo: "6"
+        titulo: Teoria geral dos direitos humanos
+        subtopicos:
+          - { codigo: "6.1", titulo: "Conceito, terminologia, estrutura normativa, fundamentação", canonico: cidadania-dh/teoria-geral-direitos-humanos }
+      - { codigo: "7", titulo: Afirmação histórica dos direitos humanos, canonico: cidadania-dh/afirmacao-historica-direitos-humanos }
+      - { codigo: "8", titulo: Direitos humanos e responsabilidade do Estado, canonico: cidadania-dh/direitos-humanos-responsabilidade-estado }
+  - slug: atualidades
+    nome: Atualidades
+    topicos:
+      - { codigo: "1", titulo: "Tópicos relevantes e atuais de diversas áreas, tais como segurança, transportes, política, economia, sociedade, educação, saúde, cultura, tecnologia, energia, relações internacionais, desenvolvimento sustentável e ecologia", canonico: atualidades/temas-atuais }
+  # ---------------------------------------------------------------- CARGO 1 – OFICIAL DE ESTADO MAIOR
+  - slug: fisica-cfo
+    nome: Física (CFO)
+    topicos:
+      - codigo: "1"
+        titulo: História e evolução das ideias da física
+        subtopicos:
+          - { codigo: "1.1", titulo: Cosmologia antiga, canonico: fisica/cosmologia-antiga }
+          - { codigo: "1.2", titulo: A física de Aristóteles, canonico: fisica/fisica-de-aristoteles }
+          - { codigo: "1.3", titulo: Origens da mecânica, canonico: fisica/origens-da-mecanica }
+          - { codigo: "1.4", titulo: Surgimento da teoria da relatividade e da teoria quântica, canonico: fisica/surgimento-relatividade-e-quantica }
+      - codigo: "2"
+        titulo: Mecânica
+        subtopicos:
+          - { codigo: "2.1", titulo: "Cinemática escalar, cinemática vetorial", canonico: fisica/cinematica-escalar-e-vetorial }
+          - { codigo: "2.2", titulo: Movimento circular, canonico: fisica/movimento-circular }
+          - { codigo: "2.3", titulo: Leis de Newton e suas aplicações, canonico: fisica/leis-de-newton }
+          - { codigo: "2.4", titulo: Trabalho, canonico: fisica/trabalho }
+          - { codigo: "2.5", titulo: Potência, canonico: fisica/potencia }
+          - { codigo: "2.6", titulo: "Energia: conservação e suas transformações, impulso", canonico: fisica/energia-conservacao-e-impulso }
+          - { codigo: "2.7", titulo: Quantidade de movimento e conservação da quantidade de movimento, canonico: fisica/quantidade-de-movimento }
+          - { codigo: "2.8", titulo: Gravitação universal, canonico: fisica/gravitacao-universal }
+          - { codigo: "2.9", titulo: Estática dos corpos rígidos, canonico: fisica/estatica-dos-corpos-rigidos }
+          - { codigo: "2.10", titulo: Estática dos fluidos, canonico: fisica/estatica-dos-fluidos }
+          - { codigo: "2.11", titulo: "Princípios de Pascal, Arquimedes e Stevin", canonico: fisica/principios-pascal-arquimedes-stevin }
+      - codigo: "3"
+        titulo: Termodinâmica
+        subtopicos:
+          - { codigo: "3.1", titulo: Calor e temperatura, canonico: fisica/calor-e-temperatura }
+          - { codigo: "3.2", titulo: Temperatura e dilatação térmica, canonico: fisica/temperatura-e-dilatacao-termica }
+          - { codigo: "3.3", titulo: Calor específico, canonico: fisica/calor-especifico }
+          - { codigo: "3.4", titulo: Trocas de calor, canonico: fisica/trocas-de-calor }
+          - { codigo: "3.5", titulo: Mudanças de fase e diagramas de fases, canonico: fisica/mudancas-de-fase }
+          - { codigo: "3.6", titulo: Propagação do calor, canonico: fisica/propagacao-do-calor }
+          - { codigo: "3.7", titulo: Teoria cinética dos gases, canonico: fisica/teoria-cinetica-dos-gases }
+          - { codigo: "3.8", titulo: Energia interna, canonico: fisica/energia-interna }
+          - { codigo: "3.9", titulo: Lei de Joule, canonico: fisica/lei-de-joule }
+          - { codigo: "3.10", titulo: Transformações gasosas, canonico: fisica/transformacoes-gasosas }
+          - { codigo: "3.11", titulo: Leis da termodinâmica; entropia e entalpia, canonico: fisica/leis-da-termodinamica }
+          - { codigo: "3.12", titulo: Máquinas térmicas, canonico: fisica/maquinas-termicas }
+          - { codigo: "3.13", titulo: Ciclo de Carnot, canonico: fisica/ciclo-de-carnot }
+      - codigo: "4"
+        titulo: Eletromagnetismo
+        subtopicos:
+          - { codigo: "4.1", titulo: Noções de eletricidade, canonico: fisica/nocoes-de-eletricidade }
+          - { codigo: "4.2", titulo: Campo elétrico, canonico: fisica/campo-eletrico }
+          - { codigo: "4.3", titulo: Lei de Gauss, canonico: fisica/lei-de-gauss }
+          - { codigo: "4.4", titulo: Potencial elétrico, canonico: fisica/potencial-eletrico }
+          - { codigo: "4.5", titulo: Corrente elétrica, canonico: fisica/corrente-eletrica }
+          - { codigo: "4.6", titulo: Potência elétrica e resistores, canonico: fisica/potencia-eletrica-e-resistores }
+          - { codigo: "4.7", titulo: Circuitos elétricos, canonico: fisica/circuitos-eletricos }
+          - { codigo: "4.8", titulo: Campo magnético, canonico: fisica/campo-magnetico }
+          - { codigo: "4.9", titulo: Lei de Ampère, canonico: fisica/lei-de-ampere }
+          - { codigo: "4.10", titulo: Lei de Faraday, canonico: fisica/lei-de-faraday }
+          - { codigo: "4.11", titulo: Propriedades elétricas e magnéticas dos materiais, canonico: fisica/propriedades-eletricas-magneticas-materiais }
+          - { codigo: "4.12", titulo: Equações de Maxwell, canonico: fisica/equacoes-de-maxwell }
+          - { codigo: "4.13", titulo: Radiação, canonico: fisica/radiacao-eletromagnetica }
+      - codigo: "5"
+        titulo: Ondulatória
+        subtopicos:
+          - { codigo: "5.1", titulo: Movimento harmônico simples, canonico: fisica/movimento-harmonico-simples }
+          - { codigo: "5.2", titulo: "Oscilações livres, amortecidas e forçadas", canonico: fisica/oscilacoes-livres-amortecidas-forcadas }
+          - { codigo: "5.3", titulo: Ondas, canonico: fisica/ondas }
+          - { codigo: "5.4", titulo: Ondas sonoras e eletromagnéticas, canonico: fisica/ondas-sonoras-e-eletromagneticas }
+          - { codigo: "5.5", titulo: Frequências naturais e ressonância, canonico: fisica/frequencias-naturais-e-ressonancia }
+          - { codigo: "5.6", titulo: Óptica geométrica; reflexão e refração da luz, canonico: fisica/optica-geometrica-reflexao-refracao }
+          - { codigo: "5.7", titulo: "Instrumentos ópticos: características e aplicações", canonico: fisica/instrumentos-opticos }
+          - codigo: "5.8"
+            titulo: Óptica física
+            subtopicos:
+              - { codigo: "5.8.1", titulo: Interferência, canonico: fisica/interferencia }
+              - { codigo: "5.8.2", titulo: Difração, canonico: fisica/difracao }
+              - { codigo: "5.8.3", titulo: Polarização, canonico: fisica/polarizacao }
+      - codigo: "6"
+        titulo: Física moderna
+        subtopicos:
+          - { codigo: "6.1", titulo: Noções de relatividade especial, canonico: fisica/relatividade-especial }
+          - { codigo: "6.2", titulo: Transformação de Lorentz, canonico: fisica/transformacao-de-lorentz }
+          - { codigo: "6.3", titulo: Equivalência massa-energia, canonico: fisica/equivalencia-massa-energia }
+          - { codigo: "6.4", titulo: Natureza ondulatória-corpuscular da matéria, canonico: fisica/dualidade-onda-particula }
+          - { codigo: "6.5", titulo: Teoria quântica da matéria e da radiação, canonico: fisica/teoria-quantica-materia-radiacao }
+          - { codigo: "6.6", titulo: Modelo do átomo de hidrogênio, canonico: fisica/modelo-atomo-de-hidrogenio }
+          - { codigo: "6.7", titulo: Núcleo atômico, canonico: fisica/nucleo-atomico }
+          - { codigo: "6.8", titulo: Energia nuclear, canonico: fisica/energia-nuclear }
+  - slug: quimica-cfo
+    nome: Química (CFO)
+    topicos:
+      - { codigo: "1", titulo: "O mundo e suas transformações: história e importância da química", canonico: quimica/historia-e-importancia-da-quimica }
+      - codigo: "2"
+        titulo: Teoria atômico-molecular
+        subtopicos:
+          - { codigo: "2.1", titulo: "Modelos atômicos (Dalton, Thomson, Rutherford e Bohr) e evolução dos conceitos de átomo", canonico: quimica/modelos-atomicos }
+          - { codigo: "2.2", titulo: Os trabalhos de Faraday, canonico: quimica/trabalhos-de-faraday }
+          - { codigo: "2.3", titulo: "Leis ponderais (Lavoisier, Proust, Dalton e Richter-Wenzel-Berzelius)", canonico: quimica/leis-ponderais }
+          - { codigo: "2.4", titulo: Leis volumétricas de Gay-Lussac, canonico: quimica/leis-volumetricas-de-gay-lussac }
+          - { codigo: "2.5", titulo: Lei de Avogadro, canonico: quimica/lei-de-avogadro }
+          - { codigo: "2.6", titulo: "Conceitos decorrentes da teoria atômico-molecular: unidade de massa atômica (u), quantidade de matéria, massa molar, volume molar", canonico: quimica/mol-massa-molar-volume-molar }
+          - { codigo: "2.7", titulo: Fórmulas químicas, canonico: quimica/formulas-quimicas }
+          - { codigo: "2.8", titulo: Cálculos estequiométricos, canonico: quimica/estequiometria }
+      - codigo: "3"
+        titulo: Classificação periódica dos elementos químicos
+        subtopicos:
+          - { codigo: "3.1", titulo: "Tabela periódica: histórico e evolução", canonico: quimica/tabela-periodica-historico }
+          - { codigo: "3.2", titulo: "Classificação dos elementos em metais, não metais, semimetais e gases nobres", canonico: quimica/classificacao-dos-elementos }
+          - { codigo: "3.3", titulo: Configuração eletrônica dos elementos ao longo da tabela periódica, canonico: quimica/configuracao-eletronica }
+          - { codigo: "3.4", titulo: Propriedades periódicas e aperiódicas, canonico: quimica/propriedades-periodicas }
+      - codigo: "4"
+        titulo: Radioatividade
+        subtopicos:
+          - { codigo: "4.1", titulo: Natureza das emissões radioativas, canonico: quimica/emissoes-radioativas }
+          - { codigo: "4.2", titulo: Leis da radioatividade, canonico: quimica/leis-da-radioatividade }
+          - { codigo: "4.3", titulo: Cinética da desintegração radioativa, canonico: quimica/cinetica-da-desintegracao-radioativa }
+          - { codigo: "4.4", titulo: Fenômenos de fissão nuclear e fusão nuclear, canonico: quimica/fissao-e-fusao-nuclear }
+          - { codigo: "4.5", titulo: Riscos e aplicações das reações nucleares, canonico: quimica/riscos-e-aplicacoes-reacoes-nucleares }
+      - codigo: "5"
+        titulo: Interações químicas
+        subtopicos:
+          - { codigo: "5.1", titulo: "Ligações iônica, covalente e metálica", canonico: quimica/ligacoes-ionica-covalente-metalica }
+          - { codigo: "5.2", titulo: Forças intermoleculares, canonico: quimica/forcas-intermoleculares }
+          - { codigo: "5.3", titulo: "Geometria molecular: eletronegatividade e polaridade das ligações e das moléculas, teoria da repulsão dos pares eletrônicos, teoria da ligação de valência e sobreposição de orbitais, orbitais híbridos e moleculares", canonico: quimica/geometria-molecular-e-polaridade }
+          - { codigo: "5.4", titulo: Relação entre estrutura e propriedade das substâncias químicas, canonico: quimica/estrutura-e-propriedades-das-substancias }
+      - codigo: "6"
+        titulo: Matéria e mudança de estado
+        subtopicos:
+          - { codigo: "6.1", titulo: "Sólidos, líquidos, gases e outros estados da matéria (ideais e reais)", canonico: quimica/estados-da-materia }
+          - { codigo: "6.2", titulo: "Características e propriedades de gases, líquidos e sólidos", canonico: quimica/propriedades-de-gases-liquidos-solidos }
+          - { codigo: "6.3", titulo: "Ligações químicas nos sólidos, líquidos e gases", canonico: quimica/ligacoes-nos-estados-fisicos }
+          - { codigo: "6.4", titulo: Métodos de separação de misturas, canonico: quimica/separacao-de-misturas }
+      - codigo: "7"
+        titulo: Funções químicas inorgânicas
+        subtopicos:
+          - { codigo: "7.1", titulo: "Ácidos, bases, sais e óxidos: conceito, propriedades e nomenclatura", canonico: quimica/acidos-bases-sais-oxidos }
+          - { codigo: "7.2", titulo: "Hidretos, carbetos e nitretos: conceito, propriedades e nomenclatura", canonico: quimica/hidretos-carbetos-nitretos }
+          - { codigo: "7.3", titulo: Principais reações envolvendo compostos inorgânicos, canonico: quimica/reacoes-inorganicas }
+          - { codigo: "7.4", titulo: Balanceamento de equações químicas, canonico: quimica/balanceamento-de-equacoes }
+      - codigo: "8"
+        titulo: Misturas e soluções
+        subtopicos:
+          - { codigo: "8.1", titulo: "Relações de proporcionalidade entre solutos e solvente: concentração em quantidade de matéria, concentração em massa, fração em quantidade de matéria, fração em massa, fração em volume, densidade", canonico: quimica/concentracao-de-solucoes }
+          - { codigo: "8.2", titulo: Grandezas-padrão e unidades-padrão (SI) e sua relação com outras grandezas e unidades, canonico: quimica/grandezas-e-unidades-si }
+          - { codigo: "8.3", titulo: Solubilidade, canonico: quimica/solubilidade }
+          - { codigo: "8.4", titulo: Propriedades coligativas, canonico: quimica/propriedades-coligativas }
+      - codigo: "9"
+        titulo: Gases
+        subtopicos:
+          - { codigo: "9.1", titulo: Teoria cinética, canonico: quimica/teoria-cinetica-dos-gases }
+          - { codigo: "9.2", titulo: Leis dos gases, canonico: quimica/leis-dos-gases }
+          - { codigo: "9.3", titulo: Densidade dos gases, canonico: quimica/densidade-dos-gases }
+          - { codigo: "9.4", titulo: Difusão e efusão dos gases, canonico: quimica/difusao-e-efusao }
+          - { codigo: "9.5", titulo: Misturas gasosas, canonico: quimica/misturas-gasosas }
+      - codigo: "10"
+        titulo: Termoquímica
+        subtopicos:
+          - { codigo: "10.1", titulo: Energia e calor, canonico: quimica/energia-e-calor }
+          - { codigo: "10.2", titulo: Reações exotérmicas e endotérmicas, canonico: quimica/reacoes-exotermicas-endotermicas }
+          - { codigo: "10.3", titulo: "Entalpia, entropia e energia livre", canonico: quimica/entalpia-entropia-energia-livre }
+          - { codigo: "10.4", titulo: Espontaneidade de uma reação, canonico: quimica/espontaneidade-de-reacoes }
+          - { codigo: "10.5", titulo: Entalpias de formação e de combustão das substâncias, canonico: quimica/entalpias-de-formacao-e-combustao }
+          - { codigo: "10.6", titulo: Calor de reação em pressão constante e em volume constante, canonico: quimica/calor-de-reacao }
+          - { codigo: "10.7", titulo: Lei de Hess, canonico: quimica/lei-de-hess }
+      - codigo: "11"
+        titulo: Cinética química
+        subtopicos:
+          - { codigo: "11.1", titulo: Velocidades e mecanismos de reação, canonico: quimica/velocidade-e-mecanismos-de-reacao }
+          - { codigo: "11.2", titulo: "Equação de velocidade, teoria das colisões e complexo ativado", canonico: quimica/equacao-de-velocidade-e-colisoes }
+          - { codigo: "11.3", titulo: "Influência da energia, da concentração, da pressão e dos catalisadores na velocidade das reações químicas", canonico: quimica/fatores-da-velocidade-de-reacao }
+      - codigo: "12"
+        titulo: Equilíbrio químico
+        subtopicos:
+          - { codigo: "12.1", titulo: "Equilíbrio iônico em soluções aquosas, constante de equilíbrio", canonico: quimica/equilibrio-ionico-e-constante }
+          - { codigo: "12.2", titulo: "Equilíbrio ácido-base, hidrólise de sais, solução tampão, conceitos de Ka, Kb, Kh, pH, pOH e graus de dissociação e de hidrólise", canonico: quimica/equilibrio-acido-base-e-ph }
+          - { codigo: "12.3", titulo: "Equilíbrio de precipitação, conceito de Kps", canonico: quimica/equilibrio-de-precipitacao-kps }
+          - { codigo: "12.4", titulo: Deslocamento do equilíbrio, canonico: quimica/deslocamento-do-equilibrio }
+          - { codigo: "12.5", titulo: Lei da diluição de Ostwald, canonico: quimica/lei-da-diluicao-de-ostwald }
+          - { codigo: "12.6", titulo: Efeito do íon comum, canonico: quimica/efeito-do-ion-comum }
+          - { codigo: "12.7", titulo: Lei da ação das massas, canonico: quimica/lei-da-acao-das-massas }
+      - codigo: "13"
+        titulo: Eletroquímica
+        subtopicos:
+          - { codigo: "13.1", titulo: Potenciais de redução e potenciais-padrão de redução, canonico: quimica/potenciais-de-reducao }
+          - { codigo: "13.2", titulo: Espontaneidade de uma reação de oxirredução, canonico: quimica/espontaneidade-de-oxirreducao }
+          - { codigo: "13.3", titulo: Pilhas e acumuladores, canonico: quimica/pilhas-e-acumuladores }
+          - { codigo: "13.4", titulo: Eletrólise, canonico: quimica/eletrolise }
+      - codigo: "14"
+        titulo: Química orgânica
+        subtopicos:
+          - { codigo: "14.1", titulo: "Propriedades fundamentais do átomo de carbono, hibridação, estados de oxidação do carbono, ligações σ e π, geometria molecular, classificação do átomo de carbono na cadeia carbônica, notação e nomenclatura dos principais radicais orgânicos", canonico: quimica/atomo-de-carbono-e-radicais-organicos }
+          - { codigo: "14.2", titulo: "Notação, nomenclatura e propriedades físicas e químicas de hidrocarbonetos, haletos orgânicos, álcoois, fenóis, éteres, cetonas, aldeídos, ácidos carboxílicos, ésteres, anidridos, haletos de ácido, aminas, amidas, nitrilas, isonitrilas e nitrocompostos", canonico: quimica/funcoes-organicas-nomenclatura-e-propriedades }
+          - { codigo: "14.3", titulo: "Reatividade dos compostos orgânicos, reações de redução, oxidação, combustão, adição e substituição", canonico: quimica/reacoes-organicas }
+          - { codigo: "14.4", titulo: "Glicídeos, lipídeos, aminoácidos, proteínas, ácidos nucleicos", canonico: quimica/biomoleculas }
+          - { codigo: "14.5", titulo: "Tecnologias associadas à química orgânica: petroquímica, polímeros sintéticos, aditivos em alimentos, agroquímica, drogas, medicamentos e biotecnologia", canonico: quimica/tecnologias-da-quimica-organica }
+  - slug: biologia-cfo
+    nome: Biologia (CFO)
+    topicos:
+      - codigo: "1"
+        titulo: Seres vivos
+        subtopicos:
+          - { codigo: "1.1", titulo: Classificação dos seres vivos, canonico: biologia/classificacao-dos-seres-vivos }
+      - codigo: "2"
+        titulo: Célula
+        subtopicos:
+          - { codigo: "2.1", titulo: Célula procariota e eucariota, canonico: biologia/celula-procariota-eucariota }
+          - { codigo: "2.2", titulo: Componentes morfológicos das células, canonico: biologia/componentes-morfologicos-das-celulas }
+          - { codigo: "2.3", titulo: Funções das estruturas celulares, canonico: biologia/funcoes-das-estruturas-celulares }
+      - codigo: "3"
+        titulo: Anatomia e fisiologia humanas
+        subtopicos:
+          - { codigo: "3.1", titulo: Fisiologia, canonico: biologia/fisiologia-humana }
+          - { codigo: "3.2", titulo: Posição anatômica, canonico: biologia/posicao-anatomica }
+          - { codigo: "3.3", titulo: Divisões do corpo humano, canonico: biologia/divisoes-do-corpo-humano }
+          - { codigo: "3.4", titulo: Quadrantes abdominais (órgãos), canonico: biologia/quadrantes-abdominais }
+          - { codigo: "3.5", titulo: "Sistema tegumentar: pele, pelos, unhas", canonico: biologia/sistema-tegumentar }
+          - { codigo: "3.6", titulo: Sistema muscular, canonico: biologia/sistema-muscular }
+          - { codigo: "3.7", titulo: "Sistema esquelético: funções, divisão anatômica do esqueleto, ossos, crânio, coluna vertebral, articulações", canonico: biologia/sistema-esqueletico }
+          - { codigo: "3.8", titulo: "Sistema respiratório: função, respiração, órgãos componentes, mecanismo da respiração", canonico: biologia/sistema-respiratorio }
+          - { codigo: "3.9", titulo: "Sistema cardiovascular: principais funções, sangue, coração, movimentos cardíacos, pulso, vasos sanguíneos, circulação sanguínea", canonico: biologia/sistema-cardiovascular }
+          - { codigo: "3.10", titulo: "Sistema geniturinário: sistema urinário, sistema genital masculino, sistema genital feminino", canonico: biologia/sistema-geniturinario }
+          - { codigo: "3.11", titulo: Sistema digestório, canonico: biologia/sistema-digestorio }
+          - { codigo: "3.12", titulo: "Sistema nervoso: função, divisão, meninges, sistema nervoso central, sistema nervoso periférico, sistema nervoso visceral, sistema nervoso somático", canonico: biologia/sistema-nervoso }
+      - { codigo: "4", titulo: "Tecidos animais: características estruturais e funcionais", canonico: biologia/tecidos-animais }
+      - { codigo: "5", titulo: Evolução dos seres vivos, canonico: biologia/evolucao }
+      - codigo: "6"
+        titulo: Reino vegetal
+        subtopicos:
+          - { codigo: "6.1", titulo: Funções vitais das plantas, canonico: biologia/funcoes-vitais-das-plantas }
+          - { codigo: "6.2", titulo: "Briófitas, pteridófitas, gimnospermas e angiospermas", canonico: biologia/grupos-vegetais }
+      - codigo: "7"
+        titulo: Reino Animal
+        subtopicos:
+          - { codigo: "7.1", titulo: "Características gerais, reprodução, nutrição, locomoção e coordenação", canonico: biologia/reino-animal-caracteristicas-gerais }
+          - { codigo: "7.2", titulo: Poríferos, canonico: biologia/poriferos }
+          - { codigo: "7.3", titulo: Cnidários, canonico: biologia/cnidarios }
+          - { codigo: "7.4", titulo: Artrópodes, canonico: biologia/artropodes }
+          - { codigo: "7.5", titulo: Moluscos, canonico: biologia/moluscos }
+          - { codigo: "7.6", titulo: Equinodermos, canonico: biologia/equinodermos }
+          - { codigo: "7.7", titulo: Nematelmintos, canonico: biologia/nematelmintos }
+          - { codigo: "7.8", titulo: Platelmintos, canonico: biologia/platelmintos }
+          - { codigo: "7.9", titulo: Anelídeos, canonico: biologia/anelideos }
+          - { codigo: "7.10", titulo: Cordados, canonico: biologia/cordados }
+      - codigo: "8"
+        titulo: "Saúde, higiene e saneamento básico"
+        subtopicos:
+          - { codigo: "8.1", titulo: Princípios básicos de saúde, canonico: biologia/principios-basicos-de-saude }
+          - codigo: "8.2"
+            titulo: Doenças adquiridas transmissíveis
+            subtopicos:
+              - { codigo: "8.2.1", titulo: "Viroses (transmissão e profilaxia): AIDS, dengue, poliomielite, raiva e sarampo", canonico: biologia/viroses }
+              - { codigo: "8.2.2", titulo: "Infecções bacterianas (transmissão e profilaxia): tuberculose, sífilis, meningite meningocócica, cólera, tétano e leptospirose", canonico: biologia/infeccoes-bacterianas }
+              - { codigo: "8.2.3", titulo: "Protozoonoses (transmissão e profilaxia): amebíase, malária e doença de Chagas", canonico: biologia/protozoonoses }
+              - { codigo: "8.2.4", titulo: "Verminoses (ciclo de vida e profilaxia): ascaridíase, teníase, cisticercose, esquistossomose e ancilostomose", canonico: biologia/verminoses }
+          - { codigo: "8.3", titulo: "Defesas do organismo: imunidades passiva e ativa", canonico: biologia/imunidade-passiva-e-ativa }
+      - codigo: "9"
+        titulo: Ecologia
+        subtopicos:
+          - { codigo: "9.1", titulo: Relações tróficas entre os seres vivos, canonico: biologia/relacoes-troficas }
+          - { codigo: "9.2", titulo: Biomas, canonico: biologia/biomas }
+          - { codigo: "9.3", titulo: Ciclos biogeoquímicos, canonico: biologia/ciclos-biogeoquimicos }
+          - { codigo: "9.4", titulo: "Conservação e preservação da natureza, ação antrópica, poluição e biocidas, ecossistemas e espécies ameaçadas de extinção (principalmente no Brasil)", canonico: biologia/conservacao-e-acao-antropica }
+  - slug: direito-administrativo
+    nome: Noções de Direito Administrativo
+    topicos:
+      - codigo: "1"
+        titulo: Noções de organização administrativa
+        subtopicos:
+          - { codigo: "1.1", titulo: "Autarquias, fundações, empresas públicas e sociedades de economia mista", canonico: direito-administrativo/administracao-indireta }
+      - codigo: "2"
+        titulo: Ato administrativo
+        subtopicos:
+          - { codigo: "2.1", titulo: "Conceito, requisitos, atributos, classificação e espécies", canonico: direito-administrativo/ato-administrativo }
+      - codigo: "3"
+        titulo: Agentes públicos
+        subtopicos:
+          - { codigo: "3.1", titulo: Disposições constitucionais aplicáveis, canonico: direito-administrativo/agentes-publicos-disposicoes-constitucionais }
+          - codigo: "3.2"
+            titulo: Disposições doutrinárias
+            subtopicos:
+              - { codigo: "3.2.1", titulo: Conceito, canonico: direito-administrativo/agentes-publicos-conceito }
+              - { codigo: "3.2.2", titulo: Espécies, canonico: direito-administrativo/agentes-publicos-especies }
+              - { codigo: "3.2.3", titulo: "Cargo, emprego e função pública", canonico: direito-administrativo/cargo-emprego-e-funcao-publica }
+      - codigo: "4"
+        titulo: Poderes administrativos
+        subtopicos:
+          - { codigo: "4.1", titulo: "Hierárquico, disciplinar, regulamentar e de polícia", canonico: direito-administrativo/poderes-administrativos }
+          - { codigo: "4.2", titulo: Uso e abuso do poder, canonico: direito-administrativo/uso-e-abuso-do-poder }
+      - codigo: "5"
+        titulo: Licitação
+        subtopicos:
+          - { codigo: "5.1", titulo: Princípios, canonico: direito-administrativo/licitacao-principios }
+          - { codigo: "5.2", titulo: "Contratação direta: dispensa e inexigibilidade", canonico: direito-administrativo/contratacao-direta }
+          - { codigo: "5.3", titulo: Modalidades, canonico: direito-administrativo/licitacao-modalidades }
+          - { codigo: "5.4", titulo: Tipos, canonico: direito-administrativo/licitacao-tipos }
+          - { codigo: "5.5", titulo: Procedimento, canonico: direito-administrativo/licitacao-procedimento }
+      - codigo: "6"
+        titulo: Controle da administração pública
+        subtopicos:
+          - { codigo: "6.1", titulo: Controle exercido pela administração pública, canonico: direito-administrativo/controle-administrativo }
+          - { codigo: "6.2", titulo: Controle judicial, canonico: direito-administrativo/controle-judicial }
+          - { codigo: "6.3", titulo: Controle legislativo, canonico: direito-administrativo/controle-legislativo }
+      - codigo: "7"
+        titulo: Responsabilidade civil do Estado
+        subtopicos:
+          - codigo: "7.1"
+            titulo: Responsabilidade civil do Estado no direito brasileiro
+            subtopicos:
+              - { codigo: "7.1.1", titulo: Responsabilidade por ato comissivo do Estado, canonico: direito-administrativo/responsabilidade-por-ato-comissivo }
+              - { codigo: "7.1.2", titulo: Responsabilidade por omissão do Estado, canonico: direito-administrativo/responsabilidade-por-omissao }
+          - { codigo: "7.2", titulo: Requisitos para a demonstração da responsabilidade do Estado, canonico: direito-administrativo/responsabilidade-civil-requisitos }
+          - { codigo: "7.3", titulo: Causas excludentes e atenuantes da responsabilidade do Estado, canonico: direito-administrativo/responsabilidade-civil-excludentes-atenuantes }
+      - codigo: "8"
+        titulo: Regime jurídico-administrativo
+        subtopicos:
+          - { codigo: "8.1", titulo: Conceito, canonico: direito-administrativo/regime-juridico-administrativo }
+          - { codigo: "8.2", titulo: Princípios expressos e implícitos da administração pública, canonico: direito-administrativo/principios-da-administracao-publica }
+  - slug: direito-constitucional
+    nome: Noções de Direito Constitucional
+    topicos:
+      - codigo: "1"
+        titulo: Constituição
+        subtopicos:
+          - { codigo: "1.1", titulo: "Conceito, classificações, princípios fundamentais", canonico: direito-constitucional/constituicao-e-principios-fundamentais }
+      - codigo: "2"
+        titulo: Direitos e garantias fundamentais
+        subtopicos:
+          - { codigo: "2.1", titulo: "Direitos e deveres individuais e coletivos, direitos sociais, nacionalidade, cidadania, direitos políticos, partidos políticos", canonico: direito-constitucional/direitos-e-garantias-fundamentais }
+      - codigo: "3"
+        titulo: Organização político-administrativa
+        subtopicos:
+          - { codigo: "3.1", titulo: "União, estados, Distrito Federal, municípios e territórios", canonico: direito-constitucional/organizacao-politico-administrativa }
+      - codigo: "4"
+        titulo: Administração pública
+        subtopicos:
+          - { codigo: "4.1", titulo: "Disposições gerais, servidores públicos e militares dos estados, do Distrito Federal e dos territórios", canonico: direito-constitucional/administracao-publica-servidores-militares }
+      - codigo: "5"
+        titulo: Defesa do Estado e das instituições democráticas
+        subtopicos:
+          - { codigo: "5.1", titulo: Segurança pública, canonico: direito-constitucional/seguranca-publica }
+          - { codigo: "5.2", titulo: Organização da segurança pública, canonico: direito-constitucional/organizacao-da-seguranca-publica }
+      - codigo: "6"
+        titulo: Estado de defesa e estado de sítio
+        subtopicos:
+          - { codigo: "6.1", titulo: Papel e competências das forças armadas, canonico: direito-constitucional/forcas-armadas }
+      - { codigo: "7", titulo: "Sistema de segurança pública: militares dos estados, do Distrito Federal e dos territórios", canonico: direito-constitucional/sistema-de-seguranca-publica-militares }
+  # ---------------------------------------------------------------- CARGOS 2 E 3 – PRAÇA BOMBEIRO MILITAR
+  - slug: fisica-soldado
+    nome: Física (Soldado)
+    topicos:
+      - codigo: "1"
+        titulo: Vetores
+        subtopicos:
+          - { codigo: "1.1", titulo: Sistema de forças, canonico: fisica/sistema-de-forcas }
+          - { codigo: "1.2", titulo: "Composição de forças: forças de mesma direção e sentido, forças de mesma direção e sentidos diferentes", canonico: fisica/composicao-de-forcas }
+          - { codigo: "1.3", titulo: Duas forças concorrentes, canonico: fisica/forcas-concorrentes }
+          - { codigo: "1.4", titulo: Representação gráfica, canonico: fisica/representacao-grafica-de-vetores }
+          - { codigo: "1.5", titulo: Binário, canonico: fisica/binario }
+      - codigo: "2"
+        titulo: Mecânica
+        subtopicos:
+          - { codigo: "2.1", titulo: Noções de Movimento, canonico: fisica/nocoes-de-movimento }
+          - { codigo: "2.2", titulo: "Movimento retilíneo: velocidade, movimento uniformemente variado, aceleração", canonico: fisica/movimento-retilineo }
+          - { codigo: "2.3", titulo: "Movimento em duas dimensões: movimento de projéteis e movimento circular uniforme", canonico: fisica/projeteis-e-movimento-circular-uniforme }
+          - { codigo: "2.4", titulo: Leis de Newton, canonico: fisica/leis-de-newton }
+          - { codigo: "2.5", titulo: Leis da Gravitação Universal, canonico: fisica/gravitacao-universal }
+          - { codigo: "2.6", titulo: Leis de Kepler, canonico: fisica/leis-de-kepler }
+          - { codigo: "2.7", titulo: Rotação da terra, canonico: fisica/rotacao-da-terra }
+          - { codigo: "2.8", titulo: "Trabalho, potência, rendimento, energia: mecânica, cinética, energia potencial e energia mecânica", canonico: fisica/trabalho-potencia-rendimento-energia }
+          - { codigo: "2.9", titulo: Conservação de energia mecânica, canonico: fisica/conservacao-da-energia-mecanica }
+      - codigo: "3"
+        titulo: Densidade e pressão
+        subtopicos:
+          - { codigo: "3.1", titulo: "Principio de Pascal, Lei de Stevin, Princípio de Arquimedes", canonico: fisica/principios-pascal-arquimedes-stevin }
+      - codigo: "4"
+        titulo: Termodinâmica
+        subtopicos:
+          - { codigo: "4.1", titulo: Temperatura e equilíbrio térmico, canonico: fisica/temperatura-e-equilibrio-termico }
+          - { codigo: "4.2", titulo: Energia térmica e calor; calor sensível e calor latente, canonico: fisica/calor-sensivel-e-latente }
+          - { codigo: "4.3", titulo: Trocas de calor, canonico: fisica/trocas-de-calor }
+          - { codigo: "4.4", titulo: Dilatação térmica dos sólidos, canonico: fisica/dilatacao-termica-dos-solidos }
+          - { codigo: "4.5", titulo: Dilatação anômala da água, canonico: fisica/dilatacao-anomala-da-agua }
+          - { codigo: "4.6", titulo: Processos de propagação do calor, canonico: fisica/propagacao-do-calor }
+      - codigo: "5"
+        titulo: Óptica geométrica
+        subtopicos:
+          - { codigo: "5.1", titulo: Mecanismos físicos da visão e defeitos visuais, canonico: fisica/visao-e-defeitos-visuais }
+      - codigo: "6"
+        titulo: Som
+        subtopicos:
+          - { codigo: "6.1", titulo: Qualidades fisiológicas do som, canonico: fisica/qualidades-fisiologicas-do-som }
+          - { codigo: "6.2", titulo: Natureza e propagação do som, canonico: fisica/natureza-e-propagacao-do-som }
+      - codigo: "7"
+        titulo: Eletricidade e Magnetismo
+        subtopicos:
+          - { codigo: "7.1", titulo: Lei de Coulomb, canonico: fisica/lei-de-coulomb }
+          - { codigo: "7.2", titulo: Corrente elétrica, canonico: fisica/corrente-eletrica }
+          - { codigo: "7.3", titulo: Circuitos elétricos, canonico: fisica/circuitos-eletricos }
+          - { codigo: "7.4", titulo: Efeito Joule, canonico: fisica/efeito-joule }
+          - { codigo: "7.5", titulo: Efeitos fisiológicos das correntes elétricas, canonico: fisica/efeitos-fisiologicos-da-corrente }
+          - { codigo: "7.6", titulo: Campo magnético, canonico: fisica/campo-magnetico }
+          - { codigo: "7.7", titulo: Imãs, canonico: fisica/imas }
+      - codigo: "8"
+        titulo: Aplicações
+        subtopicos:
+          - { codigo: "8.1", titulo: Efeito fotoelétrico, canonico: fisica/efeito-fotoeletrico }
+          - { codigo: "8.2", titulo: Efeito estufa, canonico: fisica/efeito-estufa }
+          - { codigo: "8.3", titulo: Brisas litorâneas, canonico: fisica/brisas-litoraneas }
+          - { codigo: "8.4", titulo: Relâmpagos e trovões, canonico: fisica/relampagos-e-trovoes }
+      - { codigo: "9", titulo: "Princípios básicos da emissão de radioatividade, radiações ionizantes e decaimento radioativo", canonico: fisica/radioatividade-e-radiacoes-ionizantes }
+  - slug: quimica-soldado
+    nome: Química (Soldado)
+    topicos:
+      - codigo: "I"
+        titulo: ESTRUTURA DO ÁTOMO
+        subtopicos:
+          - codigo: "I.1"
+            titulo: Estrutura atômica
+            subtopicos:
+              - { codigo: "I.1.1", titulo: Partícula fundamentais do átomo, canonico: quimica/particulas-fundamentais-do-atomo }
+              - { codigo: "I.1.2", titulo: Número atômico e massa atômica, canonico: quimica/numero-atomico-e-massa-atomica }
+              - { codigo: "I.1.3", titulo: Massa molecular, canonico: quimica/massa-molecular }
+              - { codigo: "I.1.4", titulo: "Número de avogado, mol, massa molecular, volume molecular", canonico: quimica/mol-massa-molar-volume-molar }
+      - codigo: "II"
+        titulo: CLASSIFICAÇÃO PERIÓDICA DOS ELEMENTOS QUÍMICOS
+        subtopicos:
+          - codigo: "II.1"
+            titulo: Elemento químico
+            subtopicos:
+              - { codigo: "II.1.1", titulo: Configuração eletrônica, canonico: quimica/configuracao-eletronica }
+              - { codigo: "II.1.2", titulo: Tabela periódica atual e sua estrutura, canonico: quimica/tabela-periodica-estrutura }
+              - { codigo: "II.1.3", titulo: Lei periódica, canonico: quimica/lei-periodica }
+              - { codigo: "II.1.4", titulo: Principais subgrupos de elementos físicos, canonico: quimica/familias-da-tabela-periodica }
+      - codigo: "III"
+        titulo: LIGAÇÃO QUÍMICA
+        subtopicos:
+          - { codigo: "III.1", titulo: Ligação iônica, canonico: quimica/ligacao-ionica }
+          - { codigo: "III.2", titulo: Ligação covalente, canonico: quimica/ligacao-covalente }
+          - { codigo: "III.3", titulo: "Fórmula eletrônica (estrutural de Lewis), iônica, molecular e estrutural das substâncias", canonico: quimica/formulas-quimicas }
+          - { codigo: "III.4", titulo: Número de oxidação, canonico: quimica/numero-de-oxidacao }
+      - codigo: "IV"
+        titulo: FUNÇÕES DE QUÍMICA INORGÂNICA
+        subtopicos:
+          - { codigo: "IV.1", titulo: "Reações de neutralização, dupla troca, simples troca, redução, oxidação", canonico: quimica/reacoes-inorganicas }
+          - { codigo: "IV.2", titulo: "Ácidos, bases, sais, óxidos, conceitos, classificação, nomenclatura e propriedades gerais", canonico: quimica/acidos-bases-sais-oxidos }
+      - codigo: "V"
+        titulo: REAÇÃO QUÍMICA
+        subtopicos:
+          - { codigo: "V.1", titulo: "Conceito de reação, equação química, reagente e produto", canonico: quimica/reacao-e-equacao-quimica }
+          - { codigo: "V.2", titulo: Balanceamento de equação química, canonico: quimica/balanceamento-de-equacoes }
+          - { codigo: "V.3", titulo: "Soluções, concentração das soluções (grama/litro e mol/litro)", canonico: quimica/concentracao-de-solucoes }
+      - codigo: "VI"
+        titulo: QUÍMICA DO CARBONO
+        subtopicos:
+          - codigo: "VI.1"
+            titulo: Introdução a química orgânica
+            subtopicos:
+              - { codigo: "VI.1.1", titulo: Propriedades do átomo do carbono, canonico: quimica/propriedades-do-atomo-de-carbono }
+              - { codigo: "VI.1.2", titulo: "Estrutura de compostos orgânicos, cadeias carbônicas", canonico: quimica/estrutura-de-compostos-organicos }
+              - { codigo: "VI.1.3", titulo: Classificação do átomo de carbono na cadeia carbônica, canonico: quimica/classificacao-do-carbono-na-cadeia }
+              - { codigo: "VI.1.4", titulo: Classificação de cadeia carbônica, canonico: quimica/classificacao-de-cadeias-carbonicas }
+          - codigo: "VI.2"
+            titulo: Funções orgânicas
+            subtopicos:
+              - { codigo: "VI.2.1", titulo: "Notação, nomenclatura e propriedades físicas e químicas de hidrocarboneto, álcool, éter, cenol, cetonas, aldeídos, ácido carboxílicos, amina e amida (contendo de 1 a 8 carbonos)", canonico: quimica/funcoes-organicas-nomenclatura-e-propriedades }
+          - codigo: "VI.3"
+            titulo: Reações orgânicas
+            subtopicos:
+              - { codigo: "VI.3.1", titulo: Reatividade dos compostos orgânicos, canonico: quimica/reatividade-dos-compostos-organicos }
+              - { codigo: "VI.3.2", titulo: "Reações de redução, oxidação e combustão", canonico: quimica/reacoes-organicas }
+          - { codigo: "VI.4", titulo: Identificação e nomenclatura IUPAC das funções orgânicas, canonico: quimica/nomenclatura-iupac }
+  - slug: biologia-soldado
+    nome: Biologia (Soldado)
+    topicos:
+      - { codigo: "1", titulo: "Seres vivos: classificação dos seres vivos", canonico: biologia/classificacao-dos-seres-vivos }
+      - codigo: "2"
+        titulo: Célula
+        subtopicos:
+          - { codigo: "2.1", titulo: Célula procariota e eucariota, canonico: biologia/celula-procariota-eucariota }
+          - { codigo: "2.2", titulo: Componentes morfológicos das células, canonico: biologia/componentes-morfologicos-das-celulas }
+          - { codigo: "2.3", titulo: Funções das estruturas celulares, canonico: biologia/funcoes-das-estruturas-celulares }
+      - codigo: "3"
+        titulo: Anatomia e fisiologia humanas
+        subtopicos:
+          - { codigo: "3.1", titulo: Fisiologia, canonico: biologia/fisiologia-humana }
+          - { codigo: "3.2", titulo: Posição anatômica, canonico: biologia/posicao-anatomica }
+          - { codigo: "3.3", titulo: Divisões do corpo humano, canonico: biologia/divisoes-do-corpo-humano }
+          - { codigo: "3.4", titulo: Quadrantes abdominais (órgãos), canonico: biologia/quadrantes-abdominais }
+          - { codigo: "3.5", titulo: "Sistema tegumentar: pele, pêlos, unhas", canonico: biologia/sistema-tegumentar }
+          - { codigo: "3.6", titulo: Sistema muscular, canonico: biologia/sistema-muscular }
+          - { codigo: "3.7", titulo: "Sistema esquelético: funções, divisão anatômica do esqueleto, ossos, crânio, coluna vertebral, articulações", canonico: biologia/sistema-esqueletico }
+          - { codigo: "3.8", titulo: "Sistema respiratório: função, respiração, órgãos componentes, mecanismo da respiração", canonico: biologia/sistema-respiratorio }
+          - { codigo: "3.9", titulo: "Sistema cardiovascular: principais funções, sangue, coração, movimentos cardíacos, pulso, vasos sanguíneos, circulação sanguínea", canonico: biologia/sistema-cardiovascular }
+          - { codigo: "3.10", titulo: "Sistema geniturinário: sistema urinário, sistema genital masculino, sistema genital feminino", canonico: biologia/sistema-geniturinario }
+          - { codigo: "3.11", titulo: Sistema digestório, canonico: biologia/sistema-digestorio }
+          - { codigo: "3.12", titulo: "Sistema nervoso: função, divisão, meninges, sistema nervoso central, sistema nervoso periférico, sistema nervoso visceral, sistema nervoso somático", canonico: biologia/sistema-nervoso }
+      - { codigo: "4", titulo: "Tecidos animais: características estruturais e funcionais", canonico: biologia/tecidos-animais }
+      - { codigo: "5", titulo: Evolução dos seres vivos, canonico: biologia/evolucao }
+      - codigo: "6"
+        titulo: Reino vegetal
+        subtopicos:
+          - { codigo: "6.1", titulo: Funções vitais das plantas, canonico: biologia/funcoes-vitais-das-plantas }
+          - { codigo: "6.2", titulo: "Briófitas, pteridófitas, gimnospermas e angiospermas", canonico: biologia/grupos-vegetais }
+      - codigo: "7"
+        titulo: Reino Animal
+        subtopicos:
+          - { codigo: "7.1", titulo: "Características gerais, reprodução, nutrição, locomoção e coordenação", canonico: biologia/reino-animal-caracteristicas-gerais }
+          - { codigo: "7.2", titulo: Poríferos, canonico: biologia/poriferos }
+          - { codigo: "7.3", titulo: Cnidários, canonico: biologia/cnidarios }
+          - { codigo: "7.4", titulo: Artrópodes, canonico: biologia/artropodes }
+          - { codigo: "7.5", titulo: Moluscos, canonico: biologia/moluscos }
+          - { codigo: "7.6", titulo: Equinodermos, canonico: biologia/equinodermos }
+          - { codigo: "7.7", titulo: Nematelmintos, canonico: biologia/nematelmintos }
+          - { codigo: "7.8", titulo: Platelmintos, canonico: biologia/platelmintos }
+          - { codigo: "7.9", titulo: Anelídeos, canonico: biologia/anelideos }
+          - { codigo: "7.10", titulo: Cordados, canonico: biologia/cordados }
+      - codigo: "8"
+        titulo: "Saúde, higiene e saneamento básico"
+        subtopicos:
+          - { codigo: "8.1", titulo: Princípios básicos de saúde, canonico: biologia/principios-basicos-de-saude }
+          - { codigo: "8.2", titulo: "Doenças adquiridas transmissíveis: viroses (transmissão e profilaxia) — AIDS, dengue, poliomielite, raiva e sarampo; infecções bacterianas (transmissão e profilaxia) — tuberculose, sífilis, meningite meningocócica, cólera, tétano e leptospirose; protozoonoses (transmissão e profilaxia) — amebíase, malária e doença de Chagas; verminoses (ciclo de vida e profilaxia) — ascaridíase, teníase, cisticercose, esquistossomose e ancilostomose", canonico: biologia/doencas-transmissiveis }
+          - { codigo: "8.3", titulo: "Defesas do organismo: imunidade passiva e imunidade ativa", canonico: biologia/imunidade-passiva-e-ativa }
+      - codigo: "9"
+        titulo: Ecologia
+        subtopicos:
+          - { codigo: "9.1", titulo: Relações tróficas entre os seres vivos, canonico: biologia/relacoes-troficas }
+          - { codigo: "9.2", titulo: Biomas, canonico: biologia/biomas }
+          - { codigo: "9.3", titulo: Ciclos biogeoquímicos, canonico: biologia/ciclos-biogeoquimicos }
+          - { codigo: "9.4", titulo: "Conservação e preservação da natureza, ação antrópica, poluição e biocidas, ecossistemas e espécies ameaçadas de extinção (principalmente no Brasil)", canonico: biologia/conservacao-e-acao-antropica }
+  - slug: mecanica-geral
+    nome: Mecânica Geral
+    topicos:
+      - codigo: "1"
+        titulo: Motor de combustão interna
+        subtopicos:
+          - { codigo: "1.1", titulo: Conceito, canonico: mecanica-automotiva/motor-combustao-interna-conceito }
+          - { codigo: "1.2", titulo: Ciclo de funcionamento (4 tempos), canonico: mecanica-automotiva/motor-ciclo-quatro-tempos }
+          - codigo: "1.3"
+            titulo: Tipos de motores
+            subtopicos:
+              - { codigo: "1.3.1", titulo: Ciclo Otto, canonico: mecanica-automotiva/ciclo-otto }
+              - { codigo: "1.3.2", titulo: Ciclo Diesel, canonico: mecanica-automotiva/ciclo-diesel }
+      - codigo: "2"
+        titulo: Sistema de transmissão
+        subtopicos:
+          - { codigo: "2.1", titulo: Função, canonico: mecanica-automotiva/transmissao-funcao }
+          - { codigo: "2.2", titulo: Componentes, canonico: mecanica-automotiva/transmissao-componentes }
+      - codigo: "3"
+        titulo: Sistema de freios
+        subtopicos:
+          - { codigo: "3.1", titulo: Função, canonico: mecanica-automotiva/freios-funcao }
+          - { codigo: "3.2", titulo: Tipos, canonico: mecanica-automotiva/freios-tipos }
+          - { codigo: "3.3", titulo: Princípio físico, canonico: mecanica-automotiva/freios-principio-fisico }
+      - codigo: "4"
+        titulo: Sistema de suspensão
+        subtopicos:
+          - { codigo: "4.1", titulo: Função, canonico: mecanica-automotiva/suspensao-funcao }
+          - { codigo: "4.2", titulo: Componentes, canonico: mecanica-automotiva/suspensao-componentes }
+      - codigo: "5"
+        titulo: Sistema elétrico
+        subtopicos:
+          - { codigo: "5.1", titulo: Função, canonico: mecanica-automotiva/sistema-eletrico-funcao }
+          - { codigo: "5.2", titulo: Componentes, canonico: mecanica-automotiva/sistema-eletrico-componentes }
+      - codigo: "6"
+        titulo: Sistema de arrefecimento
+        subtopicos:
+          - { codigo: "6.1", titulo: Função, canonico: mecanica-automotiva/arrefecimento-funcao }
+          - { codigo: "6.2", titulo: Componentes, canonico: mecanica-automotiva/arrefecimento-componentes }
+      - codigo: "7"
+        titulo: Sistema de alimentação
+        subtopicos:
+          - { codigo: "7.1", titulo: Função, canonico: mecanica-automotiva/alimentacao-funcao }
+          - { codigo: "7.2", titulo: Componentes, canonico: mecanica-automotiva/alimentacao-componentes }
