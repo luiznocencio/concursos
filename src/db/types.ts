@@ -265,6 +265,7 @@ export type Database = {
       }
       fontes: {
         Row: {
+          canonicos: string[]
           criado_em: string
           id: string
           slug: string
@@ -273,6 +274,7 @@ export type Database = {
           url_oficial: string | null
         }
         Insert: {
+          canonicos?: string[]
           criado_em?: string
           id?: string
           slug: string
@@ -281,6 +283,7 @@ export type Database = {
           url_oficial?: string | null
         }
         Update: {
+          canonicos?: string[]
           criado_em?: string
           id?: string
           slug?: string
@@ -818,6 +821,37 @@ export type Database = {
       edital_remover_topicos: {
         Args: { e: Json; v_concurso: string }
         Returns: undefined
+      }
+      ia_registrar_uso: { Args: { p_uso: Json }; Returns: undefined }
+      itens_registrar_lote: { Args: { p_lote: Json }; Returns: number }
+      jobs_concluir: { Args: { p_id: string }; Returns: undefined }
+      jobs_enfileirar_geracao: {
+        Args: { p_canonico: string; p_concurso: string; p_quantidade: number }
+        Returns: string
+      }
+      jobs_falhar: {
+        Args: { p_erro: string; p_id: string; p_max_tentativas: number }
+        Returns: undefined
+      }
+      jobs_reservar: {
+        Args: never
+        Returns: {
+          atualizado_em: string
+          criado_em: string
+          erro: string | null
+          executar_apos: string
+          id: string
+          payload: Json
+          status: string
+          tentativas: number
+          tipo: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "jobs"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
       nos_do_edital: {
         Args: { e: Json }
