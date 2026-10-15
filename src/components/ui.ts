@@ -11,7 +11,8 @@ export const botao = {
   contorno: `${base} border border-borda-forte bg-white text-black/90 hover:bg-black/[0.03]`,
 };
 
-export const cartao = "rounded-xl border border-borda bg-white p-6";
+// min-w-0: dentro de grid ou flex, o cartão encolhe com a tela em vez de crescer até caber o texto truncado.
+export const cartao = "min-w-0 rounded-xl border border-borda bg-white p-6";
 
 export const pilula = {
   azul: "inline-flex items-center gap-1 rounded-full bg-azul-claro px-3 py-1 text-xs font-medium text-azul",
