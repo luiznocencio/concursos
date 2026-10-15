@@ -822,7 +822,18 @@ export type Database = {
         Args: { e: Json; v_concurso: string }
         Returns: undefined
       }
+      estudo_candidatos: { Args: { p_cargo: string }; Returns: Json }
+      estudo_canonicos_do_cargo: { Args: { p_cargo: string }; Returns: string[] }
+      estudo_historico: { Args: { p_cargo: string }; Returns: Json }
+      estudo_pedir_geracao: {
+        Args: { p_canonicos: string[]; p_concurso: string }
+        Returns: number
+      }
       ia_registrar_uso: { Args: { p_uso: Json }; Returns: undefined }
+      itens_marcar_suspeito: {
+        Args: { p_item: string; p_motivo: string }
+        Returns: undefined
+      }
       itens_registrar_lote: { Args: { p_lote: Json }; Returns: number }
       jobs_concluir: { Args: { p_id: string }; Returns: undefined }
       jobs_enfileirar_geracao: {
@@ -863,6 +874,10 @@ export type Database = {
           pai: string
           titulo: string
         }[]
+      }
+      simulado_criar: {
+        Args: { p_cargo: string; p_config: Json; p_itens: string[]; p_modo: string }
+        Returns: string
       }
     }
     Enums: {
