@@ -10,4 +10,9 @@ describe("custoUsd", () => {
     const preco = PRECOS_CLAUDE["claude-opus-5-5"];
     expect(custoUsd(preco, { entrada: 0, saida: 0, escritaCache: 1_000_000, leituraCache: 1_000_000 })).toBeCloseTo(5 + 0.2, 10);
   });
+
+  it("tem preço para os modelos candidatos a gerar itens", () => {
+    expect(custoUsd(PRECOS_CLAUDE["claude-sonnet-5-5"], { entrada: 1_000_000, saida: 1_000_000 })).toBeCloseTo(12, 10);
+    expect(custoUsd(PRECOS_CLAUDE["claude-haiku-5-5"], { entrada: 1_000_000, saida: 1_000_000 })).toBeCloseTo(0.6, 10);
+  });
 });
