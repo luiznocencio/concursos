@@ -1,11 +1,44 @@
 @import "tailwindcss";
 
+/* Tokens do docs/design/DESIGN.md (estilo Notion): papel quente, cartões brancos com borda fina,
+   um único azul para a ação principal e acentos usados como pontuação. Tema claro apenas. */
 @theme inline {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --color-papel: #f6f5f4;
+  --color-tinta: #000000;
+  --color-grafite: #615d59;
+  --color-pedra: #757575;
+  --color-azul: #0075de;
+  --color-azul-escuro: #005bab;
+  --color-azul-claro: #e6f3fe;
+  --color-ceu: #62aef0;
+  --color-marigold: #ffb110;
+  --color-marigold-claro: #fff4dc;
+  --color-coral: #f64932;
+  --color-vermelho: #e32d14;
+  --color-vermelho-claro: #fdebe8;
+  --color-meia-noite: #02093a;
+  --color-borda: rgba(0, 0, 0, 0.08);
+  --color-borda-forte: rgba(0, 0, 0, 0.15);
 }
 
 body {
-  background: #f6f5f4;
-  color: #000;
+  background: var(--color-papel);
+  color: var(--color-tinta);
   font-family: var(--font-sans);
+  font-feature-settings: "lnum";
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-azul);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
 }

@@ -1,0 +1,37 @@
+import { Info } from "@phosphor-icons/react/ssr";
+
+function mensagem(codigo: string, pedidos: number): string | null {
+  const fila =
+    pedidos > 0
+      ? `Pedimos a geração de itens para ${pedidos === 1 ? "1 tópico" : `${pedidos} tópicos`}. Volte em alguns minutos.`
+      : "Os tópicos já estão na fila de geração ou o limite de 3 pedidos em aberto foi atingido.";
+  switch (codigo) {
+    case "sem-itens":
+      return `Ainda não há itens aprovados suficientes. ${fila}`;
+    case "geracao":
+      return fila;
+    case "sem-revisao":
+      return "Nenhuma revisão vencida agora. Os itens errados voltam 1, 3, 7 e 15 dias depois.";
+    case "sem-concurso":
+      return "Nenhum concurso foi carregado ainda.";
+    case "escolha":
+      return "Escolha pelo menos um tópico.";
+    case "faltam":
+      return "Ainda faltam itens para montar o simulado completo.";
+    case "encerrada":
+      return "Esta sessão já foi encerrada.";
+    default:
+      return null;
+  }
+}
+
+export function Aviso({ codigo, pedidos }: { codigo?: string; pedidos?: string }) {
+  const texto = codigo ? mensagem(codigo, Number(pedidos ?? 0)) : null;
+  if (!texto) return null;
+  return (
+    <p role="status" className="mb-8 flex items-start gap-3 rounded-xl bg-azul-claro px-4 py-3 text-[15px] text-[#00447f]">
+      <Info size={20} weight="bold" className="mt-0.5 shrink-0" aria-hidden />
+      {texto}
+    </p>
+  );
+}
