@@ -172,12 +172,26 @@ test("envia a foto, confere a transcrição e entrega", async ({ page, admin, us
   expect(r2).toEqual({ status: "na_fila", linhas: ["Linha um.", "Linha dois."] });
 });
 
-test("pedir tema novo enfileira um pedido por vez", async ({ page, admin, usuarioLogado }) => {
+test("pedir tema novo mostra o andamento e avisa quando a revisão reprova ou a geração falha", async ({ page, admin, usuarioLogado }) => {
   await page.goto("/redacao");
   await page.getByRole("button", { name: "Gerar tema novo" }).click();
   await expect(page.getByText(/Pedimos um tema novo/)).toBeVisible();
-  await page.getByRole("button", { name: "Gerar tema novo" }).click();
-  await expect(page.getByText(/já tem um tema novo a caminho/)).toBeVisible();
+  // Enquanto gera, a página mostra o andamento no lugar do botão, que só volta quando o pedido termina.
+  await expect(page.getByText("Gerando um tema novo…")).toBeVisible();
+  await expect(page.getByText(/Começou há \d+ s/)).toBeVisible();
+  await expect(page.getByRole("button", { name: "Gerar tema novo" })).toHaveCount(0);
   const { data: jobs } = await admin.from("jobs").select("tipo, status, payload").eq("payload->>pedido_por", usuarioLogado.id);
   expect(jobs).toEqual([{ tipo: "gerar_tema", status: "pendente", payload: { concurso: "cbmal-2026", pedido_por: usuarioLogado.id } }]);
+
+  // O worker não roda no E2E: o teste termina o pedido como ele terminaria, sem gravar tema (a revisão reprovou).
+  const pedido = admin.from("jobs").update({ status: "concluido" }).eq("payload->>pedido_por", usuarioLogado.id);
+  expect((await pedido).error).toBeNull();
+  await page.reload();
+  await expect(page.getByText(/não passou na revisão e foi descartado/)).toBeVisible();
+  await expect(page.getByRole("button", { name: "Gerar tema novo" })).toBeVisible();
+
+  const falha = admin.from("jobs").update({ status: "falhou" }).eq("payload->>pedido_por", usuarioLogado.id);
+  expect((await falha).error).toBeNull();
+  await page.reload();
+  await expect(page.getByText("Não foi possível gerar o último tema. Peça outro.")).toBeVisible();
 });
