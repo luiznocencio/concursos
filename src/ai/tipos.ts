@@ -10,12 +10,19 @@ export interface UsoIa {
   custoUsd: number;
 }
 
+export interface ImagemIa {
+  midia: "image/jpeg" | "image/png" | "image/webp";
+  base64: string;
+}
+
 export interface PedidoJson<S extends z.ZodType> {
   finalidade: string;
   sistema: string;
   prompt: string;
   schema: S;
   nomeSchema: string;
+  // Imagens enviadas antes do texto do prompt (ex.: fotos da folha de redação).
+  imagens?: ImagemIa[];
 }
 
 export interface RespostaJson<T> {

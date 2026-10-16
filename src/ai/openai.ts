@@ -2,12 +2,30 @@ import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
 import type { z } from "zod/v4";
 import { custoUsd, type PrecoModelo } from "./custo";
-import { ErroIa, type PedidoJson, type ProvedorIa, type RespostaJson, type UsoIa } from "./tipos";
+import { ErroIa, type ImagemIa, type PedidoJson, type ProvedorIa, type RespostaJson, type UsoIa } from "./tipos";
 
 export interface ConfigOpenAI {
   apiKey?: string;
   modelo: string;
   preco: PrecoModelo;
+}
+
+// Entrada da Responses API: só texto, ou uma mensagem com o texto e as imagens em data URL.
+export function entradaOpenAI(prompt: string, imagens: ImagemIa[] = []) {
+  if (imagens.length === 0) return prompt;
+  return [
+    {
+      role: "user" as const,
+      content: [
+        { type: "input_text" as const, text: prompt },
+        ...imagens.map((i) => ({
+          type: "input_image" as const,
+          image_url: `data:${i.midia};base64,${i.base64}`,
+          detail: "high" as const,
+        })),
+      ],
+    },
+  ];
 }
 
 export function criarProvedorOpenAI(config: ConfigOpenAI): ProvedorIa {
@@ -21,7 +39,7 @@ export function criarProvedorOpenAI(config: ConfigOpenAI): ProvedorIa {
         resposta = await client.responses.parse({
           model: config.modelo,
           instructions: pedido.sistema,
-          input: pedido.prompt,
+          input: entradaOpenAI(pedido.prompt, pedido.imagens),
           text: { format: zodTextFormat(pedido.schema, pedido.nomeSchema) },
         });
       } catch (e) {
