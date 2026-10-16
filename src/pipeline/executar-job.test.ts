@@ -76,6 +76,29 @@ describe("executarProximoJob", () => {
   });
 });
 
+describe("executarProximoJob com outros tipos de job", () => {
+  it("entrega o job ao processador do tipo e conclui", async () => {
+    const t = deps(job({ tipo: "corrigir_redacao", payload: { redacao_id: "r1" } }));
+    const recebidos: Job[] = [];
+    t.d.processadores = {
+      async corrigir_redacao(j) {
+        recebidos.push(j);
+        return { status: "corrigida" };
+      },
+    };
+    const r = await executarProximoJob(t.d);
+    expect(r).toEqual({ status: "concluido", jobId: job().id, resumo: { status: "corrigida" } });
+    expect(recebidos[0].payload).toEqual({ redacao_id: "r1" });
+    expect(t.entradas).toHaveLength(0);
+  });
+
+  it("falha de vez em tipo sem processador", async () => {
+    const t = deps(job({ tipo: "desconhecido" }));
+    await executarProximoJob(t.d);
+    expect(t.chamadas[0]).toMatch(/^falhar \S+ 0 Tipo de job desconhecido: desconhecido/);
+  });
+});
+
 describe("rodadaDoJob", () => {
   it("varia com o id e com a tentativa", () => {
     expect(rodadaDoJob(job())).toBe(10);
