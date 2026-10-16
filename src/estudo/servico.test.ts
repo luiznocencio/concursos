@@ -103,12 +103,21 @@ describe("responderItem", () => {
   it("corrige, agenda a revisão de um erro e não aceita trocar a resposta", async () => {
     const { repo, estado, id } = await sessaoDeTreino();
     const c = await responderItem(repo, { sessaoId: id, itemId: "a", resposta: "E", duvida: false, tempoMs: 5000, agora: AGORA });
-    expect(c).toMatchObject({ gabarito: "C", resultado: "errado", justificativa: "porque a", concluida: false });
+    expect(c).toMatchObject({ gabarito: "C", resultado: "errado", justificativa: "porque a", provaOrigem: null, concluida: false });
     expect(estado.revisao.get("a")).toEqual({ etapa: 1, proximaEm: new Date(AGORA.getTime() + DIA) });
 
     const outra = await responderItem(repo, { sessaoId: id, itemId: "a", resposta: "C", duvida: false, tempoMs: 1, agora: AGORA });
     expect(outra).toMatchObject({ resposta: "E", resultado: "errado" });
     expect(estado.revisao.get("a")!.etapa).toBe(1);
+  });
+
+  it("diz de que prova veio uma questão real", async () => {
+    const f = criarRepositorioFalso({ estrutura, gabaritos: { a: "C", b: "E" }, provasOrigem: { b: "CEBRASPE 2021 · PC-AL" } });
+    const id = await f.repo.criarSessao("cargo", "treino", { tipo: "estudar_agora" }, ["a", "b"]);
+    const real = await responderItem(f.repo, { sessaoId: id, itemId: "b", resposta: "E", duvida: false, tempoMs: null, agora: AGORA });
+    expect(real.provaOrigem).toBe("CEBRASPE 2021 · PC-AL");
+    const ia = await responderItem(f.repo, { sessaoId: id, itemId: "a", resposta: "C", duvida: false, tempoMs: null, agora: AGORA });
+    expect(ia.provaOrigem).toBeNull();
   });
 
   it("encerra a sessão com o resumo quando o último item é respondido", async () => {

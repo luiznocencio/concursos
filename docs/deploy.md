@@ -52,6 +52,7 @@
 
 - `npm test`: suíte unitária.
 - `npm run db:test:start && npm run test:db`: migrações, RLS e seed num Postgres local descartável. Fora do ambiente de nuvem, defina `TEST_DATABASE_URL` apontando para um Postgres seu (o usuário precisa poder criar bancos).
+- `npx supabase start && npm run test:e2e`: E2E com Playwright contra o Supabase local (Docker), sem IA e sem tocar na produção. Detalhes, login nos testes e CI em [testes.md](testes.md).
 
 ## Geração de questões por IA
 
@@ -62,7 +63,8 @@
 | `SUPABASE_SECRET_KEY` | Supabase → Project Settings → API Keys → chave secreta (`sb_secret_…`) |
 | `WORKER_SECRET` | Gere com `openssl rand -hex 32` |
 | `ANTHROPIC_API_KEY` | console.anthropic.com → API Keys |
-| `CLAUDE_MODEL` | Opcional; padrão `claude-opus-5-5` |
+| `CLAUDE_MODEL` | Opcional; padrão `claude-opus-5-5` (precisa ter preço em `src/ai/custo.ts`) |
+| `CLAUDE_ESFORCO` | Opcional; `low`, `medium`, `high` (padrão), `xhigh` ou `max` |
 | `OPENAI_API_KEY` | platform.openai.com → API keys |
 | `OPENAI_MODEL` | O modelo GPT que você quer usar |
 | `OPENAI_PRECO_ENTRADA_USD_MTOK`, `OPENAI_PRECO_SAIDA_USD_MTOK` | Preço desse modelo na página de preços da OpenAI |

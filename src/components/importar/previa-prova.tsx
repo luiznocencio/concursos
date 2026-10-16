@@ -12,7 +12,7 @@ export function TextoBase({ texto }: { texto: string }) {
       <summary className="cursor-pointer list-none px-4 py-3 text-sm font-medium text-grafite">
         <span className="line-clamp-1">Texto-base: {texto.split("\n")[0]}</span>
       </summary>
-      <div className="max-h-[40dvh] overflow-y-auto border-t border-borda px-4 py-3 text-[15px] leading-relaxed whitespace-pre-line text-black/80">
+      <div className="max-h-[40dvh] overflow-y-auto border-t border-borda px-4 py-3 text-[15px] leading-relaxed whitespace-pre-line text-tinta/80">
         {texto}
       </div>
     </details>
@@ -37,7 +37,7 @@ export function PreviaProva({ grupos }: { grupos: GrupoPrevia[] }) {
   return (
     <ol className="flex flex-col gap-4">
       {grupos.map((g) => (
-        <li key={g.itens[0].numero} className="rounded-xl border border-borda bg-white px-6 pt-5 pb-1">
+        <li key={g.itens[0].numero} className="rounded-xl border border-borda bg-superficie px-6 pt-5 pb-1">
           {g.textoBase ? <TextoBase texto={g.textoBase} /> : <p className="text-sm text-pedra">Itens sem texto-base</p>}
           <ul className="divide-y divide-borda">
             {g.itens.map((i) => (

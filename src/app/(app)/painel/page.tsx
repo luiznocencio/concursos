@@ -187,7 +187,7 @@ export default async function Painel() {
             {mod.fila && mod.fila.falhas.length > 0 && (
               <ul className="flex flex-col gap-2 text-sm">
                 {mod.fila.falhas.map((f) => (
-                  <li key={f.id} className="rounded-lg bg-vermelho-claro px-3 py-2 text-[#8f1c0c]">
+                  <li key={f.id} className="rounded-lg bg-vermelho-claro px-3 py-2 text-vermelho-tinta">
                     {f.canonico} falhou em {dataEHora(f.em)}: {f.erro}
                   </li>
                 ))}

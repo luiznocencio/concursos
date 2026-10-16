@@ -33,7 +33,7 @@ export default async function Resultado({ params }: { params: Promise<{ id: stri
         <div>
           <h1 className={titulo.pagina}>
             {nota(r.total)} pontos
-            {r.corteConjunto !== null && <span className="text-black/40"> / corte {r.corteConjunto}</span>}
+            {r.corteConjunto !== null && <span className="text-pedra"> / corte {r.corteConjunto}</span>}
           </h1>
           {r.motivos.length > 0 && (
             <ul className={`${textoApoio} mt-3 list-disc pl-5`}>

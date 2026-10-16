@@ -2,7 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import type { ItemCandidato } from "@/core";
 import { montarEstruturaCargo, type EstruturaCargo, type LinhaCargo } from "@/estudo/estrutura";
-import type { ConfigSessao, Marcacao, ModoSessao, RepositorioEstudo, ResultadoSessao } from "@/estudo/tipos";
+import type { ConfigSessao, ItemCorrecao, Marcacao, ModoSessao, RepositorioEstudo, ResultadoSessao } from "@/estudo/tipos";
 import { itensReaisVisiveis } from "@/lib/itens-reais";
 import type { Database, Json } from "../types";
 
@@ -58,6 +58,12 @@ export function filtrarCandidatos(linhas: z.infer<typeof candidatosSchema>, iten
   return linhas
     .filter((l) => itensReais || l.origem !== "real")
     .map(({ id, textoBaseId, canonicos, visto }) => ({ id, textoBaseId, canonicos, visto }));
+}
+
+// Só questão real mostra de onde veio; item de IA (ou real sem a prova anotada) não mostra nada.
+export function provaOrigemVisivel(origem: string, provaOrigem: string | null): string | null {
+  if (origem !== "real") return null;
+  return provaOrigem?.trim() || null;
 }
 
 // Implementação com o cliente do usuário: o RLS garante que cada um só vê e grava o que é seu.
@@ -132,7 +138,8 @@ export function criarRepositorioEstudo(db: Cliente, opcoes: { itensReais?: boole
 
     async itensCorrecao(ids) {
       if (ids.length === 0) return [];
-      const { data, error } = await db.from("itens").select("id, gabarito, justificativa, citacao, fontes(titulo)").in("id", ids);
+      const { data, error } = await db.from("itens").select("id, gabarito, justificativa, citacao, origem, prova_origem, fontes(titulo)")
+        .in("id", ids);
       if (error) falhou("itens", error);
       return data.map((i) => ({
         id: i.id,
@@ -140,6 +147,7 @@ export function criarRepositorioEstudo(db: Cliente, opcoes: { itensReais?: boole
         justificativa: i.justificativa,
         citacao: i.citacao,
         fonte: i.fontes?.titulo ?? null,
+        provaOrigem: provaOrigemVisivel(i.origem, i.prova_origem),
       }));
     },
 
@@ -207,6 +215,7 @@ export async function listarCargos(db: Cliente) {
     id: c.id,
     nome: c.nome,
     concurso: c.concursos.nome,
+    concursoSlug: c.concursos.slug,
     dataProva: c.concursos.data_prova,
   }));
 }
@@ -266,7 +275,8 @@ export interface ItemDaSessao {
   topicos: string[];
   resposta: { resposta: Marcacao; duvida: boolean } | null;
   // Só vem preenchida quando a pessoa já pode ver: item respondido no treino ou simulado entregue.
-  correcao: { gabarito: string; justificativa: string; citacao: string | null; fonte: string | null } | null;
+  // A prova de origem vem junto: no simulado ela denunciaria que a questão é real.
+  correcao: Omit<ItemCorrecao, "id"> | null;
 }
 
 // Itens para a tela da sessão. O gabarito nunca vai ao navegador antes da hora.
@@ -274,7 +284,7 @@ export async function itensDaSessao(db: Cliente, sessaoId: string, podeVerCorrec
   const { data, error } = await db
     .from("simulado_itens")
     .select(
-      "ordem, itens!inner(id, enunciado, gabarito, justificativa, citacao, fontes(titulo), textos_base(conteudo), item_topicos(topicos_canonicos(titulo)))",
+      "ordem, itens!inner(id, enunciado, gabarito, justificativa, citacao, origem, prova_origem, fontes(titulo), textos_base(conteudo), item_topicos(topicos_canonicos(titulo)))",
     )
     .eq("simulado_id", sessaoId)
     .order("ordem");
@@ -296,7 +306,13 @@ export async function itensDaSessao(db: Cliente, sessaoId: string, podeVerCorrec
       topicos: i.item_topicos.map((t) => t.topicos_canonicos.titulo),
       resposta,
       correcao: podeVerCorrecao(resposta !== null)
-        ? { gabarito: i.gabarito, justificativa: i.justificativa, citacao: i.citacao, fonte: i.fontes?.titulo ?? null }
+        ? {
+            gabarito: i.gabarito,
+            justificativa: i.justificativa,
+            citacao: i.citacao,
+            fonte: i.fontes?.titulo ?? null,
+            provaOrigem: provaOrigemVisivel(i.origem, i.prova_origem),
+          }
         : null,
     };
   });

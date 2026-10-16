@@ -8,7 +8,8 @@ describe("API pública de core", () => {
       "provasObjetivasDoCargo", "notaProva", "valorCorte", "calcularResultado", "analisarDuvidas",
       "resultadoDaResposta", "proximoEstadoRevisao", "revisaoVencida", "calcularPrioridades", "CONFIG_FOCO",
       "montarEstudarAgora", "montarTreinoTopico", "montarSimuladoProva", "topicosQuePrecisamGeracao",
-      "agruparPorTextoBase",
+      "agruparPorTextoBase", "notaConteudo", "calcularNPD", "aprovadoDiscursiva", "distribuirEmLinhas", "contarTL",
+      "filtrarErrosValidos", "CANONICO_POR_CATEGORIA", "escolherPrioridades", "configDaProva", "CATEGORIAS_ERRO",
     ]) {
       expect(core, nome).toHaveProperty(nome);
     }

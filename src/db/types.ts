@@ -202,6 +202,47 @@ export type Database = {
           },
         ]
       }
+      correcoes_discursiva: {
+        Row: {
+          criado_em: string
+          custo_usd: number
+          id: string
+          modelo: string
+          papel: string
+          provedor: string
+          redacao_id: string
+          resposta: Json
+        }
+        Insert: {
+          criado_em?: string
+          custo_usd?: number
+          id?: string
+          modelo: string
+          papel: string
+          provedor: string
+          redacao_id: string
+          resposta: Json
+        }
+        Update: {
+          criado_em?: string
+          custo_usd?: number
+          id?: string
+          modelo?: string
+          papel?: string
+          provedor?: string
+          redacao_id?: string
+          resposta?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "correcoes_discursiva_redacao_id_fkey"
+            columns: ["redacao_id"]
+            isOneToOne: false
+            referencedRelation: "redacoes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       disciplinas: {
         Row: {
           concurso_id: string
@@ -227,6 +268,56 @@ export type Database = {
             columns: ["concurso_id"]
             isOneToOne: false
             referencedRelation: "concursos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      erros_redacao: {
+        Row: {
+          canonico: string
+          categoria: string
+          correcao: string
+          criado_em: string
+          explicacao: string
+          id: string
+          linha: number
+          redacao_id: string
+          tipo: string
+          trecho: string
+          usuario_id: string
+        }
+        Insert: {
+          canonico: string
+          categoria: string
+          correcao: string
+          criado_em?: string
+          explicacao: string
+          id?: string
+          linha: number
+          redacao_id: string
+          tipo: string
+          trecho: string
+          usuario_id: string
+        }
+        Update: {
+          canonico?: string
+          categoria?: string
+          correcao?: string
+          criado_em?: string
+          explicacao?: string
+          id?: string
+          linha?: number
+          redacao_id?: string
+          tipo?: string
+          trecho?: string
+          usuario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "erros_redacao_redacao_id_fkey"
+            columns: ["redacao_id"]
+            isOneToOne: false
+            referencedRelation: "redacoes"
             referencedColumns: ["id"]
           },
         ]
@@ -530,6 +621,102 @@ export type Database = {
           },
         ]
       }
+      redacoes: {
+        Row: {
+          atualizado_em: string
+          aviso: string | null
+          corrigida_em: string | null
+          criado_em: string
+          detalhes: Json | null
+          entrada: string
+          entregue_em: string | null
+          excedente: string[]
+          fotos: string[]
+          fotos_apagar_em: string | null
+          id: string
+          linhas: string[]
+          nc: number | null
+          ne: number | null
+          npd: number | null
+          prioridades: Json | null
+          simulado_id: string | null
+          status: string
+          tema_id: string
+          terceira_correcao: boolean
+          texto: string
+          tl: number | null
+          usuario_id: string
+          zerada_motivo: string | null
+        }
+        Insert: {
+          atualizado_em?: string
+          aviso?: string | null
+          corrigida_em?: string | null
+          criado_em?: string
+          detalhes?: Json | null
+          entrada?: string
+          entregue_em?: string | null
+          excedente?: string[]
+          fotos?: string[]
+          fotos_apagar_em?: string | null
+          id?: string
+          linhas?: string[]
+          nc?: number | null
+          ne?: number | null
+          npd?: number | null
+          prioridades?: Json | null
+          simulado_id?: string | null
+          status?: string
+          tema_id: string
+          terceira_correcao?: boolean
+          texto?: string
+          tl?: number | null
+          usuario_id: string
+          zerada_motivo?: string | null
+        }
+        Update: {
+          atualizado_em?: string
+          aviso?: string | null
+          corrigida_em?: string | null
+          criado_em?: string
+          detalhes?: Json | null
+          entrada?: string
+          entregue_em?: string | null
+          excedente?: string[]
+          fotos?: string[]
+          fotos_apagar_em?: string | null
+          id?: string
+          linhas?: string[]
+          nc?: number | null
+          ne?: number | null
+          npd?: number | null
+          prioridades?: Json | null
+          simulado_id?: string | null
+          status?: string
+          tema_id?: string
+          terceira_correcao?: boolean
+          texto?: string
+          tl?: number | null
+          usuario_id?: string
+          zerada_motivo?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "redacoes_simulado_id_fkey"
+            columns: ["simulado_id"]
+            isOneToOne: false
+            referencedRelation: "simulados"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "redacoes_tema_id_fkey"
+            columns: ["tema_id"]
+            isOneToOne: false
+            referencedRelation: "temas_discursiva"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       respostas: {
         Row: {
           duvida: boolean
@@ -705,6 +892,66 @@ export type Database = {
           },
         ]
       }
+      temas_discursiva: {
+        Row: {
+          concurso_id: string
+          criado_em: string
+          enunciado: string
+          hash: string
+          id: string
+          origem: string
+          padrao_resposta: Json
+          prova_id: string
+          prova_origem: string | null
+          status: string
+          textos_apoio: Json
+          tipo: string
+        }
+        Insert: {
+          concurso_id: string
+          criado_em?: string
+          enunciado: string
+          hash: string
+          id?: string
+          origem: string
+          padrao_resposta: Json
+          prova_id: string
+          prova_origem?: string | null
+          status: string
+          textos_apoio?: Json
+          tipo?: string
+        }
+        Update: {
+          concurso_id?: string
+          criado_em?: string
+          enunciado?: string
+          hash?: string
+          id?: string
+          origem?: string
+          padrao_resposta?: Json
+          prova_id?: string
+          prova_origem?: string | null
+          status?: string
+          textos_apoio?: Json
+          tipo?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "temas_discursiva_concurso_id_fkey"
+            columns: ["concurso_id"]
+            isOneToOne: false
+            referencedRelation: "concursos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "temas_discursiva_prova_id_fkey"
+            columns: ["prova_id"]
+            isOneToOne: false
+            referencedRelation: "provas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       textos_base: {
         Row: {
           conteudo: string
@@ -805,6 +1052,11 @@ export type Database = {
     }
     Functions: {
       carregar_edital: { Args: { e: Json }; Returns: undefined }
+      discursiva_checar_limites: { Args: { p_usuario: string }; Returns: undefined }
+      discursiva_entregar: { Args: { p_redacao: string }; Returns: undefined }
+      discursiva_enviar_fotos: { Args: { p_fotos: string[]; p_redacao: string }; Returns: undefined }
+      discursiva_importar_temas: { Args: { p_lote: Json }; Returns: Json }
+      discursiva_pedir_tema: { Args: { p_concurso: string }; Returns: boolean }
       edital_gravar_estrutura: { Args: { e: Json }; Returns: string }
       edital_gravar_topicos: {
         Args: { e: Json; v_concurso: string }

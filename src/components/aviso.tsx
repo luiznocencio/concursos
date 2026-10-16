@@ -18,6 +18,10 @@ function mensagem(codigo: string, pedidos: number): string | null {
       return "Escolha pelo menos um tópico.";
     case "faltam":
       return "Ainda faltam itens para montar o simulado completo.";
+    case "tema-pedido":
+      return "Pedimos um tema novo. Ele aparece na lista em cerca de 1 minuto, se a revisão por outra IA aprovar; se não aparecer, peça outro.";
+    case "tema-ja-pedido":
+      return "Você já tem um tema novo a caminho. Espere ele ficar pronto para pedir outro.";
     case "encerrada":
       return "Esta sessão já foi encerrada.";
     default:
@@ -29,7 +33,7 @@ export function Aviso({ codigo, pedidos }: { codigo?: string; pedidos?: string }
   const texto = codigo ? mensagem(codigo, Number(pedidos ?? 0)) : null;
   if (!texto) return null;
   return (
-    <p role="status" className="mb-8 flex items-start gap-3 rounded-xl bg-azul-claro px-4 py-3 text-[15px] text-[#00447f]">
+    <p role="status" className="mb-8 flex items-start gap-3 rounded-xl bg-azul-claro px-4 py-3 text-[15px] text-azul-tinta">
       <Info size={20} weight="bold" className="mt-0.5 shrink-0" aria-hidden />
       {texto}
     </p>

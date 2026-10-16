@@ -96,8 +96,8 @@ export class ErroPipeline extends Error {
 }
 
 // Tenta os provedores na ordem dada; registra o uso de cada chamada (inclusive as que falham depois de cobrar).
-async function chamarComReserva<T>(
-  deps: DepsPipeline,
+export async function chamarComReserva<T>(
+  deps: { repo: Pick<RepositorioPipeline, "registrarUso">; jobId: string | null },
   ordem: ProvedorIa[],
   finalidade: string,
   custo: { total: number },

@@ -30,7 +30,7 @@ const COR_MAPA: Record<string, string> = {
   certo: "bg-azul-claro text-azul border-transparent",
   certo_duvida: "bg-azul-claro text-azul border-transparent",
   errado: "bg-vermelho-claro text-vermelho border-transparent",
-  branco: "bg-black/5 text-black/60 border-transparent",
+  branco: "bg-tinta/5 text-tinta/60 border-transparent",
 };
 
 // Treino e revisão: uma pergunta por vez, correção logo após a resposta. Atalhos: C, E, B, D e Enter.
@@ -68,10 +68,19 @@ export function PlayerTreino({ sessaoId, itens }: { sessaoId: string; itens: Ite
           setErro(r.erro);
           return;
         }
-        const { gabarito, justificativa, citacao, fonte, resultado } = r.dados;
+        const { gabarito, justificativa, citacao, fonte, provaOrigem, resultado } = r.dados;
         setCorrigidos((c) => ({
           ...c,
-          [item.id]: { gabarito, justificativa, citacao, fonte, resultado, resposta: r.dados.resposta, duvida: r.dados.duvida },
+          [item.id]: {
+            gabarito,
+            justificativa,
+            citacao,
+            fonte,
+            provaOrigem,
+            resultado,
+            resposta: r.dados.resposta,
+            duvida: r.dados.duvida,
+          },
         }));
       });
     },
@@ -141,7 +150,7 @@ export function PlayerTreino({ sessaoId, itens }: { sessaoId: string; itens: Ite
                 aria-pressed={duvida}
                 onClick={() => setDuvida((d) => !d)}
                 className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors duration-200 ${
-                  duvida ? "border-transparent bg-marigold-claro text-[#8a5a00]" : "border-borda-forte text-black/70 hover:bg-black/[0.03]"
+                  duvida ? "border-transparent bg-marigold-claro text-marigold-tinta" : "border-borda-forte text-tinta/70 hover:bg-realce"
                 }`}
               >
                 Tenho dúvida
@@ -175,7 +184,7 @@ export function PlayerTreino({ sessaoId, itens }: { sessaoId: string; itens: Ite
                   aria-label={`Item ${n + 1}`}
                   aria-current={n === indice ? "step" : undefined}
                   className={`flex aspect-square w-full items-center justify-center rounded-md border text-xs font-medium transition-colors duration-200 ${
-                    c ? COR_MAPA[c.resultado] : "border-borda-forte bg-white text-black/60"
+                    c ? COR_MAPA[c.resultado] : "border-borda-forte bg-superficie text-tinta/60"
                   } ${n === indice ? "ring-2 ring-azul ring-offset-1" : ""}`}
                 >
                   {n + 1}

@@ -99,7 +99,7 @@ export function PlayerSimulado({
             aria-pressed={atual?.duvida ?? false}
             onClick={() => gravar(item.id, { resposta: atual?.resposta ?? "branco", duvida: !(atual?.duvida ?? false) })}
             className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors duration-200 ${
-              atual?.duvida ? "border-transparent bg-marigold-claro text-[#8a5a00]" : "border-borda-forte text-black/70 hover:bg-black/[0.03]"
+              atual?.duvida ? "border-transparent bg-marigold-claro text-marigold-tinta" : "border-borda-forte text-tinta/70 hover:bg-realce"
             }`}
           >
             Tenho dúvida
@@ -143,8 +143,8 @@ export function PlayerSimulado({
                       aria-label={`Item ${n + 1}${marcado ? ", marcado" : ""}${m?.duvida ? ", com dúvida" : ""}`}
                       aria-current={n === indice ? "step" : undefined}
                       className={`flex aspect-square w-full items-center justify-center rounded text-[10px] font-medium transition-colors duration-200 ${
-                        marcado ? "bg-azul-claro text-azul" : "bg-white text-black/50 ring-1 ring-borda-forte ring-inset"
-                      } ${m?.duvida ? "!bg-marigold-claro !text-[#8a5a00]" : ""} ${n === indice ? "outline-2 outline-offset-1 outline-azul" : ""}`}
+                        marcado ? "bg-azul-claro text-azul" : "bg-superficie text-pedra ring-1 ring-borda-forte ring-inset"
+                      } ${m?.duvida ? "!bg-marigold-claro !text-marigold-tinta" : ""} ${n === indice ? "outline-2 outline-offset-1 outline-azul" : ""}`}
                     >
                       {n + 1}
                     </button>
@@ -155,7 +155,7 @@ export function PlayerSimulado({
           </div>
         ))}
         {confirmando ? (
-          <div className="flex flex-col gap-3 rounded-xl border border-borda bg-white p-4">
+          <div className="flex flex-col gap-3 rounded-xl border border-borda bg-superficie p-4">
             <p className="text-sm">
               Entregar agora? {brancos > 0 ? `${brancos} ${brancos === 1 ? "item está" : "itens estão"} em branco.` : "Todos os itens foram marcados."}
             </p>

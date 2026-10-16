@@ -3,9 +3,13 @@ import { criarProvedorClaude } from "../ai/claude";
 import { criarProvedorOpenAI } from "../ai/openai";
 import type { ProvedorIa } from "../ai/tipos";
 
+// Variável vazia (ex.: "CLAUDE_MODEL=" copiado do .env.example) conta como ausente.
+const vazioComoAusente = (v: unknown) => (v === "" ? undefined : v);
+
 const schema = z.object({
   ANTHROPIC_API_KEY: z.string().min(1),
-  CLAUDE_MODEL: z.string().min(1).default("claude-opus-5-5"),
+  CLAUDE_MODEL: z.preprocess(vazioComoAusente, z.string().min(1).default("claude-opus-5-5")),
+  CLAUDE_ESFORCO: z.preprocess(vazioComoAusente, z.enum(["low", "medium", "high", "xhigh", "max"]).default("high")),
   OPENAI_API_KEY: z.string().min(1),
   OPENAI_MODEL: z.string().min(1),
   OPENAI_PRECO_ENTRADA_USD_MTOK: z.coerce.number().positive(),
@@ -25,7 +29,7 @@ export function lerConfigIa(env: Record<string, string | undefined> = process.en
 
 export function criarProvedores(config: ConfigIa = lerConfigIa()): [ProvedorIa, ProvedorIa] {
   return [
-    criarProvedorClaude({ apiKey: config.ANTHROPIC_API_KEY, modelo: config.CLAUDE_MODEL }),
+    criarProvedorClaude({ apiKey: config.ANTHROPIC_API_KEY, modelo: config.CLAUDE_MODEL, esforco: config.CLAUDE_ESFORCO }),
     criarProvedorOpenAI({
       apiKey: config.OPENAI_API_KEY,
       modelo: config.OPENAI_MODEL,

@@ -6,6 +6,8 @@ export interface ConfigFoco {
   tauEsquecimentoDias: number;
   esquecimentoMinimo: number;
   escalaIncerteza: number;
+  // Peso de um erro de redação no histórico, relativo a um item respondido (peso 1).
+  pesoErroRedacao: number;
 }
 
 export const CONFIG_FOCO: ConfigFoco = {
@@ -13,6 +15,7 @@ export const CONFIG_FOCO: ConfigFoco = {
   tauEsquecimentoDias: 7,
   esquecimentoMinimo: 0.1,
   escalaIncerteza: 5,
+  pesoErroRedacao: 0.5,
 };
 
 export const VALOR_RESULTADO: Record<ResultadoResposta, number> = {
@@ -26,6 +29,8 @@ export interface RespostaHistorico {
   canonico: string;
   resultado: ResultadoResposta;
   respondidaEm: Date;
+  // Padrão 1 (item respondido). Erros de redação entram com CONFIG_FOCO.pesoErroRedacao.
+  peso?: number;
 }
 
 export interface PrioridadeTopico extends TopicoAlvo {
@@ -67,7 +72,7 @@ export function calcularPrioridades(
         let somaValores = 0;
         let ultima = rs[0].respondidaEm;
         for (const r of rs) {
-          const w = 0.5 ** (diasEntre(r.respondidaEm, agora) / config.meiaVidaDias);
+          const w = (r.peso ?? 1) * 0.5 ** (diasEntre(r.respondidaEm, agora) / config.meiaVidaDias);
           somaPesos += w;
           somaValores += w * VALOR_RESULTADO[r.resultado];
           if (r.respondidaEm > ultima) ultima = r.respondidaEm;

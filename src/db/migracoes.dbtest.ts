@@ -37,9 +37,10 @@ describe("schema", () => {
       "select table_name from information_schema.tables where table_schema = 'public' order by table_name",
     );
     expect(r.rows.map((x) => x.table_name)).toEqual([
-      "ai_usage", "bancas", "cargo_provas", "cargos", "concursos", "disciplinas", "fonte_dispositivos",
-      "fontes", "item_topicos", "itens", "jobs", "prova_disciplinas", "provas", "respostas",
-      "revisao_espacada", "seed_partes", "simulado_itens", "simulados", "textos_base", "topicos", "topicos_canonicos",
+      "ai_usage", "bancas", "cargo_provas", "cargos", "concursos", "correcoes_discursiva", "disciplinas",
+      "erros_redacao", "fonte_dispositivos", "fontes", "item_topicos", "itens", "jobs", "prova_disciplinas", "provas",
+      "redacoes", "respostas", "revisao_espacada", "seed_partes", "simulado_itens", "simulados", "temas_discursiva",
+      "textos_base", "topicos", "topicos_canonicos",
     ]);
   });
 

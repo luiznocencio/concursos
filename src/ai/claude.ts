@@ -2,7 +2,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import type { z } from "zod/v4";
 import { custoUsd, PRECOS_CLAUDE } from "./custo";
-import { ErroIa, type PedidoJson, type ProvedorIa, type RespostaJson, type UsoIa } from "./tipos";
+import { ErroIa, type ImagemIa, type PedidoJson, type ProvedorIa, type RespostaJson, type UsoIa } from "./tipos";
 
 export interface ConfigClaude {
   apiKey?: string;
@@ -10,10 +10,31 @@ export interface ConfigClaude {
   esforco?: "low" | "medium" | "high" | "xhigh" | "max";
 }
 
+// O Haiku 5.5 não tem fallback no servidor: com "default" a recusa continua recusa.
+export function suportaFallbackServidor(modelo: string): boolean {
+  return !modelo.startsWith("claude-haiku-");
+}
+
+// Conteúdo da mensagem do usuário: só texto, ou as imagens seguidas do texto.
+export function conteudoClaude(prompt: string, imagens: ImagemIa[] = []) {
+  if (imagens.length === 0) return prompt;
+  return [
+    ...imagens.map((i) => ({
+      type: "image" as const,
+      source: { type: "base64" as const, media_type: i.midia, data: i.base64 },
+    })),
+    { type: "text" as const, text: prompt },
+  ];
+}
+
 export function criarProvedorClaude(config: ConfigClaude = {}): ProvedorIa {
   const client = new Anthropic(config.apiKey ? { apiKey: config.apiKey } : {});
   const modelo = config.modelo ?? "claude-opus-5-5";
   if (!PRECOS_CLAUDE[modelo]) throw new Error(`Preço desconhecido para o modelo ${modelo}`);
+  // Em recusa por política, a própria API refaz o pedido no modelo de fallback padrão.
+  const fallback = suportaFallbackServidor(modelo)
+    ? { betas: ["server-side-fallback-2026-07-01"], fallbacks: "default" as const }
+    : {};
 
   return {
     nome: "anthropic",
@@ -23,12 +44,10 @@ export function criarProvedorClaude(config: ConfigClaude = {}): ProvedorIa {
         resposta = await client.beta.messages.parse({
           model: modelo,
           max_tokens: 16000,
-          // Em recusa por política, a própria API refaz o pedido no modelo de fallback padrão.
-          betas: ["server-side-fallback-2026-07-01"],
-          fallbacks: "default",
+          ...fallback,
           output_config: { effort: config.esforco ?? "high", format: betaZodOutputFormat(pedido.schema) },
           system: [{ type: "text", text: pedido.sistema, cache_control: { type: "ephemeral" } }],
-          messages: [{ role: "user", content: pedido.prompt }],
+          messages: [{ role: "user", content: conteudoClaude(pedido.prompt, pedido.imagens) }],
         });
       } catch (e) {
         throw new ErroIa("anthropic", "api", e instanceof Error ? e.message : String(e));

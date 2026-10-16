@@ -5,14 +5,14 @@ export function Enunciado({ textoBase, enunciado, topicos }: { textoBase: string
       {topicos.length > 0 && (
         <p className="flex flex-wrap gap-2">
           {topicos.map((t) => (
-            <span key={t} className="rounded-full bg-black/5 px-3 py-1 text-xs font-medium text-black/70">
+            <span key={t} className="rounded-full bg-tinta/5 px-3 py-1 text-xs font-medium text-tinta/70">
               {t}
             </span>
           ))}
         </p>
       )}
       {textoBase && (
-        <div className="max-h-[50dvh] overflow-y-auto rounded-lg border border-borda bg-papel px-5 py-4 text-[15px] leading-relaxed whitespace-pre-line text-black/80">
+        <div className="max-h-[50dvh] overflow-y-auto rounded-lg border border-borda bg-papel px-5 py-4 text-[15px] leading-relaxed whitespace-pre-line text-tinta/80">
           {textoBase}
         </div>
       )}
