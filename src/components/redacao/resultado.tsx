@@ -6,6 +6,7 @@ import { treinarTopicos } from "@/app/(app)/acoes";
 import { botao, cartao, pilula, textoApoio, titulo } from "@/components/ui";
 import { nota } from "@/lib/formato";
 import { segmentosDaLinha } from "@/lib/redacao";
+import { BotaoEnviar } from "@/components/botao-enviar";
 
 const BANCAS = ["conteudo_1", "conteudo_2", "conteudo_3"] as const;
 const NOME_TIPO: Record<string, string> = { grafia: "grafia", morfossintaxe: "morfossintaxe", propriedade_vocabular: "propriedade vocabular" };
@@ -73,9 +74,9 @@ export function ResultadoRedacao({ r }: { r: RedacaoCompleta }) {
                   <form action={treinarTopicos}>
                     <input type="hidden" name="canonico" value={p.canonico} />
                     <input type="hidden" name="total" value="10" />
-                    <button type="submit" className={botao.secundario}>
+                    <BotaoEnviar pendente="Montando o treino…" className={botao.secundario}>
                       Treinar 10 itens
-                    </button>
+                    </BotaoEnviar>
                   </form>
                 )}
               </li>

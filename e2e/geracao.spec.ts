@@ -32,4 +32,10 @@ test("treino maior que o estoque enfileira um pedido de geração", async ({ pag
     tentativas: 0,
     payload: { concurso: "cbmal-2026", canonico, quantidade: 5, pedido_por: usuarioLogado.id },
   });
+
+  // Enquanto o pedido está na fila, Início e Treinar mostram a faixa de andamento.
+  await page.goto("/");
+  await expect(page.getByText(/Gerando itens para 1 tópico…/)).toBeVisible();
+  await page.goto("/treinar");
+  await expect(page.getByText(/Gerando itens para 1 tópico…/)).toBeVisible();
 });

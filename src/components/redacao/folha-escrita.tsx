@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { entregar, salvarRascunho } from "@/app/(app)/redacao/acoes";
 import { contarTL, distribuirEmLinhas } from "@/core/discursiva/linhas";
 import type { ConfigDiscursiva } from "@/core/discursiva/tipos";
+import { Indicador } from "@/components/carregando";
 import { botao } from "@/components/ui";
 import { duracao } from "@/lib/formato";
 
@@ -30,7 +31,21 @@ function TempoEscrevendo({ inicio }: { inicio: number | null }) {
 }
 
 // Escrita da redação: o texto digitado é distribuído nas linhas da folha como na prova, e salvo sozinho.
-export function FolhaEscrita({ redacaoId, textoInicial, config }: { redacaoId: string; textoInicial: string; config: ConfigDiscursiva }) {
+// `noSimulado`: sem entrega nem cronômetro próprios (o simulado entrega tudo junto e tem o seu tempo);
+// `aoMudar` repassa o texto atual para o simulado enviar na entrega.
+export function FolhaEscrita({
+  redacaoId,
+  textoInicial,
+  config,
+  noSimulado = false,
+  aoMudar,
+}: {
+  redacaoId: string;
+  textoInicial: string;
+  config: ConfigDiscursiva;
+  noSimulado?: boolean;
+  aoMudar?: (texto: string) => void;
+}) {
   const router = useRouter();
   const [texto, setTexto] = useState(textoInicial);
   const [salvamento, setSalvamento] = useState<Salvamento>("salvo");
@@ -57,6 +72,7 @@ export function FolhaEscrita({ redacaoId, textoInicial, config }: { redacaoId: s
 
   function aoDigitar(valor: string) {
     setTexto(valor);
+    aoMudar?.(valor);
     setSalvamento("pendente");
     if (inicio === null) setInicio(Date.now());
     if (timer.current) clearTimeout(timer.current);
@@ -76,11 +92,12 @@ export function FolhaEscrita({ redacaoId, textoInicial, config }: { redacaoId: s
     });
   }
 
-  const estado = { salvo: "Rascunho salvo", pendente: "Alterações não salvas", salvando: "Salvando…", erro: "Não salvou" }[salvamento];
+  const estado = { salvo: "Rascunho salvo", pendente: "Salvando em instantes…", salvando: "Salvando…", erro: "Não salvou" }[salvamento];
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="grid gap-6 lg:grid-cols-2">
+      {/* No simulado a coluna é mais estreita: texto e folha ficam um embaixo do outro. */}
+      <div className={`grid gap-6 ${noSimulado ? "" : "lg:grid-cols-2"}`}>
         <div className="flex min-w-0 flex-col gap-2">
           <label htmlFor="texto" className="text-sm font-medium">
             Seu texto
@@ -95,8 +112,11 @@ export function FolhaEscrita({ redacaoId, textoInicial, config }: { redacaoId: s
             className="min-h-80 w-full resize-y rounded-lg border border-borda-campo bg-superficie px-4 py-3 text-[15px] leading-relaxed"
           />
           <p className="flex flex-wrap justify-between gap-2 text-sm" aria-live="polite">
-            <span className={salvamento === "erro" ? "text-vermelho" : "text-pedra"}>{estado}</span>
-            <TempoEscrevendo inicio={inicio} />
+            <span className={`flex items-center gap-1.5 ${salvamento === "erro" ? "text-vermelho" : "text-pedra"}`}>
+              {salvamento === "salvando" && <Indicador tamanho={12} />}
+              {estado}
+            </span>
+            {!noSimulado && <TempoEscrevendo inicio={inicio} />}
           </p>
         </div>
 
@@ -132,23 +152,28 @@ export function FolhaEscrita({ redacaoId, textoInicial, config }: { redacaoId: s
           {erro}
         </p>
       )}
-      <div className="flex flex-wrap items-center gap-3">
-        {confirmando ? (
-          <>
-            <span className="text-sm">Depois de entregar, o texto não pode mais ser editado.</span>
-            <button type="button" onClick={confirmarEntrega} disabled={entregando} className={botao.primario}>
-              {entregando ? "Entregando…" : "Entregar agora"}
+      {noSimulado ? (
+        <p className="text-sm text-pedra">A redação é entregue junto com o simulado.</p>
+      ) : (
+        <div className="flex flex-wrap items-center gap-3">
+          {confirmando ? (
+            <>
+              <span className="text-sm">Depois de entregar, o texto não pode mais ser editado.</span>
+              <button type="button" onClick={confirmarEntrega} disabled={entregando} aria-busy={entregando} className={botao.primario}>
+                {entregando && <Indicador />}
+                {entregando ? "Entregando…" : "Entregar agora"}
+              </button>
+              <button type="button" onClick={() => setConfirmando(false)} disabled={entregando} className={botao.texto}>
+                Continuar escrevendo
+              </button>
+            </>
+          ) : (
+            <button type="button" onClick={() => setConfirmando(true)} disabled={tl === 0} className={botao.primario}>
+              Entregar para correção
             </button>
-            <button type="button" onClick={() => setConfirmando(false)} disabled={entregando} className={botao.texto}>
-              Continuar escrevendo
-            </button>
-          </>
-        ) : (
-          <button type="button" onClick={() => setConfirmando(true)} disabled={tl === 0} className={botao.primario}>
-            Entregar para correção
-          </button>
-        )}
-      </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { filtrarCandidatos, itensDaSessao, provaOrigemVisivel, type Cliente } from "./estudo";
+import { filtrarCandidatos, historicoDasLinhas, itensDaSessao, provaOrigemVisivel, type Cliente } from "./estudo";
 
 const linhas = [
   { id: "a", textoBaseId: null, canonicos: ["portugues/crase"], visto: false, origem: "ia" as const },
@@ -16,6 +16,22 @@ describe("filtrarCandidatos", () => {
 
   it("tira os itens reais das sessões em modo produto", () => {
     expect(filtrarCandidatos(linhas, false)).toEqual([{ id: "a", textoBaseId: null, canonicos: ["portugues/crase"], visto: false }]);
+  });
+});
+
+describe("historicoDasLinhas", () => {
+  it("converte a data e dá peso 0,5 aos erros de redação", () => {
+    expect(
+      historicoDasLinhas([
+        { canonico: "portugues/crase", resultado: "certo", respondidaEm: "2026-10-15T12:00:00Z", origem: "item" },
+        { canonico: "portugues/crase", resultado: "errado", respondidaEm: "2026-10-16T12:00:00Z", origem: "redacao" },
+        { canonico: "portugues/crase", resultado: "branco", respondidaEm: "2026-10-16T12:00:00Z" },
+      ]),
+    ).toEqual([
+      { canonico: "portugues/crase", resultado: "certo", respondidaEm: new Date("2026-10-15T12:00:00Z") },
+      { canonico: "portugues/crase", resultado: "errado", respondidaEm: new Date("2026-10-16T12:00:00Z"), peso: 0.5 },
+      { canonico: "portugues/crase", resultado: "branco", respondidaEm: new Date("2026-10-16T12:00:00Z") },
+    ]);
   });
 });
 

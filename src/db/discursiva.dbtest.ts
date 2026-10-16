@@ -280,3 +280,59 @@ describe("discursiva_pedir_tema", () => {
     ).rejects.toThrow(/concurso desconhecido/);
   });
 });
+
+describe("estudo_historico com erros de redação", () => {
+  it("inclui os erros de redação do usuário nos tópicos do cargo, marcados como origem redacao", async () => {
+    const id = await redacao(ANA, "corrigida");
+    const erro = (usuario: string, canonico: string) =>
+      client.query(
+        `insert into public.erros_redacao (redacao_id, usuario_id, linha, trecho, tipo, categoria, correcao, explicacao, canonico)
+         values ($1, $2, 1, 'Texto', 'morfossintaxe', 'crase', 'x', 'y', $3)`,
+        [id, usuario, canonico],
+      );
+    await erro(ANA, "portugues/crase");
+    await erro(BRUNO, "portugues/crase");
+    // Tópico que não cai nas objetivas do cargo (só na discursiva): fica fora.
+    await erro(ANA, "atualidades/temas-atuais");
+    const cargo = await valor<string>("select id from public.cargos where slug = 'cfo'");
+    const historico = await comoUsuario(client, ANA, () =>
+      valor<{ canonico: string; resultado: string; origem: string }[]>("select public.estudo_historico($1)", [cargo]),
+    );
+    // Um teste anterior já gravou um erro de ortografia da Ana; o do Bruno e o de Atualidades não entram.
+    expect(historico.map(({ canonico, resultado, origem }) => `${canonico}:${resultado}:${origem}`).sort()).toEqual([
+      "portugues/crase:errado:redacao",
+      "portugues/ortografia:errado:redacao",
+    ]);
+  });
+});
+
+describe("meus_pedidos_ia", () => {
+  it("devolve só os pedidos de IA do próprio usuário, em aberto ou recentes", async () => {
+    await client.query("delete from public.jobs");
+    await client.query(
+      `insert into public.jobs (tipo, payload, status, atualizado_em) values
+        ('gerar_tema', jsonb_build_object('concurso', 'c', 'pedido_por', $1::text), 'pendente', now()),
+        ('gerar_itens', jsonb_build_object('canonico', 'portugues/crase', 'pedido_por', $1::text), 'concluido', now()),
+        ('gerar_itens', jsonb_build_object('canonico', 'portugues/regencia', 'pedido_por', $1::text), 'concluido', now() - interval '2 hours'),
+        ('corrigir_redacao', jsonb_build_object('redacao_id', 'r', 'pedido_por', $1::text), 'pendente', now()),
+        ('gerar_tema', jsonb_build_object('concurso', 'c', 'pedido_por', $2::text), 'pendente', now())`,
+      [ANA, BRUNO],
+    );
+    const pedidos = await comoUsuario(client, ANA, () =>
+      valor<{ tipo: string; status: string; canonico: string | null }[]>("select public.meus_pedidos_ia()"),
+    );
+    expect(pedidos.map((p) => `${p.tipo}:${p.status}:${p.canonico}`).sort()).toEqual([
+      "gerar_itens:concluido:portugues/crase",
+      "gerar_tema:pendente:null",
+    ]);
+  });
+
+  it("não fica disponível para visitantes", async () => {
+    await client.query("set role anon");
+    try {
+      await expect(client.query("select public.meus_pedidos_ia()")).rejects.toThrow(/permission denied/);
+    } finally {
+      await client.query("reset role");
+    }
+  });
+});

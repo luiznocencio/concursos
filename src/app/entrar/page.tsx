@@ -1,5 +1,6 @@
 import { botao } from "@/components/ui";
 import { enviarLinkMagico } from "./actions";
+import { BotaoEnviar } from "@/components/botao-enviar";
 
 const MENSAGENS: Record<string, string> = {
   email: "Informe um e-mail válido.",
@@ -37,9 +38,9 @@ export default async function Entrar({
           />
           <input type="hidden" name="proximo" value={proximo ?? "/"} />
           {erro && <p className="text-sm text-vermelho">{MENSAGENS[erro] ?? "Algo deu errado."}</p>}
-          <button type="submit" className={botao.primario}>
+          <BotaoEnviar pendente="Enviando o link…" className={botao.primario}>
             Receber link de acesso
-          </button>
+          </BotaoEnviar>
         </form>
       )}
     </main>

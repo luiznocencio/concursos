@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { registrarFotos } from "@/app/(app)/redacao/acoes";
 import { criarClienteNavegador } from "@/db/supabase/navegador";
+import { Indicador } from "@/components/carregando";
 import { botao } from "@/components/ui";
 import { BUCKET_FOTOS, validarFoto } from "@/lib/redacao";
 
@@ -28,6 +29,8 @@ export function EnvioFoto({ redacaoId, usuarioId }: { redacaoId: string; usuario
   const [arquivos, setArquivos] = useState<File[]>([]);
   const [erro, setErro] = useState<string | null>(null);
   const [enviando, iniciar] = useTransition();
+  // Passo atual do envio (reduzir, enviar, registrar), mostrado no botão: o envio de 2 fotos pode levar vários segundos.
+  const [passo, setPasso] = useState("Enviando…");
 
   function escolher(lista: FileList | null) {
     const escolhidos = Array.from(lista ?? []).slice(0, 2);
@@ -41,14 +44,18 @@ export function EnvioFoto({ redacaoId, usuarioId }: { redacaoId: string; usuario
       try {
         const db = criarClienteNavegador();
         const caminhos: string[] = [];
+        const total = arquivos.length;
         for (const [i, arquivo] of arquivos.entries()) {
+          const deQuantas = total > 1 ? ` ${i + 1} de ${total}` : "";
+          setPasso(`Reduzindo a foto${deQuantas}…`);
+          const reduzida = await reduzirFoto(arquivo);
+          setPasso(`Enviando a foto${deQuantas}…`);
           const caminho = `${usuarioId}/${redacaoId}/${Date.now()}-${i + 1}.jpg`;
-          const { error } = await db.storage
-            .from(BUCKET_FOTOS)
-            .upload(caminho, await reduzirFoto(arquivo), { contentType: "image/jpeg" });
+          const { error } = await db.storage.from(BUCKET_FOTOS).upload(caminho, reduzida, { contentType: "image/jpeg" });
           if (error) throw error;
           caminhos.push(caminho);
         }
+        setPasso("Registrando para a transcrição…");
         const r = await registrarFotos(redacaoId, caminhos);
         if (!r.ok) {
           setErro(r.erro);
@@ -81,8 +88,15 @@ export function EnvioFoto({ redacaoId, usuarioId }: { redacaoId: string; usuario
           {erro}
         </p>
       )}
-      <button type="button" onClick={enviar} disabled={arquivos.length === 0 || enviando} className={`${botao.contorno} self-start`}>
-        {enviando ? "Enviando…" : "Enviar para transcrição"}
+      <button
+        type="button"
+        onClick={enviar}
+        disabled={arquivos.length === 0 || enviando}
+        aria-busy={enviando}
+        className={`${botao.contorno} self-start`}
+      >
+        {enviando && <Indicador />}
+        {enviando ? passo : "Enviar para transcrição"}
       </button>
     </div>
   );

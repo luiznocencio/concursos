@@ -45,6 +45,7 @@ export interface TemaResumo {
   origem: "gerado" | "real";
   provaOrigem: string | null;
   feito: boolean;
+  criadoEm: string;
 }
 
 export interface RedacaoResumo {
@@ -71,6 +72,8 @@ export interface RedacaoCompleta {
   npd: number | null;
   zeradaMotivo: string | null;
   terceiraCorrecao: boolean;
+  entregueEm: string | null;
+  atualizadoEm: string;
   prioridades: z.infer<typeof prioridadeSchema>[];
   detalhes: z.infer<typeof detalhesSchema>;
   tema: {
@@ -101,6 +104,7 @@ export async function listarTemas(db: Cliente, concursoSlug: string, limite = 30
       origem: t.origem === "real" ? ("real" as const) : ("gerado" as const),
       provaOrigem: t.prova_origem,
       feito: t.redacoes.length > 0,
+      criadoEm: t.criado_em,
     }))
     .sort((a, b) => Number(b.origem === "real") - Number(a.origem === "real"));
 }
@@ -122,8 +126,12 @@ export async function listarRedacoes(db: Cliente, limite = 50): Promise<RedacaoR
   }));
 }
 
-export async function criarRedacao(db: Cliente, usuarioId: string, temaId: string): Promise<string> {
-  const { data, error } = await db.from("redacoes").insert({ usuario_id: usuarioId, tema_id: temaId }).select("id").single();
+export async function criarRedacao(db: Cliente, usuarioId: string, temaId: string, simuladoId?: string): Promise<string> {
+  const { data, error } = await db
+    .from("redacoes")
+    .insert({ usuario_id: usuarioId, tema_id: temaId, simulado_id: simuladoId ?? null })
+    .select("id")
+    .single();
   if (error) falhou("criar redação", error);
   return data.id;
 }
@@ -133,7 +141,7 @@ export async function carregarRedacao(db: Cliente, id: string): Promise<RedacaoC
     .from("redacoes")
     .select(
       `id, status, aviso, entrada, texto, linhas, excedente, fotos, nc, ne, tl, npd, zerada_motivo, terceira_correcao,
-       prioridades, detalhes,
+       entregue_em, atualizado_em, prioridades, detalhes,
        temas_discursiva!inner(enunciado, origem, prova_origem, textos_apoio, padrao_resposta, provas!inner(config_discursiva)),
        correcoes_discursiva(papel, provedor, modelo, resposta),
        erros_redacao(id, redacao_id, usuario_id, linha, trecho, tipo, categoria, correcao, explicacao, canonico, criado_em)`,
@@ -159,6 +167,8 @@ export async function carregarRedacao(db: Cliente, id: string): Promise<RedacaoC
     npd: data.npd,
     zeradaMotivo: data.zerada_motivo,
     terceiraCorrecao: data.terceira_correcao,
+    entregueEm: data.entregue_em,
+    atualizadoEm: data.atualizado_em,
     prioridades: z.array(prioridadeSchema).catch([]).parse(data.prioridades ?? []),
     detalhes: detalhesSchema.catch(null).parse(data.detalhes),
     tema: {
@@ -231,4 +241,18 @@ export async function configDaDiscursiva(db: Cliente, concursoSlug: string): Pro
   if (!data) return null;
   const c = configSchema.parse(data.config_discursiva);
   return { pontuacaoMaxima: c.pontuacao_maxima, linhasMax: c.linhas_max, notaMinima: c.nota_minima, caracteresPorLinha: c.caracteres_por_linha };
+}
+
+// Erros de língua do usuário desde a data dada (para a seção "Redação" do painel).
+export async function errosDesde(db: Cliente, desde: Date): Promise<{ categoria: string; criadoEm: string }[]> {
+  const { data, error } = await db.from("erros_redacao").select("categoria, criado_em").gte("criado_em", desde.toISOString());
+  if (error) falhou("erros das redações", error);
+  return data.map((e) => ({ categoria: e.categoria, criadoEm: e.criado_em }));
+}
+
+// Redação ligada a um simulado completo com discursiva (no máximo uma por simulado).
+export async function redacaoDoSimulado(db: Cliente, simuladoId: string): Promise<RedacaoCompleta | null> {
+  const { data, error } = await db.from("redacoes").select("id").eq("simulado_id", simuladoId).limit(1).maybeSingle();
+  if (error) falhou("redação do simulado", error);
+  return data ? carregarRedacao(db, data.id) : null;
 }

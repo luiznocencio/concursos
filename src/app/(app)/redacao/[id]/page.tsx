@@ -11,6 +11,7 @@ import { carregarRedacao, urlsDasFotos } from "@/db/repositorios/redacao";
 import { passosDoAndamento, rotuloStatus } from "@/lib/redacao";
 import { contextoDoUsuario } from "../../contexto";
 import { tentarDeNovo } from "../acoes";
+import { BotaoEnviar } from "@/components/botao-enviar";
 
 const transcricaoSchema = z.object({ linhas: z.array(z.object({ texto: z.string(), ilegivel: z.boolean() })) });
 
@@ -101,16 +102,19 @@ async function Conteudo({ r, usuarioId }: { r: NonNullable<Awaited<ReturnType<ty
         <section className={`${cartao} flex flex-col gap-4`}>
           <p className={textoApoio}>A correção não terminou. Seu texto está salvo e pode ser corrigido de novo.</p>
           <form action={tentarDeNovo.bind(null, r.id)}>
-            <button type="submit" className={botao.primario}>
+            <BotaoEnviar pendente="Entregando…" className={botao.primario}>
               Tentar de novo
-            </button>
+            </BotaoEnviar>
           </form>
         </section>
       );
     default:
       return (
         <section className={`${cartao} flex flex-col gap-6`}>
-          <Andamento passos={passosDoAndamento(r.status, r.correcoes.map((c) => c.papel))} />
+          <Andamento
+            passos={passosDoAndamento(r.status, r.correcoes.map((c) => c.papel))}
+            desde={r.status === "transcrevendo" ? r.atualizadoEm : (r.entregueEm ?? r.atualizadoEm)}
+          />
           <p className={textoApoio}>Leva cerca de 1 minuto. Pode sair desta página: a correção continua e fica salva em Redações.</p>
         </section>
       );

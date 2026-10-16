@@ -3,7 +3,7 @@ import { Info } from "@phosphor-icons/react/ssr";
 function mensagem(codigo: string, pedidos: number): string | null {
   const fila =
     pedidos > 0
-      ? `Pedimos a geração de itens para ${pedidos === 1 ? "1 tópico" : `${pedidos} tópicos`}. Volte em alguns minutos.`
+      ? `Pedimos a geração de itens para ${pedidos === 1 ? "1 tópico" : `${pedidos} tópicos`}. Acompanhe na faixa abaixo.`
       : "Os tópicos já estão na fila de geração ou o limite de 3 pedidos em aberto foi atingido.";
   switch (codigo) {
     case "sem-itens":
@@ -19,9 +19,11 @@ function mensagem(codigo: string, pedidos: number): string | null {
     case "faltam":
       return "Ainda faltam itens para montar o simulado completo.";
     case "tema-pedido":
-      return "Pedimos um tema novo. Ele aparece na lista em cerca de 1 minuto, se a revisão por outra IA aprovar; se não aparecer, peça outro.";
+      return "Pedimos um tema novo. Acompanhe abaixo, em Escolha um tema.";
     case "tema-ja-pedido":
       return "Você já tem um tema novo a caminho. Espere ele ficar pronto para pedir outro.";
+    case "sem-tema":
+      return "Não há tema de redação para a prova discursiva. Gere um tema em Redação ou comece o simulado só com as objetivas.";
     case "encerrada":
       return "Esta sessão já foi encerrada.";
     default:

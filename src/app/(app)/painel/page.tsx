@@ -3,14 +3,17 @@ import { ArrowRight } from "@phosphor-icons/react/ssr";
 import { calcularPrioridades } from "@/core";
 import { contarFilaItens, criarRepositorioEstudo, listarSessoes } from "@/db/repositorios/estudo";
 import { custoIaDoMes, situacaoDaFila } from "@/db/repositorios/moderacao";
+import { configDaDiscursiva, errosDesde, listarRedacoes } from "@/db/repositorios/redacao";
 import { criarClienteServico } from "@/db/supabase/servico";
 import { diasAte, tabelaDesempenho } from "@/estudo/painel";
 import { Evolucao } from "@/components/painel/evolucao";
 import { Tendencia } from "@/components/painel/tendencia";
 import { botao, cartao, textoApoio, titulo } from "@/components/ui";
 import { aproveitamento, data, dataDaProva, dataEHora, nota, percentual, plural } from "@/lib/formato";
+import { resumoDasRedacoes } from "@/lib/redacao";
 import { treinarTopicos } from "../acoes";
 import { exigirCargo } from "../contexto";
+import { BotaoEnviar } from "@/components/botao-enviar";
 
 async function dadosDoModerador(agora: Date) {
   try {
@@ -26,11 +29,15 @@ export default async function Painel() {
   const { db, cargo, moderador } = await exigirCargo();
   const repo = criarRepositorioEstudo(db);
   const agora = new Date();
-  const [estrutura, historico, simulados] = await Promise.all([
+  const [estrutura, historico, simulados, redacoes, errosRedacao, configRedacao] = await Promise.all([
     repo.estrutura(cargo.id),
     repo.historico(cargo.id),
     listarSessoes(db, cargo.id, { modo: "completo", abertas: false, limite: 10 }),
+    listarRedacoes(db),
+    errosDesde(db, new Date(agora.getTime() - 30 * 86_400_000)),
+    configDaDiscursiva(db, cargo.concursoSlug),
   ]);
+  const redacao = resumoDasRedacoes(redacoes, errosRedacao, agora);
   const prioridades = calcularPrioridades(estrutura.topicosAlvo, historico, agora);
   const tabela = tabelaDesempenho(estrutura.topicosAlvo, prioridades, historico, agora);
   const entregues = simulados
@@ -76,6 +83,70 @@ export default async function Painel() {
         )}
       </section>
 
+      {configRedacao && (
+        <section className={`${cartao} mt-4`}>
+          <h2 className={titulo.secao}>Redação</h2>
+          {redacao.ultima === null ? (
+            <p className={`${textoApoio} mt-3`}>
+              Escreva uma <Link href="/redacao" className="text-azul hover:underline">redação</Link> para acompanhar a nota da
+              discursiva e os erros de língua mais frequentes.
+            </p>
+          ) : (
+            <div className="mt-6 grid gap-8 md:grid-cols-2">
+              <div className="flex flex-col gap-6">
+                <dl className="grid grid-cols-2 gap-4">
+                  <div>
+                    <dt className="text-sm text-pedra">Última nota</dt>
+                    <dd className="text-[28px] font-semibold tabular-nums tracking-tight">
+                      {nota(redacao.ultima)}
+                      <span className="text-base font-normal text-pedra"> / {configRedacao.pontuacaoMaxima}</span>
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-sm text-pedra">Média das últimas 5</dt>
+                    <dd className="text-[28px] font-semibold tabular-nums tracking-tight">{nota(Math.round((redacao.media ?? 0) * 100) / 100)}</dd>
+                  </div>
+                </dl>
+                {redacao.pontos.length >= 2 && (
+                  <Evolucao
+                    nome="Nota na discursiva"
+                    maximo={configRedacao.pontuacaoMaxima}
+                    corte={configRedacao.notaMinima}
+                    pontos={redacao.pontos.map((p) => ({ id: p.id, rotulo: data(p.quando), nota: p.npd }))}
+                  />
+                )}
+              </div>
+              <div>
+                <h3 className="text-sm font-medium">Erros mais frequentes (30 dias)</h3>
+                {redacao.categorias.length === 0 ? (
+                  <p className="mt-2 text-sm text-pedra">Nenhum erro de língua nos últimos 30 dias.</p>
+                ) : (
+                  <ul className="mt-2 divide-y divide-borda">
+                    {redacao.categorias.map((c) => (
+                      <li key={c.categoria} className="flex items-center justify-between gap-4 py-2">
+                        <span className="first-letter:uppercase">{c.rotulo}</span>
+                        <span className="flex items-center gap-3">
+                          <span className="text-sm text-pedra tabular-nums">{plural(c.n, "erro", "erros")}</span>
+                          {c.canonico && (
+                            <form action={treinarTopicos}>
+                              <input type="hidden" name="canonico" value={c.canonico} />
+                              <input type="hidden" name="total" value="10" />
+                              <BotaoEnviar pendente="Montando…" className={botao.texto}>
+                                Treinar
+                              </BotaoEnviar>
+                            </form>
+                          )}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          )}
+        </section>
+      )}
+
       <section className="mt-4 grid gap-4 lg:grid-cols-[1fr_1.6fr]">
         <div className={cartao}>
           <h2 className={titulo.secao}>10 tópicos prioritários</h2>
@@ -92,9 +163,9 @@ export default async function Painel() {
                 <form action={treinarTopicos}>
                   <input type="hidden" name="canonico" value={t.canonico} />
                   <input type="hidden" name="total" value="10" />
-                  <button type="submit" className={botao.texto} aria-label={`Treinar ${t.titulo}`}>
+                  <BotaoEnviar pendente="" className={botao.texto} aria-label={`Treinar ${t.titulo}`}>
                     <ArrowRight size={16} weight="bold" aria-hidden />
-                  </button>
+                  </BotaoEnviar>
                 </form>
               </li>
             ))}

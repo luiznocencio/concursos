@@ -22,6 +22,8 @@ export type ConfigSessao =
       duracaoMin: number;
       provas: { slug: string; itens: string[] }[];
       disciplinaDoItem: Record<string, string>;
+      // true quando a prova discursiva faz parte do simulado (redação ligada pela coluna redacoes.simulado_id).
+      discursiva?: boolean;
     };
 
 export interface Sessao {

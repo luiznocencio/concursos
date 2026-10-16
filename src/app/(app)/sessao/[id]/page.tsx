@@ -8,6 +8,7 @@ import { nomeDaSessao } from "@/lib/modos";
 import { estudarAgora } from "../../acoes";
 import { contextoDoUsuario } from "../../contexto";
 import { encerrar } from "./acoes";
+import { BotaoEnviar } from "@/components/botao-enviar";
 
 export default async function PaginaSessao({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -25,9 +26,9 @@ export default async function PaginaSessao({ params }: { params: Promise<{ id: s
         <div className="mb-8 flex items-center justify-between gap-4">
           <h1 className={titulo.secao}>{nomeDaSessao(sessao.config)}</h1>
           <form action={encerrar.bind(null, id)}>
-            <button type="submit" className={botao.texto}>
+            <BotaoEnviar pendente="Encerrando…" className={botao.texto}>
               Encerrar sessão
-            </button>
+            </BotaoEnviar>
           </form>
         </div>
         <PlayerTreino sessaoId={id} itens={itens} />
@@ -53,9 +54,9 @@ export default async function PaginaSessao({ params }: { params: Promise<{ id: s
         </div>
         <div className="flex flex-wrap gap-2">
           <form action={estudarAgora}>
-            <button type="submit" className={botao.primario}>
+            <BotaoEnviar pendente="Montando a sessão…" className={botao.primario}>
               Nova sessão
-            </button>
+            </BotaoEnviar>
           </form>
           <Link href="/" className={botao.texto}>
             Voltar ao início

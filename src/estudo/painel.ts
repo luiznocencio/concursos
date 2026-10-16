@@ -1,4 +1,4 @@
-import { VALOR_RESULTADO, type PrioridadeTopico, type RespostaHistorico, type TopicoAlvo } from "@/core";
+import { calcularPrioridades, VALOR_RESULTADO, type PrioridadeTopico, type RespostaHistorico, type TopicoAlvo } from "@/core";
 
 const DIA_MS = 86_400_000;
 const SEMANA_MS = 7 * DIA_MS;
@@ -36,14 +36,21 @@ export function tendenciaSemanal(respostas: RespostaHistorico[], agora: Date, se
   });
 }
 
-// Tabela do painel: tópicos na ordem do edital, agrupados por disciplina. O aproveitamento
-// e a prioridade vêm do motor de foco; brancos e tendência são calculados aqui.
+// Itens respondidos, sem os erros de redação (que só entram na prioridade do motor de foco).
+export function soItens(historico: RespostaHistorico[]): RespostaHistorico[] {
+  return historico.filter((r) => r.peso === undefined);
+}
+
+// Tabela do painel: tópicos na ordem do edital, agrupados por disciplina. A prioridade vem do motor de foco
+// (com os erros de redação); respostas, aproveitamento, brancos e tendência contam só os itens.
 export function tabelaDesempenho(
   topicosAlvo: TopicoAlvo[],
   prioridades: PrioridadeTopico[],
-  historico: RespostaHistorico[],
+  historicoCompleto: RespostaHistorico[],
   agora: Date,
 ): LinhaDisciplina[] {
+  const historico = soItens(historicoCompleto);
+  const doItens = new Map(calcularPrioridades(topicosAlvo, historico, agora).map((p) => [p.chave, p]));
   const porCanonico = new Map<string, RespostaHistorico[]>();
   for (const r of historico) porCanonico.set(r.canonico, [...(porCanonico.get(r.canonico) ?? []), r]);
 
@@ -57,8 +64,8 @@ export function tabelaDesempenho(
       codigo: p.codigo,
       titulo: p.titulo,
       canonico: p.canonico,
-      n: p.n,
-      aproveitamento: p.aproveitamento,
+      n: doItens.get(p.chave)?.n ?? 0,
+      aproveitamento: doItens.get(p.chave)?.aproveitamento ?? 0,
       taxaBrancos: rs.length ? rs.filter((r) => r.resultado === "branco").length / rs.length : 0,
       tendencia: tendenciaSemanal(rs, agora),
       prioridade: p.prioridade,

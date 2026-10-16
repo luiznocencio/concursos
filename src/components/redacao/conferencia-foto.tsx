@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { confirmarTranscricao } from "@/app/(app)/redacao/acoes";
+import { Indicador } from "@/components/carregando";
 import { botao } from "@/components/ui";
 
 // Foto ao lado da transcrição: o usuário corrige o que a IA leu errado antes da correção.
@@ -76,7 +77,8 @@ export function ConferenciaFoto({
             {erro}
           </p>
         )}
-        <button type="button" onClick={confirmar} disabled={enviando} className={`${botao.primario} self-start`}>
+        <button type="button" onClick={confirmar} disabled={enviando} aria-busy={enviando} className={`${botao.primario} self-start`}>
+          {enviando && <Indicador />}
           {enviando ? "Entregando…" : "Confirmar e entregar para correção"}
         </button>
       </div>
