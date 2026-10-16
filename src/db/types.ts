@@ -627,6 +627,7 @@ export type Database = {
           aviso: string | null
           corrigida_em: string | null
           criado_em: string
+          detalhes: Json | null
           entrada: string
           entregue_em: string | null
           excedente: string[]
@@ -651,6 +652,7 @@ export type Database = {
           aviso?: string | null
           corrigida_em?: string | null
           criado_em?: string
+          detalhes?: Json | null
           entrada?: string
           entregue_em?: string | null
           excedente?: string[]
@@ -675,6 +677,7 @@ export type Database = {
           aviso?: string | null
           corrigida_em?: string | null
           criado_em?: string
+          detalhes?: Json | null
           entrada?: string
           entregue_em?: string | null
           excedente?: string[]
