@@ -8,6 +8,7 @@ import { dataEHora, nota } from "@/lib/formato";
 import { rotuloStatus } from "@/lib/redacao";
 import { revisarErros } from "../../../acoes";
 import { exigirCargo } from "../../../contexto";
+import { BotaoEnviar } from "@/components/botao-enviar";
 
 const RECOMENDACAO = {
   arriscar_mais: "Seus chutes com dúvida mais acertam do que erram: vale arriscar mais nesta disciplina.",
@@ -66,9 +67,9 @@ export default async function Resultado({ params }: { params: Promise<{ id: stri
         </div>
         <div className="flex flex-wrap gap-2">
           <form action={revisarErros}>
-            <button type="submit" className={botao.primario}>
+            <BotaoEnviar pendente="Montando a revisão…" className={botao.primario}>
               Revisar erros
-            </button>
+            </BotaoEnviar>
           </form>
           <Link href="/simulado" className={botao.texto}>
             Voltar aos simulados

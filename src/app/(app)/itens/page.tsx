@@ -6,6 +6,7 @@ import { botao, cartao, pilula, textoApoio, titulo } from "@/components/ui";
 import { dataEHora } from "@/lib/formato";
 import { contextoDoUsuario } from "../contexto";
 import { decidir } from "./acoes";
+import { BotaoEnviar } from "@/components/botao-enviar";
 
 interface Validacao {
   gabarito_validador?: string | null;
@@ -77,15 +78,15 @@ export default async function FilaDeItens() {
                 )}
                 <form action={decidir} className="flex flex-wrap gap-2">
                   <input type="hidden" name="item" value={i.id} />
-                  <button type="submit" name="decisao" value="aprovar" className={botao.contorno}>
+                  <BotaoEnviar pendente="Aprovando…" name="decisao" value="aprovar" className={botao.contorno}>
                     Aprovar como está
-                  </button>
-                  <button type="submit" name="decisao" value="inverter" className={botao.contorno}>
+                  </BotaoEnviar>
+                  <BotaoEnviar pendente="Aprovando…" name="decisao" value="inverter" className={botao.contorno}>
                     Aprovar com gabarito {i.gabarito === "C" ? "Errado" : "Certo"}
-                  </button>
-                  <button type="submit" name="decisao" value="descartar" className={`${botao.texto} text-vermelho`}>
+                  </BotaoEnviar>
+                  <BotaoEnviar pendente="Descartando…" name="decisao" value="descartar" className={`${botao.texto} text-vermelho`}>
                     Descartar
-                  </button>
+                  </BotaoEnviar>
                 </form>
               </li>
             );

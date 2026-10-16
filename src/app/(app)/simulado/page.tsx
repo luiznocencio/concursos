@@ -7,6 +7,7 @@ import { botao, cartao, pilula, textoApoio, titulo } from "@/components/ui";
 import { dataEHora, nota, plural } from "@/lib/formato";
 import { comecarSimulado, gerarFaltantes } from "../acoes";
 import { exigirCargo } from "../contexto";
+import { BotaoEnviar } from "@/components/botao-enviar";
 
 export default async function Simulado({ searchParams }: { searchParams: Promise<{ aviso?: string; pedidos?: string }> }) {
   const { aviso, pedidos } = await searchParams;
@@ -64,9 +65,9 @@ export default async function Simulado({ searchParams }: { searchParams: Promise
                   </span>
                 </label>
               )}
-              <button type="submit" className={`${botao.primario} self-start`}>
+              <BotaoEnviar pendente="Montando a prova…" className={`${botao.primario} self-start`}>
                 Começar simulado
-              </button>
+              </BotaoEnviar>
             </form>
           ) : (
             <p className="text-sm text-pedra">Ainda faltam itens para montar a prova inteira.</p>
@@ -88,9 +89,9 @@ export default async function Simulado({ searchParams }: { searchParams: Promise
               {[...new Set(previa.faltantes.flatMap((f) => f.canonicos))].map((c) => (
                 <input key={c} type="hidden" name="canonico" value={c} />
               ))}
-              <button type="submit" className={botao.secundario}>
+              <BotaoEnviar pendente="Pedindo…" className={botao.secundario}>
                 Pedir itens à IA
-              </button>
+              </BotaoEnviar>
             </form>
             <p className="mt-3 text-sm text-pedra">Até 3 pedidos em aberto por vez; cada pedido gera 5 itens.</p>
           </div>

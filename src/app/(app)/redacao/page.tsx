@@ -7,15 +7,23 @@ import { data, nota } from "@/lib/formato";
 import { resumoDoTema, rotuloStatus } from "@/lib/redacao";
 import { exigirCargo } from "../contexto";
 import { novaRedacao, pedirNovoTema } from "./acoes";
+import { BotaoEnviar } from "@/components/botao-enviar";
+import { AutoAtualizar } from "@/components/auto-atualizar";
+import { Indicador } from "@/components/carregando";
+import { TempoDeEspera } from "@/components/tempo-de-espera";
+import { meusPedidosIa } from "@/db/repositorios/pedidos";
+import { estadoDoTema } from "@/lib/pedidos";
 
 export default async function Redacoes({ searchParams }: { searchParams: Promise<{ aviso?: string }> }) {
   const { aviso } = await searchParams;
   const { db, cargo } = await exigirCargo();
-  const [temas, redacoes, config] = await Promise.all([
+  const [temas, redacoes, config, pedidos] = await Promise.all([
     listarTemas(db, cargo.concursoSlug),
     listarRedacoes(db),
     configDaDiscursiva(db, cargo.concursoSlug),
+    meusPedidosIa(db),
   ]);
+  const novoTema = estadoDoTema(pedidos, temas);
   const corrigidas = redacoes.filter((r) => r.status === "corrigida" && r.npd !== null).slice(0, 8).reverse();
 
   return (
@@ -68,14 +76,40 @@ export default async function Redacoes({ searchParams }: { searchParams: Promise
       <section className="mt-12">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <h2 className={titulo.secao}>Escolha um tema</h2>
-          <form action={pedirNovoTema}>
-            <button type="submit" className={botao.secundario}>
-              Gerar tema novo
-            </button>
-          </form>
+          {novoTema?.tipo !== "gerando" && (
+            <form action={pedirNovoTema}>
+              <BotaoEnviar pendente="Pedindo…" className={botao.secundario}>
+                Gerar tema novo
+              </BotaoEnviar>
+            </form>
+          )}
         </div>
+        {novoTema?.tipo === "gerando" && (
+          <div role="status" className={`${cartao} mt-4 flex flex-col gap-2`}>
+            <AutoAtualizar />
+            <p className="flex items-center gap-2 font-medium">
+              <Indicador /> Gerando um tema novo…
+            </p>
+            <p className={textoApoio}>
+              Uma IA escreve a proposta e outra revisa. Leva cerca de 1 minuto; o tema aparece aqui quando ficar pronto.
+            </p>
+            <TempoDeEspera
+              desde={novoTema.desde}
+              demora="Está demorando mais que o normal. Pode sair desta página: o tema aparece aqui quando ficar pronto."
+            />
+          </div>
+        )}
+        {(novoTema?.tipo === "reprovado" || novoTema?.tipo === "falhou") && (
+          <p role="status" className="mt-4 rounded-xl bg-marigold-claro px-4 py-3 text-[15px] text-marigold-tinta">
+            {novoTema.tipo === "reprovado"
+              ? "O último tema gerado não passou na revisão e foi descartado. Peça outro."
+              : "Não foi possível gerar o último tema. Peça outro."}
+          </p>
+        )}
         {temas.length === 0 ? (
-          <p className={`${textoApoio} mt-3`}>Nenhum tema ainda. Gere um tema novo: fica pronto em cerca de 1 minuto.</p>
+          novoTema?.tipo !== "gerando" && (
+            <p className={`${textoApoio} mt-3`}>Nenhum tema ainda. Gere um tema novo: fica pronto em cerca de 1 minuto.</p>
+          )
         ) : (
           <ul className="mt-4 grid gap-4 md:grid-cols-2">
             {temas.map((t) => (
@@ -89,9 +123,9 @@ export default async function Redacoes({ searchParams }: { searchParams: Promise
                 </p>
                 <form action={novaRedacao} className="mt-auto">
                   <input type="hidden" name="tema" value={t.id} />
-                  <button type="submit" className={botao.contorno}>
+                  <BotaoEnviar pendente="Abrindo…" className={botao.contorno}>
                     Escrever sobre este tema
-                  </button>
+                  </BotaoEnviar>
                 </form>
               </li>
             ))}

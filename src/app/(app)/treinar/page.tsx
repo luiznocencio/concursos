@@ -6,6 +6,9 @@ import { botao, textoApoio, titulo } from "@/components/ui";
 import { aproveitamento, plural } from "@/lib/formato";
 import { treinarTopicos } from "../acoes";
 import { exigirCargo } from "../contexto";
+import { BotaoEnviar } from "@/components/botao-enviar";
+import { GeracaoDeItens } from "@/components/geracao-itens";
+import { meusPedidosIa } from "@/db/repositorios/pedidos";
 
 export default async function Treinar({
   searchParams,
@@ -16,10 +19,11 @@ export default async function Treinar({
   const { db, cargo } = await exigirCargo();
   const repo = criarRepositorioEstudo(db);
   const agora = new Date();
-  const [estrutura, candidatos, historico] = await Promise.all([
+  const [estrutura, candidatos, historico, pedidosIa] = await Promise.all([
     repo.estrutura(cargo.id),
     repo.candidatos(cargo.id),
     repo.historico(cargo.id),
+    meusPedidosIa(db),
   ]);
   const tabela = tabelaDesempenho(estrutura.topicosAlvo, calcularPrioridades(estrutura.topicosAlvo, historico, agora), historico, agora);
   const naoVistos = new Map<string, number>();
@@ -31,6 +35,7 @@ export default async function Treinar({
   return (
     <>
       <Aviso codigo={aviso} pedidos={pedidos} />
+      <GeracaoDeItens pedidos={pedidosIa} />
       <h1 className={titulo.pagina}>Treinar por tópico</h1>
       <p className={`${textoApoio} mt-3 max-w-[60ch]`}>
         Escolha os tópicos do edital. Os itens que você ainda não viu vêm primeiro; quando faltam, pedimos mais à IA.
@@ -74,9 +79,9 @@ export default async function Treinar({
             <option value="20">20 itens</option>
             <option value="30">30 itens</option>
           </select>
-          <button type="submit" className={botao.primario}>
+          <BotaoEnviar pendente="Montando o treino…" className={botao.primario}>
             Começar treino
-          </button>
+          </BotaoEnviar>
         </div>
       </form>
     </>

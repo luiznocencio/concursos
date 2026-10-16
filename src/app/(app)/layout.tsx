@@ -6,6 +6,7 @@ import { botao } from "@/components/ui";
 import { COOKIE_TEMA, lerTema } from "@/lib/tema";
 import { sair } from "../actions";
 import { contextoDoUsuario } from "./contexto";
+import { BotaoEnviar } from "@/components/botao-enviar";
 
 export default async function LayoutApp({ children }: { children: React.ReactNode }) {
   const { user, moderador } = await contextoDoUsuario();
@@ -29,9 +30,9 @@ export default async function LayoutApp({ children }: { children: React.ReactNod
           <span className="hidden text-sm text-pedra md:inline">{user.email}</span>
           <SeletorTema inicial={tema} />
           <form action={sair}>
-            <button type="submit" className={botao.texto}>
+            <BotaoEnviar pendente="Saindo…" className={botao.texto}>
               Sair
-            </button>
+            </BotaoEnviar>
           </form>
         </div>
       </header>

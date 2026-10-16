@@ -13,6 +13,7 @@ import { aproveitamento, data, dataDaProva, dataEHora, nota, percentual, plural 
 import { resumoDasRedacoes } from "@/lib/redacao";
 import { treinarTopicos } from "../acoes";
 import { exigirCargo } from "../contexto";
+import { BotaoEnviar } from "@/components/botao-enviar";
 
 async function dadosDoModerador(agora: Date) {
   try {
@@ -130,9 +131,9 @@ export default async function Painel() {
                             <form action={treinarTopicos}>
                               <input type="hidden" name="canonico" value={c.canonico} />
                               <input type="hidden" name="total" value="10" />
-                              <button type="submit" className={botao.texto}>
+                              <BotaoEnviar pendente="Montando…" className={botao.texto}>
                                 Treinar
-                              </button>
+                              </BotaoEnviar>
                             </form>
                           )}
                         </span>
@@ -162,9 +163,9 @@ export default async function Painel() {
                 <form action={treinarTopicos}>
                   <input type="hidden" name="canonico" value={t.canonico} />
                   <input type="hidden" name="total" value="10" />
-                  <button type="submit" className={botao.texto} aria-label={`Treinar ${t.titulo}`}>
+                  <BotaoEnviar pendente="" className={botao.texto} aria-label={`Treinar ${t.titulo}`}>
                     <ArrowRight size={16} weight="bold" aria-hidden />
-                  </button>
+                  </BotaoEnviar>
                 </form>
               </li>
             ))}

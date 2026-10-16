@@ -9,6 +9,9 @@ import { aproveitamento, data, dataDaProva, plural } from "@/lib/formato";
 import { nomeDaSessao, rotaDaSessao } from "@/lib/modos";
 import { escolherCargo, estudarAgora, revisarErros, treinarTopicos } from "./acoes";
 import { contextoDoUsuario } from "./contexto";
+import { BotaoEnviar } from "@/components/botao-enviar";
+import { GeracaoDeItens } from "@/components/geracao-itens";
+import { meusPedidosIa } from "@/db/repositorios/pedidos";
 
 export default async function Inicio({ searchParams }: { searchParams: Promise<{ aviso?: string; pedidos?: string }> }) {
   const { aviso, pedidos } = await searchParams;
@@ -25,12 +28,13 @@ export default async function Inicio({ searchParams }: { searchParams: Promise<{
 
   const agora = new Date();
   const repo = criarRepositorioEstudo(db);
-  const [estrutura, historico, abertas, recentes, vencidas] = await Promise.all([
+  const [estrutura, historico, abertas, recentes, vencidas, pedidosIa] = await Promise.all([
     repo.estrutura(cargo.id),
     repo.historico(cargo.id),
     listarSessoes(db, cargo.id, { abertas: true, limite: 1 }),
     listarSessoes(db, cargo.id, { limite: 5 }),
     contarRevisoesVencidas(db, agora),
+    meusPedidosIa(db),
   ]);
   const foco = calcularPrioridades(estrutura.topicosAlvo, historico, agora).slice(0, 5);
   const aberta = abertas[0];
@@ -39,6 +43,7 @@ export default async function Inicio({ searchParams }: { searchParams: Promise<{
   return (
     <>
       <Aviso codigo={aviso} pedidos={pedidos} />
+      <GeracaoDeItens pedidos={pedidosIa} />
       <section className="grid gap-4 md:grid-cols-[1.5fr_1fr]">
         <div className={`${cartao} flex flex-col gap-6 p-8`}>
           <div className="flex flex-col gap-3">
@@ -50,9 +55,9 @@ export default async function Inicio({ searchParams }: { searchParams: Promise<{
           </div>
           <div className="flex flex-wrap gap-2">
             <form action={estudarAgora}>
-              <button type="submit" className={botao.primario}>
+              <BotaoEnviar pendente="Montando a sessão…" className={botao.primario}>
                 Começar sessão
-              </button>
+              </BotaoEnviar>
             </form>
             {aberta && (
               <Link href={rotaDaSessao(aberta.id, aberta.config)} className={botao.secundario}>
@@ -73,9 +78,9 @@ export default async function Inicio({ searchParams }: { searchParams: Promise<{
           {cargos.length > 1 && (
             <form action={escolherCargo} className="flex flex-wrap gap-2" aria-label="Cargo">
               {cargos.map((c) => (
-                <button
+                <BotaoEnviar
                   key={c.id}
-                  type="submit"
+                  pendente={c.nome}
                   name="cargo"
                   value={c.id}
                   aria-pressed={c.id === cargo.id}
@@ -84,7 +89,7 @@ export default async function Inicio({ searchParams }: { searchParams: Promise<{
                   }`}
                 >
                   {c.nome}
-                </button>
+                </BotaoEnviar>
               ))}
             </form>
           )}
@@ -102,9 +107,9 @@ export default async function Inicio({ searchParams }: { searchParams: Promise<{
             </p>
           </div>
           <form action={revisarErros}>
-            <button type="submit" disabled={vencidas === 0} className={botao.contorno}>
+            <BotaoEnviar pendente="Montando a revisão…" disabled={vencidas === 0} className={botao.contorno}>
               Revisar agora
-            </button>
+            </BotaoEnviar>
           </form>
         </div>
 
@@ -128,10 +133,10 @@ export default async function Inicio({ searchParams }: { searchParams: Promise<{
                 <form action={treinarTopicos}>
                   <input type="hidden" name="canonico" value={t.canonico} />
                   <input type="hidden" name="total" value="10" />
-                  <button type="submit" className={botao.texto} aria-label={`Treinar ${t.titulo}`}>
+                  <BotaoEnviar pendente="Montando…" className={botao.texto} aria-label={`Treinar ${t.titulo}`}>
                     Treinar
                     <ArrowRight size={16} weight="bold" aria-hidden />
-                  </button>
+                  </BotaoEnviar>
                 </form>
               </li>
             ))}
