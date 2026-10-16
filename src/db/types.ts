@@ -643,6 +643,7 @@ export type Database = {
           status: string
           tema_id: string
           terceira_correcao: boolean
+          texto: string
           tl: number | null
           usuario_id: string
           zerada_motivo: string | null
@@ -668,6 +669,7 @@ export type Database = {
           status?: string
           tema_id: string
           terceira_correcao?: boolean
+          texto?: string
           tl?: number | null
           usuario_id: string
           zerada_motivo?: string | null
@@ -693,6 +695,7 @@ export type Database = {
           status?: string
           tema_id?: string
           terceira_correcao?: boolean
+          texto?: string
           tl?: number | null
           usuario_id?: string
           zerada_motivo?: string | null

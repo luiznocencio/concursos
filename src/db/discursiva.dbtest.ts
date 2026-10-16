@@ -141,6 +141,17 @@ describe("RLS", () => {
     expect(vistas).toBe(0);
   });
 
+  it("dono grava o texto digitado só no rascunho", async () => {
+    const id = await redacao(ANA);
+    const entregue = await redacao(ANA, "na_fila");
+    const alteradas = await comoUsuario(client, ANA, async () => {
+      const a = await client.query("update public.redacoes set texto = 'Meu texto' where id = $1", [id]);
+      const b = await client.query("update public.redacoes set texto = 'Meu texto' where id = $1", [entregue]);
+      return [a.rowCount, b.rowCount];
+    });
+    expect(alteradas).toEqual([1, 0]);
+  });
+
   it("correções e erros só para o dono da redação", async () => {
     const id = await redacao(ANA, "corrigida");
     await client.query(
