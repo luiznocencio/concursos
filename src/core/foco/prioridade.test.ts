@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { TopicoAlvo } from "../edital/consultas";
-import { calcularPrioridades, type RespostaHistorico } from "./prioridade";
+import { calcularPrioridades, CONFIG_FOCO, type RespostaHistorico } from "./prioridade";
 
 const agora = new Date("2026-11-01T12:00:00Z");
 const diasAtras = (n: number) => new Date(agora.getTime() - n * 86_400_000);
@@ -57,5 +57,16 @@ describe("calcularPrioridades", () => {
     const [a, b] = calcularPrioridades([alvo("1", "a/x", 1), alvo("2", "a/y", 4)], [], agora);
     expect(a.chave).toBe("d:2");
     expect(a.prioridade / b.prioridade).toBeCloseTo(4, 10);
+  });
+
+  it("erro de redação pesa menos que item errado", () => {
+    const certo = h("a/x", "certo", 0);
+    const [item] = calcularPrioridades([alvo("1", "a/x")], [certo, h("a/x", "errado", 0)], agora);
+    const erroRedacao = { ...h("a/x", "errado", 0), peso: CONFIG_FOCO.pesoErroRedacao };
+    const [redacao] = calcularPrioridades([alvo("1", "a/x")], [certo, erroRedacao], agora);
+    // item: (1 − 1) / 2 = 0; redação: (1 − 0,5) / 1,5 = 1/3
+    expect(item.aproveitamento).toBeCloseTo(0, 10);
+    expect(redacao.aproveitamento).toBeCloseTo(1 / 3, 10);
+    expect(redacao.prioridade).toBeLessThan(item.prioridade);
   });
 });
