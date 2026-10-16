@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { importarTema, type EstadoTema } from "@/app/(app)/importar/acoes";
+import { Indicador } from "@/components/carregando";
 import { botao } from "@/components/ui";
 
 const campo = "w-full rounded-lg border border-borda-campo bg-superficie px-3 py-2 text-[15px]";
@@ -60,7 +61,8 @@ export function ImportarTemaReal({ pontuacaoMaxima }: { pontuacaoMaxima: number 
         O que a banca espera (opcional)
         <textarea name="expectativas" rows={4} defaultValue={valores?.expectativas} className={campo} />
       </label>
-      <button type="submit" disabled={enviando} className={`${botao.contorno} self-start`}>
+      <button type="submit" disabled={enviando} aria-busy={enviando} className={`${botao.contorno} self-start`}>
+        {enviando && <Indicador />}
         {enviando ? "Gravando…" : "Gravar tema"}
       </button>
     </form>

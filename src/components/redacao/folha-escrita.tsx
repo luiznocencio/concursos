@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { entregar, salvarRascunho } from "@/app/(app)/redacao/acoes";
 import { contarTL, distribuirEmLinhas } from "@/core/discursiva/linhas";
 import type { ConfigDiscursiva } from "@/core/discursiva/tipos";
+import { Indicador } from "@/components/carregando";
 import { botao } from "@/components/ui";
 import { duracao } from "@/lib/formato";
 
@@ -91,7 +92,7 @@ export function FolhaEscrita({
     });
   }
 
-  const estado = { salvo: "Rascunho salvo", pendente: "Alterações não salvas", salvando: "Salvando…", erro: "Não salvou" }[salvamento];
+  const estado = { salvo: "Rascunho salvo", pendente: "Salvando em instantes…", salvando: "Salvando…", erro: "Não salvou" }[salvamento];
 
   return (
     <div className="flex flex-col gap-6">
@@ -111,7 +112,10 @@ export function FolhaEscrita({
             className="min-h-80 w-full resize-y rounded-lg border border-borda-campo bg-superficie px-4 py-3 text-[15px] leading-relaxed"
           />
           <p className="flex flex-wrap justify-between gap-2 text-sm" aria-live="polite">
-            <span className={salvamento === "erro" ? "text-vermelho" : "text-pedra"}>{estado}</span>
+            <span className={`flex items-center gap-1.5 ${salvamento === "erro" ? "text-vermelho" : "text-pedra"}`}>
+              {salvamento === "salvando" && <Indicador tamanho={12} />}
+              {estado}
+            </span>
             {!noSimulado && <TempoEscrevendo inicio={inicio} />}
           </p>
         </div>
@@ -155,7 +159,8 @@ export function FolhaEscrita({
           {confirmando ? (
             <>
               <span className="text-sm">Depois de entregar, o texto não pode mais ser editado.</span>
-              <button type="button" onClick={confirmarEntrega} disabled={entregando} className={botao.primario}>
+              <button type="button" onClick={confirmarEntrega} disabled={entregando} aria-busy={entregando} className={botao.primario}>
+                {entregando && <Indicador />}
                 {entregando ? "Entregando…" : "Entregar agora"}
               </button>
               <button type="button" onClick={() => setConfirmando(false)} disabled={entregando} className={botao.texto}>

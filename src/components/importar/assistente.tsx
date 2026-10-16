@@ -4,6 +4,7 @@ import { CheckCircle, WarningCircle } from "@phosphor-icons/react";
 import Link from "next/link";
 import { useState, useTransition } from "react";
 import { gravar, sugerir } from "@/app/(app)/importar/acoes";
+import { Indicador } from "@/components/carregando";
 import { botao, cartao, textoApoio, titulo } from "@/components/ui";
 import type { ResultadoImportacao } from "@/db/repositorios/importacao";
 import { faixas, montarPrevia, type PreviaImportacao } from "@/importacao/previa";
@@ -246,7 +247,8 @@ export function AssistenteImportacao({
               {previa.total > 0 && (
                 <>
                   <button type="button" onClick={pedirSugestao} disabled={pendente} className={botao.primario}>
-                    {pendente ? "Pedindo sugestões..." : "Sugerir tópicos com IA"}
+                    {pendente && <Indicador />}
+                    {pendente ? "Pedindo sugestões à IA…" : "Sugerir tópicos com IA"}
                   </button>
                   <button type="button" onClick={() => irPara("topicos")} disabled={pendente} className={botao.contorno}>
                     Escolher tópicos sem IA
@@ -277,7 +279,8 @@ export function AssistenteImportacao({
             {alerta}
             <div className="flex flex-wrap gap-2">
               <button type="button" onClick={confirmarGravacao} disabled={pendente || semTopico.length > 0} className={botao.primario}>
-                {pendente ? "Gravando..." : itens.length === 1 ? "Gravar 1 item" : `Gravar ${itens.length} itens`}
+                {pendente && <Indicador />}
+                {pendente ? "Gravando…" : itens.length === 1 ? "Gravar 1 item" : `Gravar ${itens.length} itens`}
               </button>
               <button type="button" onClick={() => irPara("previa")} disabled={pendente} className={botao.texto}>
                 Voltar

@@ -6,6 +6,7 @@ import { entregar, marcar } from "@/app/(app)/simulado/[id]/acoes";
 import { Enunciado } from "@/components/sessao/enunciado";
 import { FolhaEscrita } from "@/components/redacao/folha-escrita";
 import type { ConfigDiscursiva } from "@/core/discursiva/tipos";
+import { Indicador } from "@/components/carregando";
 import { botao } from "@/components/ui";
 import type { ItemDaSessao } from "@/db/repositorios/estudo";
 import type { Marcacao } from "@/estudo/tipos";
@@ -161,6 +162,12 @@ export function PlayerSimulado({
 
       <aside className="flex flex-col gap-6 lg:sticky lg:top-24 lg:self-start">
         <Cronometro prazo={prazo} aoTerminar={finalizar} />
+        {entregando && (
+          <p role="status" className="flex items-center gap-2 text-sm text-grafite">
+            <Indicador />
+            Entregando e corrigindo a prova…
+          </p>
+        )}
         {provas.map((p) => (
           <div key={p.slug}>
             <p className="mb-2 text-sm font-medium">{p.nome}</p>
@@ -210,10 +217,11 @@ export function PlayerSimulado({
               Entregar agora? {brancos > 0 ? `${brancos} ${brancos === 1 ? "item está" : "itens estão"} em branco.` : "Todos os itens foram marcados."}
             </p>
             <div className="flex gap-2">
-              <button type="button" disabled={entregando} onClick={finalizar} className={botao.primario}>
-                Entregar
+              <button type="button" disabled={entregando} aria-busy={entregando} onClick={finalizar} className={botao.primario}>
+                {entregando && <Indicador />}
+                {entregando ? "Entregando…" : "Entregar"}
               </button>
-              <button type="button" onClick={() => setConfirmando(false)} className={botao.texto}>
+              <button type="button" disabled={entregando} onClick={() => setConfirmando(false)} className={botao.texto}>
                 Voltar
               </button>
             </div>

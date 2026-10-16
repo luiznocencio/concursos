@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { responder } from "@/app/(app)/sessao/[id]/acoes";
+import { Indicador } from "@/components/carregando";
 import { botao } from "@/components/ui";
 import type { ItemDaSessao } from "@/db/repositorios/estudo";
 import { resultadoDe } from "@/estudo/resultado";
@@ -159,6 +160,12 @@ export function PlayerTreino({ sessaoId, itens }: { sessaoId: string; itens: Ite
                 Deixar em branco
               </button>
             </div>
+            {pendente && (
+              <p role="status" className="flex items-center gap-2 text-sm text-grafite">
+                <Indicador />
+                Corrigindo…
+              </p>
+            )}
             {erro && (
               <p role="alert" className="text-sm text-vermelho">
                 {erro}

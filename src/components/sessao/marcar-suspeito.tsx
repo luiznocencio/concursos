@@ -3,6 +3,7 @@
 import { Flag } from "@phosphor-icons/react";
 import { useState, useTransition } from "react";
 import { marcarComoSuspeito } from "@/app/(app)/sessao/[id]/acoes";
+import { Indicador } from "@/components/carregando";
 import { botao } from "@/components/ui";
 
 // Denuncia um item com problema (gabarito, ambiguidade, lei desatualizada). Ele sai das sessões até ser revisado.
@@ -49,8 +50,9 @@ export function MarcarSuspeito({ itemId }: { itemId: string }) {
       />
       {estado !== "livre" && <p className="text-sm text-vermelho">{estado}</p>}
       <div className="flex gap-2">
-        <button type="submit" disabled={pendente || !motivo.trim()} className={botao.contorno}>
-          Marcar como suspeito
+        <button type="submit" disabled={pendente || !motivo.trim()} aria-busy={pendente} className={botao.contorno}>
+          {pendente && <Indicador />}
+          {pendente ? "Marcando…" : "Marcar como suspeito"}
         </button>
         <button type="button" onClick={() => setAberto(false)} className={botao.texto}>
           Cancelar
