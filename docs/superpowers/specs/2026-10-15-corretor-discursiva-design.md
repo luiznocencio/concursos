@@ -113,12 +113,10 @@ Segue o padrão existente: prompts versionados, respostas validadas com Zod, cus
 - Retentativas: até 3 por job, como hoje; esgotadas → `falhou`, com o botão "Tentar de novo" (chama `discursiva_entregar` de novo, que aceita o estado `falhou`).
 
 ### Configuração
-- Modelos por papel, por variável de ambiente, com padrões:
-  - `DISCURSIVA_MODELO_CONTEUDO_1` = Claude;
-  - `DISCURSIVA_MODELO_CONTEUDO_2` = GPT;
-  - `DISCURSIVA_MODELO_LINGUA` = Claude;
-  - `DISCURSIVA_MODELO_TRANSCRICAO` = Claude.
-- Os padrões reaproveitam `CLAUDE_MODEL`/`OPENAI_MODEL` e a configuração de esforço atual.
+- Papéis fixos por provedor, com os modelos de `CLAUDE_MODEL`/`OPENAI_MODEL` e o esforço de `CLAUDE_ESFORCO`:
+  - banca 1, língua e terceira correção = Claude; banca 2 = GPT;
+  - transcrição e geração de tema = Claude, com o GPT de reserva; avaliação do tema = o outro provedor.
+- Trocar o modelo de um papel isolado fica para quando houver necessidade (decisão do plano 7).
 - Limites: 2 redações em correção ao mesmo tempo e 10 entregas por dia, fixos na função `discursiva_checar_limites` do banco (mudar exige migração; variável de ambiente não protegeria uma função chamada direto pela API).
 - Custo esperado: US$ 0,10 a 0,25 por correção, + cerca de US$ 0,05 com foto, + cerca de US$ 0,03 por tema gerado.
 
@@ -234,4 +232,4 @@ Quatro etapas, cada uma com plano próprio executado por agentes, commit por tar
 3. **Telas**: `/redacao`, escrita, conferência da foto, andamento e resultado.
 4. **Integração**: simulado completo, motor de foco, painel e importação de temas reais.
 
-Para ir ao ar: aplicar a migração (inclui o bucket privado) e, opcionalmente, definir as variáveis `DISCURSIVA_*`. Nenhuma chave nova.
+Para ir ao ar: aplicar as migrações 0009 (inclui o bucket privado) e 0010 (coluna `detalhes` com a nota por aspecto e as correções usadas). Nenhuma chave nova.
