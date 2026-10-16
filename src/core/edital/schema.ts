@@ -61,6 +61,8 @@ const provaDiscursivaSchema = z.object({
   pontuacao_maxima: z.number().positive(),
   linhas_max: z.number().int().positive(),
   nota_minima: z.number().min(0),
+  // Média de caracteres por linha manuscrita; calibra a folha digitada de 30 linhas.
+  caracteres_por_linha: z.number().int().positive().default(70),
   disciplinas: z.array(slug).min(1),
 });
 

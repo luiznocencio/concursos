@@ -11,3 +11,4 @@ export * from "./foco/prioridade";
 export * from "./sessao/selecao";
 export * from "./sessao/estudar-agora";
 export * from "./sessao/treino-simulado";
+export * from "./discursiva";

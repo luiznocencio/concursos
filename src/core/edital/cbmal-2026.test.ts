@@ -40,7 +40,7 @@ describe("edital CBM-AL 2026", () => {
     expect(p["p1-gerais"]).toMatchObject({ tipo: "objetiva", formato: "certo_errado", itens: 50, corte: { regra: "piso_fator", fator: 0.2 } });
     expect(p["p2-cfo"]).toMatchObject({ itens: 70, corte: { regra: "piso_fator", fator: 0.3 } });
     expect(p["p2-soldado"]).toMatchObject({ itens: 70, corte: { regra: "piso_fator", fator: 0.3 } });
-    expect(p["discursiva"]).toMatchObject({ tipo: "discursiva", pontuacao_maxima: 30, linhas_max: 30, nota_minima: 15, disciplinas: ["atualidades"] });
+    expect(p["discursiva"]).toMatchObject({ tipo: "discursiva", pontuacao_maxima: 30, linhas_max: 30, nota_minima: 15, caracteres_por_linha: 70, disciplinas: ["atualidades"] });
     for (const c of edital.cargos) {
       expect(c.duracao_min).toBe(270);
       expect(c.corte_conjunto?.corte).toEqual({ regra: "piso_fator", fator: 0.3 });
