@@ -1,9 +1,10 @@
-# Verificação a cada push e pull request. Não usa segredos: o E2E roda contra um Supabase local
+# Verificação a cada pull request e push no main. Não usa segredos: o E2E roda contra um Supabase local
 # (Docker no próprio runner), com as chaves padrão públicas do CLI e as chaves de IA vazias.
 name: CI
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 concurrency:
@@ -71,7 +72,7 @@ jobs:
       - uses: supabase/setup-cli@v1
         with:
           version: 2.121.0
-      # Sobe Postgres, Auth, PostgREST, Kong e Mailpit (o resto está desligado em supabase/config.toml)
+      # Sobe Postgres, Auth, PostgREST, Storage, Kong e Mailpit (o resto está desligado em supabase/config.toml)
       # e aplica supabase/migrations/ e supabase/seed/*.sql num banco novo.
       - name: Supabase local
         run: supabase start

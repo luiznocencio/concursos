@@ -115,7 +115,8 @@ port = 54324
 # sender_name = "Admin"
 
 [storage]
-enabled = false
+# Ligado para a migração 0009 criar o bucket de fotos das redações.
+enabled = true
 # The maximum file size allowed (e.g. "5MB", "500KB").
 file_size_limit = "50MiB"
 
