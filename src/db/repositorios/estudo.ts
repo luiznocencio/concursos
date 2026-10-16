@@ -215,6 +215,7 @@ export async function listarCargos(db: Cliente) {
     id: c.id,
     nome: c.nome,
     concurso: c.concursos.nome,
+    concursoSlug: c.concursos.slug,
     dataProva: c.concursos.data_prova,
   }));
 }
