@@ -280,3 +280,28 @@ describe("discursiva_pedir_tema", () => {
     ).rejects.toThrow(/concurso desconhecido/);
   });
 });
+
+describe("estudo_historico com erros de redação", () => {
+  it("inclui os erros de redação do usuário nos tópicos do cargo, marcados como origem redacao", async () => {
+    const id = await redacao(ANA, "corrigida");
+    const erro = (usuario: string, canonico: string) =>
+      client.query(
+        `insert into public.erros_redacao (redacao_id, usuario_id, linha, trecho, tipo, categoria, correcao, explicacao, canonico)
+         values ($1, $2, 1, 'Texto', 'morfossintaxe', 'crase', 'x', 'y', $3)`,
+        [id, usuario, canonico],
+      );
+    await erro(ANA, "portugues/crase");
+    await erro(BRUNO, "portugues/crase");
+    // Tópico que não cai nas objetivas do cargo (só na discursiva): fica fora.
+    await erro(ANA, "atualidades/temas-atuais");
+    const cargo = await valor<string>("select id from public.cargos where slug = 'cfo'");
+    const historico = await comoUsuario(client, ANA, () =>
+      valor<{ canonico: string; resultado: string; origem: string }[]>("select public.estudo_historico($1)", [cargo]),
+    );
+    // Um teste anterior já gravou um erro de ortografia da Ana; o do Bruno e o de Atualidades não entram.
+    expect(historico.map(({ canonico, resultado, origem }) => `${canonico}:${resultado}:${origem}`).sort()).toEqual([
+      "portugues/crase:errado:redacao",
+      "portugues/ortografia:errado:redacao",
+    ]);
+  });
+});
