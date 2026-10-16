@@ -78,7 +78,7 @@ Nova migração `0009_discursiva.sql`, aplicada pelo controlador (não pelos age
 - Bucket privado `redacoes-fotos`, com política por pasta `usuario_id/`. Fotos apagadas 30 dias após a correção (job diário ou na passagem do worker).
 
 ### Funções
-- `discursiva_entregar(p_redacao)` (`security definer`, confere `auth.uid()`): valida dono e estado, aplica os limites (no máximo 2 redações em `na_fila`/`corrigindo` e 10 entregas por dia por usuário, configuráveis) e enfileira `corrigir_redacao`.
+- `discursiva_entregar(p_redacao)` (`security definer`, confere `auth.uid()`): valida dono e estado, aplica os limites (no máximo 2 redações em `na_fila`/`corrigindo` e 10 entregas por dia por usuário) e enfileira `corrigir_redacao`.
 - `discursiva_pedir_tema(p_concurso)` (`security definer`): enfileira `gerar_tema`, com limite próprio (igual a `estudo_pedir_geracao`).
 - `discursiva_importar_temas(jsonb)`: só service role; a Server Action verifica `ehModerador`.
 - `estudo_historico` passa a incluir os erros de redação (ver §7).
