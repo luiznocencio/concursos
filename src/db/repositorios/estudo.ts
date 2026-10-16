@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
-import type { ItemCandidato } from "@/core";
+import { CONFIG_FOCO, type ItemCandidato, type RespostaHistorico } from "@/core";
 import { montarEstruturaCargo, type EstruturaCargo, type LinhaCargo } from "@/estudo/estrutura";
 import type { ConfigSessao, ItemCorrecao, Marcacao, ModoSessao, RepositorioEstudo, ResultadoSessao } from "@/estudo/tipos";
 import { itensReaisVisiveis } from "@/lib/itens-reais";
@@ -26,8 +26,18 @@ const historicoSchema = z.array(
     canonico: z.string(),
     resultado: z.enum(["certo", "certo_duvida", "errado", "branco"]),
     respondidaEm: z.string(),
+    origem: z.enum(["item", "redacao"]).default("item"),
   }),
 );
+
+// Erros de redação entram no histórico com peso menor que um item respondido (ver CONFIG_FOCO).
+export function historicoDasLinhas(linhas: z.input<typeof historicoSchema>): RespostaHistorico[] {
+  return historicoSchema.parse(linhas).map(({ origem, respondidaEm, ...r }) => ({
+    ...r,
+    respondidaEm: new Date(respondidaEm),
+    ...(origem === "redacao" ? { peso: CONFIG_FOCO.pesoErroRedacao } : {}),
+  }));
+}
 export const configSessaoSchema: z.ZodType<ConfigSessao> = z.union([
   z.object({ tipo: z.literal("estudar_agora") }),
   z.object({ tipo: z.literal("topico"), canonicos: z.array(z.string()) }),
@@ -37,6 +47,7 @@ export const configSessaoSchema: z.ZodType<ConfigSessao> = z.union([
     duracaoMin: z.number(),
     provas: z.array(z.object({ slug: z.string(), itens: z.array(z.string()) })),
     disciplinaDoItem: z.record(z.string(), z.string()),
+    discursiva: z.boolean().optional(),
   }),
 ]);
 
@@ -86,7 +97,7 @@ export function criarRepositorioEstudo(db: Cliente, opcoes: { itensReais?: boole
     async historico(cargoId) {
       const { data, error } = await db.rpc("estudo_historico", { p_cargo: cargoId });
       if (error) falhou("histórico", error);
-      return historicoSchema.parse(data).map((r) => ({ ...r, respondidaEm: new Date(r.respondidaEm) }));
+      return historicoDasLinhas(data as z.input<typeof historicoSchema>);
     },
 
     async revisoesVencidas(agora) {

@@ -34,6 +34,20 @@ describe("tabelaDesempenho", () => {
   });
 });
 
+describe("tabelaDesempenho com erros de redação", () => {
+  const topicos: TopicoAlvo[] = [{ disciplina: "lp", codigo: "1", titulo: "Crase", canonico: "lp/crase", chave: "lp:1", peso: 1 }];
+
+  it("os erros de redação sobem a prioridade, mas não contam como respostas nem na tendência", () => {
+    const itens = [r("lp/crase", "certo", 1)];
+    const comRedacao = [...itens, { ...r("lp/crase", "errado", 1), peso: 0.5 }];
+    const so = tabelaDesempenho(topicos, calcularPrioridades(topicos, itens, AGORA), itens, AGORA)[0];
+    const com = tabelaDesempenho(topicos, calcularPrioridades(topicos, comRedacao, AGORA), comRedacao, AGORA)[0];
+    expect(com.topicos[0]).toMatchObject({ n: 1, aproveitamento: 1, tendencia: [null, null, null, 1] });
+    expect(com).toMatchObject({ n: 1, aproveitamento: 1 });
+    expect(com.topicos[0].prioridade).toBeGreaterThan(so.topicos[0].prioridade);
+  });
+});
+
 describe("diasAte", () => {
   it("conta os dias até a prova no horário de Brasília e nunca fica negativo", () => {
     expect(diasAte("2026-10-20", AGORA)).toBe(5);

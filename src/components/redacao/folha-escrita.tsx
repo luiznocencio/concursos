@@ -30,7 +30,21 @@ function TempoEscrevendo({ inicio }: { inicio: number | null }) {
 }
 
 // Escrita da redação: o texto digitado é distribuído nas linhas da folha como na prova, e salvo sozinho.
-export function FolhaEscrita({ redacaoId, textoInicial, config }: { redacaoId: string; textoInicial: string; config: ConfigDiscursiva }) {
+// `noSimulado`: sem entrega nem cronômetro próprios (o simulado entrega tudo junto e tem o seu tempo);
+// `aoMudar` repassa o texto atual para o simulado enviar na entrega.
+export function FolhaEscrita({
+  redacaoId,
+  textoInicial,
+  config,
+  noSimulado = false,
+  aoMudar,
+}: {
+  redacaoId: string;
+  textoInicial: string;
+  config: ConfigDiscursiva;
+  noSimulado?: boolean;
+  aoMudar?: (texto: string) => void;
+}) {
   const router = useRouter();
   const [texto, setTexto] = useState(textoInicial);
   const [salvamento, setSalvamento] = useState<Salvamento>("salvo");
@@ -57,6 +71,7 @@ export function FolhaEscrita({ redacaoId, textoInicial, config }: { redacaoId: s
 
   function aoDigitar(valor: string) {
     setTexto(valor);
+    aoMudar?.(valor);
     setSalvamento("pendente");
     if (inicio === null) setInicio(Date.now());
     if (timer.current) clearTimeout(timer.current);
@@ -80,7 +95,8 @@ export function FolhaEscrita({ redacaoId, textoInicial, config }: { redacaoId: s
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="grid gap-6 lg:grid-cols-2">
+      {/* No simulado a coluna é mais estreita: texto e folha ficam um embaixo do outro. */}
+      <div className={`grid gap-6 ${noSimulado ? "" : "lg:grid-cols-2"}`}>
         <div className="flex min-w-0 flex-col gap-2">
           <label htmlFor="texto" className="text-sm font-medium">
             Seu texto
@@ -96,7 +112,7 @@ export function FolhaEscrita({ redacaoId, textoInicial, config }: { redacaoId: s
           />
           <p className="flex flex-wrap justify-between gap-2 text-sm" aria-live="polite">
             <span className={salvamento === "erro" ? "text-vermelho" : "text-pedra"}>{estado}</span>
-            <TempoEscrevendo inicio={inicio} />
+            {!noSimulado && <TempoEscrevendo inicio={inicio} />}
           </p>
         </div>
 
@@ -132,23 +148,27 @@ export function FolhaEscrita({ redacaoId, textoInicial, config }: { redacaoId: s
           {erro}
         </p>
       )}
-      <div className="flex flex-wrap items-center gap-3">
-        {confirmando ? (
-          <>
-            <span className="text-sm">Depois de entregar, o texto não pode mais ser editado.</span>
-            <button type="button" onClick={confirmarEntrega} disabled={entregando} className={botao.primario}>
-              {entregando ? "Entregando…" : "Entregar agora"}
+      {noSimulado ? (
+        <p className="text-sm text-pedra">A redação é entregue junto com o simulado.</p>
+      ) : (
+        <div className="flex flex-wrap items-center gap-3">
+          {confirmando ? (
+            <>
+              <span className="text-sm">Depois de entregar, o texto não pode mais ser editado.</span>
+              <button type="button" onClick={confirmarEntrega} disabled={entregando} className={botao.primario}>
+                {entregando ? "Entregando…" : "Entregar agora"}
+              </button>
+              <button type="button" onClick={() => setConfirmando(false)} disabled={entregando} className={botao.texto}>
+                Continuar escrevendo
+              </button>
+            </>
+          ) : (
+            <button type="button" onClick={() => setConfirmando(true)} disabled={tl === 0} className={botao.primario}>
+              Entregar para correção
             </button>
-            <button type="button" onClick={() => setConfirmando(false)} disabled={entregando} className={botao.texto}>
-              Continuar escrevendo
-            </button>
-          </>
-        ) : (
-          <button type="button" onClick={() => setConfirmando(true)} disabled={tl === 0} className={botao.primario}>
-            Entregar para correção
-          </button>
-        )}
-      </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

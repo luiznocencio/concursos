@@ -122,8 +122,12 @@ export async function listarRedacoes(db: Cliente, limite = 50): Promise<RedacaoR
   }));
 }
 
-export async function criarRedacao(db: Cliente, usuarioId: string, temaId: string): Promise<string> {
-  const { data, error } = await db.from("redacoes").insert({ usuario_id: usuarioId, tema_id: temaId }).select("id").single();
+export async function criarRedacao(db: Cliente, usuarioId: string, temaId: string, simuladoId?: string): Promise<string> {
+  const { data, error } = await db
+    .from("redacoes")
+    .insert({ usuario_id: usuarioId, tema_id: temaId, simulado_id: simuladoId ?? null })
+    .select("id")
+    .single();
   if (error) falhou("criar redação", error);
   return data.id;
 }
@@ -231,4 +235,18 @@ export async function configDaDiscursiva(db: Cliente, concursoSlug: string): Pro
   if (!data) return null;
   const c = configSchema.parse(data.config_discursiva);
   return { pontuacaoMaxima: c.pontuacao_maxima, linhasMax: c.linhas_max, notaMinima: c.nota_minima, caracteresPorLinha: c.caracteres_por_linha };
+}
+
+// Erros de língua do usuário desde a data dada (para a seção "Redação" do painel).
+export async function errosDesde(db: Cliente, desde: Date): Promise<{ categoria: string; criadoEm: string }[]> {
+  const { data, error } = await db.from("erros_redacao").select("categoria, criado_em").gte("criado_em", desde.toISOString());
+  if (error) falhou("erros das redações", error);
+  return data.map((e) => ({ categoria: e.categoria, criadoEm: e.criado_em }));
+}
+
+// Redação ligada a um simulado completo com discursiva (no máximo uma por simulado).
+export async function redacaoDoSimulado(db: Cliente, simuladoId: string): Promise<RedacaoCompleta | null> {
+  const { data, error } = await db.from("redacoes").select("id").eq("simulado_id", simuladoId).limit(1).maybeSingle();
+  if (error) falhou("redação do simulado", error);
+  return data ? carregarRedacao(db, data.id) : null;
 }

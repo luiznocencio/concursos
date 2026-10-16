@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { criarRepositorioEstudo, listarSessoes } from "@/db/repositorios/estudo";
-import { previaSimulado } from "@/estudo/servico";
+import { listarTemas } from "@/db/repositorios/redacao";
+import { DURACAO_DISCURSIVA_MIN, previaSimulado } from "@/estudo/servico";
 import { Aviso } from "@/components/aviso";
 import { botao, cartao, pilula, textoApoio, titulo } from "@/components/ui";
 import { dataEHora, nota, plural } from "@/lib/formato";
@@ -11,15 +12,17 @@ export default async function Simulado({ searchParams }: { searchParams: Promise
   const { aviso, pedidos } = await searchParams;
   const { db, cargo } = await exigirCargo();
   const repo = criarRepositorioEstudo(db);
-  const [estrutura, previa, abertos, entregues] = await Promise.all([
+  const [estrutura, previa, abertos, entregues, temas] = await Promise.all([
     repo.estrutura(cargo.id),
     previaSimulado(repo, cargo.id),
     listarSessoes(db, cargo.id, { modo: "completo", abertas: true, limite: 1 }),
     listarSessoes(db, cargo.id, { modo: "completo", abertas: false, limite: 20 }),
+    listarTemas(db, cargo.concursoSlug),
   ]);
   const total = estrutura.provas.reduce((s, p) => s + p.nItens, 0);
   const aberto = abertos[0];
-  const horas = `${Math.floor(previa.config.duracaoMin / 60)}h${String(previa.config.duracaoMin % 60).padStart(2, "0")}`;
+  const horas = (min: number) => `${Math.floor(min / 60)}h${String(min % 60).padStart(2, "0")}`;
+  const comRedacao = previa.config.duracaoMin + DURACAO_DISCURSIVA_MIN;
 
   return (
     <>
@@ -29,8 +32,10 @@ export default async function Simulado({ searchParams }: { searchParams: Promise
           <div>
             <h1 className={titulo.pagina}>Simulado completo</h1>
             <p className={`${textoApoio} mt-3 max-w-[56ch]`}>
-              {total} itens de {estrutura.provas.map((p) => p.nome).join(" e ")}, na distribuição do edital, em {horas}. A
-              correção sai só no final, com as regras e os cortes da banca. A discursiva entra com o corretor de redação.
+              {total} itens de {estrutura.provas.map((p) => p.nome).join(" e ")}, na distribuição do edital, em{" "}
+              {horas(previa.config.duracaoMin)}
+              {estrutura.temDiscursiva && `, ou ${horas(comRedacao)} com a redação`}. A correção sai só no final, com as regras e
+              os cortes da banca.
             </p>
           </div>
           {aberto ? (
@@ -38,8 +43,28 @@ export default async function Simulado({ searchParams }: { searchParams: Promise
               Continuar simulado ({aberto.respondidos} de {aberto.total})
             </Link>
           ) : previa.faltantes.length === 0 ? (
-            <form action={comecarSimulado}>
-              <button type="submit" className={botao.primario}>
+            <form action={comecarSimulado} className="flex flex-col gap-4">
+              {estrutura.temDiscursiva && (
+                <label className="flex items-start gap-3 text-[15px]">
+                  <input
+                    type="checkbox"
+                    name="discursiva"
+                    value="sim"
+                    defaultChecked={temas.length > 0}
+                    disabled={temas.length === 0}
+                    className="mt-1 size-4 accent-azul"
+                  />
+                  <span>
+                    Incluir a prova discursiva ({horas(comRedacao)} no total)
+                    {temas.length === 0 && (
+                      <span className="block text-sm text-pedra">
+                        Ainda não há tema de redação. Gere um em <Link href="/redacao" className="text-azul hover:underline">Redação</Link>.
+                      </span>
+                    )}
+                  </span>
+                </label>
+              )}
+              <button type="submit" className={`${botao.primario} self-start`}>
                 Começar simulado
               </button>
             </form>

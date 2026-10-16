@@ -1,3 +1,5 @@
+import { CANONICO_POR_CATEGORIA, ROTULO_CATEGORIA } from "@/core/discursiva/erros";
+import type { CategoriaErro } from "@/core/discursiva/tipos";
 import type { pilula } from "@/components/ui";
 
 export const BUCKET_FOTOS = "redacoes-fotos";
@@ -109,4 +111,55 @@ export function resumoDoTema(enunciado: string): string {
   const m = /\btema:\s*([^\n]+)/i.exec(enunciado);
   const titulo = (m ? m[1] : enunciado).trim().replace(/[.:]\s*$/, "");
   return titulo.length > 160 ? `${titulo.slice(0, 157)}…` : titulo;
+}
+
+export interface ResumoRedacoes {
+  ultima: number | null;
+  // Média das últimas 5 corrigidas.
+  media: number | null;
+  pontos: { id: string; quando: string; npd: number }[];
+  categorias: { categoria: string; rotulo: string; canonico: string | null; n: number }[];
+}
+
+const DIAS_ERROS = 30;
+
+// Seção "Redação" do painel: notas das corrigidas (até 8 no gráfico) e as categorias de erro mais frequentes em 30 dias.
+export function resumoDasRedacoes(
+  redacoes: { id: string; status: string; npd: number | null; corrigidaEm: string | null }[],
+  erros: { categoria: string; criadoEm: string }[],
+  agora: Date,
+): ResumoRedacoes {
+  const corrigidas = redacoes
+    .filter((r) => r.status === "corrigida" && r.npd !== null && r.corrigidaEm)
+    .map((r) => ({ id: r.id, quando: r.corrigidaEm!, npd: r.npd! }))
+    .sort((a, b) => a.quando.localeCompare(b.quando));
+  const ultimas5 = corrigidas.slice(-5);
+  const desde = agora.getTime() - DIAS_ERROS * 86_400_000;
+  const contagem = new Map<string, number>();
+  for (const e of erros) if (new Date(e.criadoEm).getTime() >= desde) contagem.set(e.categoria, (contagem.get(e.categoria) ?? 0) + 1);
+  const categorias = [...contagem.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .slice(0, 5)
+    .map(([categoria, n]) => ({
+      categoria,
+      rotulo: ROTULO_CATEGORIA[categoria as CategoriaErro] ?? categoria,
+      canonico: CANONICO_POR_CATEGORIA[categoria as CategoriaErro] ?? null,
+      n,
+    }));
+  return {
+    ultima: corrigidas.at(-1)?.npd ?? null,
+    media: ultimas5.length ? ultimas5.reduce((s, r) => s + r.npd, 0) / ultimas5.length : null,
+    pontos: corrigidas.slice(-8),
+    categorias,
+  };
+}
+
+// Tema da discursiva no simulado: real ainda não feito, depois gerado não feito, depois qualquer um.
+export function escolherTemaDoSimulado<T extends { id: string; origem: string; feito: boolean }>(temas: T[]): T | null {
+  return (
+    temas.find((t) => t.origem === "real" && !t.feito) ??
+    temas.find((t) => !t.feito) ??
+    temas[0] ??
+    null
+  );
 }

@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { useCallback, useRef, useState, useTransition } from "react";
 import { entregar, marcar } from "@/app/(app)/simulado/[id]/acoes";
 import { Enunciado } from "@/components/sessao/enunciado";
+import { FolhaEscrita } from "@/components/redacao/folha-escrita";
+import type { ConfigDiscursiva } from "@/core/discursiva/tipos";
 import { botao } from "@/components/ui";
 import type { ItemDaSessao } from "@/db/repositorios/estudo";
 import type { Marcacao } from "@/estudo/tipos";
@@ -21,17 +23,27 @@ export interface ProvaNoSimulado {
   fim: number;
 }
 
+export interface RedacaoNoSimulado {
+  id: string;
+  texto: string;
+  config: ConfigDiscursiva;
+  enunciado: string;
+  textosApoio: { titulo: string; texto: string; fonte: string }[];
+}
+
 // Simulado completo: sem correção até a entrega; cada marcação é salva na hora e pode ser trocada.
 export function PlayerSimulado({
   sessaoId,
   itens,
   provas,
   prazo,
+  redacao = null,
 }: {
   sessaoId: string;
   itens: ItemDaSessao[];
   provas: ProvaNoSimulado[];
   prazo: string;
+  redacao?: RedacaoNoSimulado | null;
 }) {
   const router = useRouter();
   const [marcadas, setMarcadas] = useState<Record<string, Marcada>>(() =>
@@ -42,6 +54,8 @@ export function PlayerSimulado({
   const [confirmando, setConfirmando] = useState(false);
   const [entregando, iniciarEntrega] = useTransition();
   const entregue = useRef(false);
+  const [naRedacao, setNaRedacao] = useState(false);
+  const textoRedacao = useRef<string | null>(null);
 
   const item = itens[indice];
   const atual = marcadas[item.id];
@@ -68,7 +82,7 @@ export function PlayerSimulado({
     if (entregue.current) return;
     entregue.current = true;
     iniciarEntrega(async () => {
-      const r = await entregar(sessaoId);
+      const r = await entregar(sessaoId, textoRedacao.current);
       if (r.ok) router.push(`/simulado/${sessaoId}/resultado`);
       else {
         entregue.current = false;
@@ -82,7 +96,27 @@ export function PlayerSimulado({
 
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_300px]">
-      <article className="flex min-w-0 flex-col gap-8">
+      {redacao && (
+        // Fica montada (só escondida) ao voltar aos itens, para não perder o texto nem o salvamento em andamento.
+        <article className={`flex min-w-0 flex-col gap-6 ${naRedacao ? "" : "hidden"}`}>
+          <p className="text-sm text-pedra">P3 – Prova discursiva</p>
+          <div className="text-[15px] leading-relaxed whitespace-pre-line">{redacao.enunciado}</div>
+          {redacao.textosApoio.map((t, i) => (
+            <blockquote key={i} className="border-l-2 border-borda-forte pl-4 text-[15px] text-grafite">
+              {t.titulo && <p className="font-medium text-tinta">{t.titulo}</p>}
+              <p className="whitespace-pre-line">{t.texto}</p>
+            </blockquote>
+          ))}
+          <FolhaEscrita
+            redacaoId={redacao.id}
+            textoInicial={redacao.texto}
+            config={redacao.config}
+            noSimulado
+            aoMudar={(t) => (textoRedacao.current = t)}
+          />
+        </article>
+      )}
+      <article className={`flex min-w-0 flex-col gap-8 ${naRedacao ? "hidden" : ""}`}>
         <p className="text-sm text-pedra">
           {prova?.nome} · item {indice + 1} de {itens.length}
         </p>
@@ -139,7 +173,10 @@ export function PlayerSimulado({
                   <li key={i.id}>
                     <button
                       type="button"
-                      onClick={() => setIndice(n)}
+                      onClick={() => {
+                        setIndice(n);
+                        setNaRedacao(false);
+                      }}
                       aria-label={`Item ${n + 1}${marcado ? ", marcado" : ""}${m?.duvida ? ", com dúvida" : ""}`}
                       aria-current={n === indice ? "step" : undefined}
                       className={`flex aspect-square w-full items-center justify-center rounded text-[10px] font-medium transition-colors duration-200 ${
@@ -154,6 +191,19 @@ export function PlayerSimulado({
             </ol>
           </div>
         ))}
+        {redacao && (
+          <div>
+            <p className="mb-2 text-sm font-medium">P3 – Prova discursiva</p>
+            <button
+              type="button"
+              onClick={() => setNaRedacao(true)}
+              aria-current={naRedacao ? "step" : undefined}
+              className={`${botao.contorno} w-full ${naRedacao ? "!border-azul !bg-azul-claro !text-azul" : ""}`}
+            >
+              Redação
+            </button>
+          </div>
+        )}
         {confirmando ? (
           <div className="flex flex-col gap-3 rounded-xl border border-borda bg-superficie p-4">
             <p className="text-sm">

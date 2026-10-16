@@ -3,6 +3,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { criarRepositorioEstudo } from "@/db/repositorios/estudo";
+import { criarRedacao, listarTemas } from "@/db/repositorios/redacao";
 import {
   iniciarEstudarAgora,
   iniciarRevisao,
@@ -11,6 +12,7 @@ import {
   pedirGeracaoDosFaltantes,
   type InicioSessao,
 } from "@/estudo/servico";
+import { escolherTemaDoSimulado } from "@/lib/redacao";
 import { COOKIE_CARGO, contextoDoUsuario, exigirCargo } from "./contexto";
 
 const QUANTIDADES = [10, 20, 30];
@@ -50,10 +52,15 @@ export async function revisarErros() {
   redirect(`/sessao/${r.sessaoId}`);
 }
 
-export async function comecarSimulado() {
-  const { db, cargo } = await exigirCargo();
-  const r = await iniciarSimulado(criarRepositorioEstudo(db), cargo.id);
+// Com a discursiva, o simulado leva uma redação (tema real ainda não feito, se houver) e dura o tempo inteiro do cargo.
+export async function comecarSimulado(formData: FormData) {
+  const { db, cargo, user } = await exigirCargo();
+  const comDiscursiva = formData.get("discursiva") === "sim";
+  const tema = comDiscursiva ? escolherTemaDoSimulado(await listarTemas(db, cargo.concursoSlug)) : null;
+  if (comDiscursiva && !tema) redirect("/simulado?aviso=sem-tema");
+  const r = await iniciarSimulado(criarRepositorioEstudo(db), cargo.id, comDiscursiva);
   if (r.tipo === "faltam_itens") redirect("/simulado?aviso=faltam");
+  if (tema) await criarRedacao(db, user.id, tema.id, r.sessaoId);
   redirect(`/simulado/${r.sessaoId}`);
 }
 
