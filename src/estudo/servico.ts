@@ -9,8 +9,8 @@ import {
 import { resultadoCompleto, resultadoDe, resumoTreino } from "./resultado";
 import type { ConfigSessao, Marcacao, RepositorioEstudo, ResultadoResposta, ResultadoSessao, Sessao } from "./tipos";
 
-// A prova discursiva ainda não é simulada: o simulado completo usa só as objetivas
-// (4h30 menos 1h no CBM-AL, como a opção "só objetivas" da spec).
+// Tempo da prova discursiva dentro da duração do cargo: no simulado "só objetivas" ele é descontado
+// (4h30 menos 1h no CBM-AL); com a discursiva, vale a duração inteira.
 export const DURACAO_DISCURSIVA_MIN = 60;
 // Tolerância para respostas que chegam logo depois do fim do tempo (latência da rede).
 export const TOLERANCIA_ENTREGA_MS = 60_000;
@@ -99,7 +99,7 @@ export interface PreviaSimulado {
 }
 
 // Sem viés adaptativo: segue a distribuição do edital, priorizando itens não vistos.
-export async function previaSimulado(repo: RepositorioEstudo, cargoId: string): Promise<PreviaSimulado> {
+export async function previaSimulado(repo: RepositorioEstudo, cargoId: string, comDiscursiva = false): Promise<PreviaSimulado> {
   const [estrutura, candidatos] = await Promise.all([repo.estrutura(cargoId), repo.candidatos(cargoId)]);
   const usados = new Set<string>();
   const provas: { slug: string; itens: string[] }[] = [];
@@ -120,12 +120,16 @@ export async function previaSimulado(repo: RepositorioEstudo, cargoId: string): 
       });
     }
   }
-  const duracaoMin = estrutura.cargo.duracaoMin - (estrutura.temDiscursiva ? DURACAO_DISCURSIVA_MIN : 0);
-  return { config: { tipo: "completo", duracaoMin, provas, disciplinaDoItem }, faltantes };
+  const discursiva = comDiscursiva && estrutura.temDiscursiva;
+  const duracaoMin = estrutura.cargo.duracaoMin - (estrutura.temDiscursiva && !discursiva ? DURACAO_DISCURSIVA_MIN : 0);
+  return {
+    config: { tipo: "completo", duracaoMin, provas, disciplinaDoItem, ...(discursiva ? { discursiva: true } : {}) },
+    faltantes,
+  };
 }
 
-export async function iniciarSimulado(repo: RepositorioEstudo, cargoId: string): Promise<InicioSimulado> {
-  const { config, faltantes } = await previaSimulado(repo, cargoId);
+export async function iniciarSimulado(repo: RepositorioEstudo, cargoId: string, comDiscursiva = false): Promise<InicioSimulado> {
+  const { config, faltantes } = await previaSimulado(repo, cargoId, comDiscursiva);
   if (faltantes.length > 0) return { tipo: "faltam_itens", faltantes };
   const sessaoId = await repo.criarSessao(cargoId, "completo", config, config.provas.flatMap((p) => p.itens));
   return { tipo: "criada", sessaoId };

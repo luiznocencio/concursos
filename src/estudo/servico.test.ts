@@ -167,6 +167,13 @@ describe("simulado completo", () => {
     });
   });
 
+  it("com a discursiva, usa a duração inteira do cargo e marca a sessão", async () => {
+    const { repo, estado } = criarRepositorioFalso({ estrutura, candidatos });
+    const r = await iniciarSimulado(repo, "cargo", true);
+    const s = estado.sessoes.get((r as { sessaoId: string }).sessaoId)!;
+    expect(s.config).toMatchObject({ tipo: "completo", duracaoMin: 270, discursiva: true });
+  });
+
   it("informa o que falta por disciplina sem criar a sessão", async () => {
     const { repo, estado } = criarRepositorioFalso({ estrutura, candidatos: itens("lp/a", 1) });
     expect(await iniciarSimulado(repo, "cargo")).toEqual({

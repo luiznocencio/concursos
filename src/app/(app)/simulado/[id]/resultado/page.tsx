@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { criarRepositorioEstudo, itensDaSessao, resultadoGuardado } from "@/db/repositorios/estudo";
+import { redacaoDoSimulado } from "@/db/repositorios/redacao";
 import { ListaCorrecao } from "@/components/sessao/lista-correcao";
 import { botao, cartao, pilula, textoApoio, titulo } from "@/components/ui";
 import { dataEHora, nota } from "@/lib/formato";
+import { rotuloStatus } from "@/lib/redacao";
 import { revisarErros } from "../../../acoes";
 import { exigirCargo } from "../../../contexto";
 
@@ -20,8 +22,13 @@ export default async function Resultado({ params }: { params: Promise<{ id: stri
   const sessao = await criarRepositorioEstudo(db).sessao(id);
   if (!sessao || sessao.config.tipo !== "completo") notFound();
   if (!sessao.finalizadaEm) redirect(`/simulado/${id}`);
-  const [r, itens] = await Promise.all([resultadoGuardado(db, id), itensDaSessao(db, id, () => true)]);
+  const [r, itens, redacao] = await Promise.all([
+    resultadoGuardado(db, id),
+    itensDaSessao(db, id, () => true),
+    redacaoDoSimulado(db, id),
+  ]);
   if (!r || r.tipo !== "completo") notFound();
+  const statusRedacao = redacao ? rotuloStatus(redacao.status) : null;
 
   return (
     <>
@@ -68,6 +75,37 @@ export default async function Resultado({ params }: { params: Promise<{ id: stri
           </Link>
         </div>
       </section>
+
+      {redacao && statusRedacao && (
+        <section className={`${cartao} mt-4 flex flex-col gap-4`}>
+          <div className="flex flex-wrap items-center gap-3">
+            <h2 className={titulo.secao}>P3 – Prova discursiva</h2>
+            <span className={pilula[statusRedacao.tom]}>{statusRedacao.texto}</span>
+          </div>
+          {redacao.status === "corrigida" && redacao.npd !== null ? (
+            <p className="text-[28px] font-semibold tabular-nums tracking-tight">
+              {nota(redacao.npd)}
+              <span className="text-base font-normal text-pedra">
+                {" "}
+                / {redacao.config.pontuacaoMaxima} · mínimo {redacao.config.notaMinima}
+              </span>
+            </p>
+          ) : redacao.status === "rascunho" ? (
+            <p className={textoApoio}>A redação não foi entregue (ficou sem texto). Você pode terminá-la e entregar agora.</p>
+          ) : (
+            <p className={textoApoio}>A correção leva cerca de 1 minuto. A nota aparece aqui e em Redação.</p>
+          )}
+          {!r.aprovado && (
+            <p className="rounded-lg bg-marigold-claro px-4 py-3 text-[15px] text-marigold-tinta">
+              Na prova real, sua redação não seria corrigida: só é corrigida a discursiva de quem passa nos cortes das objetivas
+              (edital, item 9.7.1). Corrigimos mesmo assim, para treino.
+            </p>
+          )}
+          <Link href={`/redacao/${redacao.id}`} className={`${botao.secundario} self-start`}>
+            {redacao.status === "rascunho" ? "Continuar a redação" : "Ver a redação"}
+          </Link>
+        </section>
+      )}
 
       <section className="mt-4 grid gap-4 md:grid-cols-2">
         <div className={cartao}>
