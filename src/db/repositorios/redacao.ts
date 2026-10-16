@@ -45,6 +45,7 @@ export interface TemaResumo {
   origem: "gerado" | "real";
   provaOrigem: string | null;
   feito: boolean;
+  criadoEm: string;
 }
 
 export interface RedacaoResumo {
@@ -71,6 +72,8 @@ export interface RedacaoCompleta {
   npd: number | null;
   zeradaMotivo: string | null;
   terceiraCorrecao: boolean;
+  entregueEm: string | null;
+  atualizadoEm: string;
   prioridades: z.infer<typeof prioridadeSchema>[];
   detalhes: z.infer<typeof detalhesSchema>;
   tema: {
@@ -101,6 +104,7 @@ export async function listarTemas(db: Cliente, concursoSlug: string, limite = 30
       origem: t.origem === "real" ? ("real" as const) : ("gerado" as const),
       provaOrigem: t.prova_origem,
       feito: t.redacoes.length > 0,
+      criadoEm: t.criado_em,
     }))
     .sort((a, b) => Number(b.origem === "real") - Number(a.origem === "real"));
 }
@@ -137,7 +141,7 @@ export async function carregarRedacao(db: Cliente, id: string): Promise<RedacaoC
     .from("redacoes")
     .select(
       `id, status, aviso, entrada, texto, linhas, excedente, fotos, nc, ne, tl, npd, zerada_motivo, terceira_correcao,
-       prioridades, detalhes,
+       entregue_em, atualizado_em, prioridades, detalhes,
        temas_discursiva!inner(enunciado, origem, prova_origem, textos_apoio, padrao_resposta, provas!inner(config_discursiva)),
        correcoes_discursiva(papel, provedor, modelo, resposta),
        erros_redacao(id, redacao_id, usuario_id, linha, trecho, tipo, categoria, correcao, explicacao, canonico, criado_em)`,
@@ -163,6 +167,8 @@ export async function carregarRedacao(db: Cliente, id: string): Promise<RedacaoC
     npd: data.npd,
     zeradaMotivo: data.zerada_motivo,
     terceiraCorrecao: data.terceira_correcao,
+    entregueEm: data.entregue_em,
+    atualizadoEm: data.atualizado_em,
     prioridades: z.array(prioridadeSchema).catch([]).parse(data.prioridades ?? []),
     detalhes: detalhesSchema.catch(null).parse(data.detalhes),
     tema: {
