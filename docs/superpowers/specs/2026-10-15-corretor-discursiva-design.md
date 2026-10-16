@@ -119,7 +119,7 @@ Segue o padrão existente: prompts versionados, respostas validadas com Zod, cus
   - `DISCURSIVA_MODELO_LINGUA` = Claude;
   - `DISCURSIVA_MODELO_TRANSCRICAO` = Claude.
 - Os padrões reaproveitam `CLAUDE_MODEL`/`OPENAI_MODEL` e a configuração de esforço atual.
-- Limites: `DISCURSIVA_LIMITE_SIMULTANEAS` (2) e `DISCURSIVA_LIMITE_DIA` (10).
+- Limites: 2 redações em correção ao mesmo tempo e 10 entregas por dia, fixos na função `discursiva_checar_limites` do banco (mudar exige migração; variável de ambiente não protegeria uma função chamada direto pela API).
 - Custo esperado: US$ 0,10 a 0,25 por correção, + cerca de US$ 0,05 com foto, + cerca de US$ 0,03 por tema gerado.
 
 ## 6. Telas
