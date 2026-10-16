@@ -62,6 +62,7 @@ provas:
     pontuacao_maxima: 30
     linhas_max: 30
     nota_minima: 15
+    caracteres_por_linha: 70
     disciplinas: [atualidades]
 disciplinas:
   # ---------------------------------------------------------------- CONHECIMENTOS GERAIS
