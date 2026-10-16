@@ -21,6 +21,7 @@ export default async function LayoutApp({ children }: { children: React.ReactNod
             <NavLink href="/">Início</NavLink>
             <NavLink href="/treinar">Treinar</NavLink>
             <NavLink href="/simulado">Simulado</NavLink>
+            <NavLink href="/redacao">Redação</NavLink>
             <NavLink href="/painel">Painel</NavLink>
             {moderador && <NavLink href="/itens">Itens</NavLink>}
             {moderador && <NavLink href="/importar">Importar</NavLink>}
