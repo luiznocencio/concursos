@@ -1865,7 +1865,7 @@ test("pedir tema novo enfileira um pedido por vez", async ({ page, admin, usuari
 Com o Supabase local de pé (`npx supabase start`; veja `docs/testes.md`) e com as migrações até a 0011 aplicadas, rode:
 
 Run: `npm run test:e2e`
-Esperado: todos passam (os 15 anteriores e os 4 novos).
+Esperado: todos passam (os 11 anteriores e os 4 novos).
 
 Se o Docker deste ambiente não permitir subir o Supabase, registre o erro no relatório e siga. O CI do PR roda o E2E.
 
@@ -1882,7 +1882,7 @@ git commit -m "test(e2e): redação — escrita, resultado, foto e pedido de tem
 
 O código deste plano foi escrito e testado numa cópia à parte:
 - **Testes:** 290 unitários e 57 de banco, além de typecheck e lint.
-- **E2E:** com o build de produção contra o Supabase local (Storage ligado, migrações até a 0011), todos os 19 testes passaram: os 15 anteriores e os 4 novos.
+- **E2E:** com o build de produção contra o Supabase local (Storage ligado, migrações até a 0011), todos os 15 testes passaram: os 11 anteriores e os 4 novos.
   - **Escrita:** o texto vai para a folha e é salvo sozinho. Depois de recarregar a página o texto continua lá, e a entrega cria o job `corrigir_redacao`.
   - **Resultado:** a nota aparece com a conta do NPD, as notas de cada banca e os erros marcados com link. O botão de treino leva a uma sessão. Nada estoura a largura em 390 px.
   - **Foto:** a foto sobe ao Storage na pasta do usuário. A redação passa para `transcrevendo`, e as linhas com leitura incerta ficam destacadas na conferência. A confirmação entrega para correção.
