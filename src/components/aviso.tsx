@@ -18,6 +18,10 @@ function mensagem(codigo: string, pedidos: number): string | null {
       return "Escolha pelo menos um tópico.";
     case "faltam":
       return "Ainda faltam itens para montar o simulado completo.";
+    case "tema-pedido":
+      return "Pedimos um tema novo. Ele aparece na lista em cerca de 1 minuto, se a revisão por outra IA aprovar; se não aparecer, peça outro.";
+    case "tema-ja-pedido":
+      return "Você já tem um tema novo a caminho. Espere ele ficar pronto para pedir outro.";
     case "encerrada":
       return "Esta sessão já foi encerrada.";
     default:
