@@ -1117,6 +1117,7 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      meus_pedidos_ia: { Args: never; Returns: Json }
       nos_do_edital: {
         Args: { e: Json }
         Returns: {
