@@ -52,6 +52,7 @@
 
 - `npm test`: suíte unitária.
 - `npm run db:test:start && npm run test:db`: migrações, RLS e seed num Postgres local descartável. Fora do ambiente de nuvem, defina `TEST_DATABASE_URL` apontando para um Postgres seu (o usuário precisa poder criar bancos).
+- `npx supabase start && npm run test:e2e`: E2E com Playwright contra o Supabase local (Docker), sem IA e sem tocar na produção. Detalhes, login nos testes e CI em [testes.md](testes.md).
 
 ## Geração de questões por IA
 

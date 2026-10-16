@@ -1,0 +1,107 @@
+# Verificação a cada push e pull request. Não usa segredos: o E2E roda contra um Supabase local
+# (Docker no próprio runner), com as chaves padrão públicas do CLI e as chaves de IA vazias.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verificacao:
+    name: Tipos, lint e testes unitários
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+
+  banco:
+    name: Testes de banco (migrações, RLS, seed)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run test:db
+
+  e2e:
+    name: E2E (Playwright + Supabase local)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 2.121.0
+      # Sobe Postgres, Auth, PostgREST, Kong e Mailpit (o resto está desligado em supabase/config.toml)
+      # e aplica supabase/migrations/ e supabase/seed/*.sql num banco novo.
+      - name: Supabase local
+        run: supabase start
+
+      - name: Navegador do Playwright
+        run: npx playwright install --with-deps chromium
+
+      - uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: next-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('src/**') }}
+          restore-keys: next-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-
+
+      # O webServer do playwright.config.ts faz `next build` + `next start` com as variáveis do E2E
+      # (e2e/ambiente.ts); o globalSetup semeia os itens de teste no banco local.
+      - name: Playwright
+        run: npm run test:e2e
+        env:
+          E2E_SUPABASE_CLI: supabase
+
+      - name: Relatório do Playwright
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
+
+      - name: Logs do Supabase local
+        if: failure()
+        run: docker ps -a && docker logs supabase_auth_concursos --tail 200 || true
