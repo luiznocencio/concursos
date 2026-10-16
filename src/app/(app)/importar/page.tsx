@@ -1,7 +1,9 @@
 import { notFound } from "next/navigation";
 import { AssistenteImportacao } from "@/components/importar/assistente";
-import { textoApoio, titulo } from "@/components/ui";
+import { ImportarTemaReal } from "@/components/importar/tema-real";
+import { cartao, textoApoio, titulo } from "@/components/ui";
 import { dadosDaImportacao } from "@/db/repositorios/importacao";
+import { configDaDiscursiva } from "@/db/repositorios/redacao";
 import { itensReaisVisiveis } from "@/lib/itens-reais";
 import { contextoDoUsuario, exigirCargo } from "../contexto";
 
@@ -12,7 +14,10 @@ export default async function Importar() {
   const { moderador } = await contextoDoUsuario();
   if (!moderador) notFound();
   const { db, cargo } = await exigirCargo();
-  const { concurso, opcoes } = await dadosDaImportacao(db, cargo.id);
+  const [{ concurso, opcoes }, discursiva] = await Promise.all([
+    dadosDaImportacao(db, cargo.id),
+    configDaDiscursiva(db, cargo.concursoSlug),
+  ]);
 
   return (
     <>
@@ -22,6 +27,17 @@ export default async function Importar() {
         de referência de estilo para os itens gerados.
       </p>
       <AssistenteImportacao concurso={concurso.nome} opcoes={opcoes} reaisNasSessoes={itensReaisVisiveis()} />
+
+      {discursiva && (
+        <section className={`${cartao} mt-12 flex flex-col gap-4`}>
+          <h2 className={titulo.secao}>Tema de redação</h2>
+          <p className={`${textoApoio} max-w-[60ch]`}>
+            Proposta real de prova discursiva, com o padrão de resposta da banca. Entra aprovada e aparece primeiro na lista de
+            temas.
+          </p>
+          <ImportarTemaReal pontuacaoMaxima={discursiva.pontuacaoMaxima} />
+        </section>
+      )}
     </>
   );
 }

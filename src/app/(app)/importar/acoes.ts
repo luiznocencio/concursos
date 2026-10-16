@@ -4,6 +4,9 @@ import { ErroIa } from "@/ai/tipos";
 import { dadosDaImportacao, importarItensReais, registrarUsoSugestao, type ResultadoImportacao } from "@/db/repositorios/importacao";
 import { criarClienteServico } from "@/db/supabase/servico";
 import { ErroImportacao, importacaoSchema, montarLoteReal, previaSchema } from "@/importacao/gravacao";
+import { lerTemaReal, type CamposTema } from "@/importacao/tema";
+import { configDaDiscursiva } from "@/db/repositorios/redacao";
+import type { Json } from "@/db/types";
 import { sugerirTopicos } from "@/importacao/topicos";
 import { criarProvedores } from "@/pipeline/config";
 import type { Retorno } from "../sessao/[id]/acoes";
@@ -61,5 +64,41 @@ export async function gravar(importacao: unknown): Promise<Retorno<ResultadoImpo
     return { ok: true, dados: await importarItensReais(criarClienteServico(), lote) };
   } catch (e) {
     return falha(e, "Não foi possível gravar. Nada foi importado; tente de novo.");
+  }
+}
+
+// `vez` conta os envios: o formulário usa como chave para remontar com os valores certos.
+export type EstadoTema =
+  | { vez: number; tipo: "gravado" | "duplicado"; enunciado: string }
+  | { vez: number; tipo: "erro"; erros: string[]; campos: CamposTema }
+  | null;
+
+// Tema real de discursiva: validado aqui (inclusive a soma dos pontos) e gravado pela função do banco,
+// que só a chave de serviço executa. O mesmo enunciado não entra duas vezes.
+export async function importarTema(anterior: EstadoTema, formData: FormData): Promise<EstadoTema> {
+  const vez = (anterior?.vez ?? 0) + 1;
+  const ctx = await moderador();
+  const campos: CamposTema = {
+    provaOrigem: String(formData.get("provaOrigem") ?? ""),
+    enunciado: String(formData.get("enunciado") ?? ""),
+    textosApoio: String(formData.get("textosApoio") ?? ""),
+    padrao: String(formData.get("padrao") ?? ""),
+    expectativas: String(formData.get("expectativas") ?? ""),
+  };
+  if (!ctx) return { vez, tipo: "erro", erros: [SO_MODERADOR.erro], campos };
+  try {
+    const config = await configDaDiscursiva(ctx.db, ctx.cargo.concursoSlug);
+    if (!config) return { vez, tipo: "erro", erros: ["Este concurso não tem prova discursiva."], campos };
+    const lido = lerTemaReal(campos, config.pontuacaoMaxima);
+    if (!lido.ok) return { vez, tipo: "erro", erros: lido.erros, campos };
+    const { data, error } = await criarClienteServico().rpc("discursiva_importar_temas", {
+      p_lote: { concurso: ctx.cargo.concursoSlug, prova_origem: lido.provaOrigem, temas: [lido.tema] } as unknown as Json,
+    });
+    if (error) throw new Error(error.message);
+    const r = data as { gravados: number };
+    return { vez, tipo: r.gravados === 1 ? "gravado" : "duplicado", enunciado: lido.tema.enunciado };
+  } catch (e) {
+    console.error(e);
+    return { vez, tipo: "erro", erros: ["Não foi possível gravar o tema. Tente de novo."], campos };
   }
 }
